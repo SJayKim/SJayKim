@@ -6,6 +6,28 @@ UNIST(울산과학기술원) 산업공학과 석사 졸업 (2023)
 
 LLM 기반 AI 서비스 개발 경험을 보유한 백엔드/AI 엔지니어입니다. vLLM, LangGraph, RAG 시스템 구축부터 데이터 파이프라인, API 서비스까지 End-to-End 개발 경험이 있습니다.
 
+## 학위 논문
+
+**Personal recommender system via convolutional autoencoder with conditioning augmentation**
+
+Recommender system and representation learning with convolutional autoencoder
+
+Kim, Sunjun (2023) | UNIST 산업공학과 석사
+
+[논문 링크](https://apac-tc.hosted.exlibrisgroup.com/primo-explore/fulldisplay?docid=82UNIST_INST21228494070002596&vid=82UNIST&search_scope=everything&tab=everything&lang=ko_KR&context=L)
+
+---
+
+## 프로젝트 목록
+
+| 구분 | 프로젝트 | 설명 | 역할 |
+|------|----------|------|------|
+| AIO2O | [Skylife 영화 추천 시스템](#aio2o-1-skylife-영화-추천-시스템) | 임베딩 벡터 기반 영화 추천 | 벡터 DB 구축, 추천 알고리즘 |
+| AIO2O | [부산관광공사 여행 챗봇](#aio2o-2-부산관광공사-여행-스케줄링-챗봇) | 여행지 추천 챗봇 (상용 서비스) | 벡터 DB 구축, 추천 알고리즘 |
+| Plantynet | [AI_LLM_API](#plantynet-3-ai_llm_api) | vLLM 기반 텍스트 처리 API 서비스 | 전체 개발 |
+| Plantynet | [RAG 시스템](#plantynet-4-rag-시스템-ai_prompt--rag-chatbot) | Milvus 기반 Agentic RAG 챗봇 | 데이터 전처리, 벡터 DB, 검색 |
+| Side Project | [서울 상권분석 시스템](#side-project-5-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
+
 ---
 
 ## 기술 스택
@@ -14,8 +36,8 @@ LLM 기반 AI 서비스 개발 경험을 보유한 백엔드/AI 엔지니어입�
 |------|------|
 | Language | Python |
 | LLM/AI | vLLM, LangChain, LangGraph, OpenAI API, HuggingFace |
-| Vector DB | Milvus, Chroma |
-| Database | PostgreSQL, Redis, MongoDB |
+| Vector DB | Milvus, Pgvector |
+| Database | PostgreSQL, Oracle, Mysql |
 | Backend | FastAPI, Uvicorn |
 | Frontend | Streamlit, Gradio |
 | Infra | Docker, Docker Compose |
@@ -25,7 +47,47 @@ LLM 기반 AI 서비스 개발 경험을 보유한 백엔드/AI 엔지니어입�
 
 ## 프로젝트
 
-### [Plantynet] 1. AI_LLM_API
+### [AIO2O] 1. Skylife 영화 추천 시스템
+
+**역할**: 벡터 DB 구축, 추천 알고리즘 개발
+
+임베딩 벡터 기반 영화 콘텐츠 추천 시스템. 영화 메타데이터를 벡터화하여 의미 기반 유사도 검색 구현.
+
+**주요 기능**
+- 영화 메타 정보 임베딩 (장르, 내용, 감독, 배우 등)
+- PostgreSQL + pgvector 기반 벡터 DB 구축
+- 메타 필터링 + 벡터 유사도 결합 추천 알고리즘
+
+**추천 알고리즘**
+- 1단계: 메타 필터링 (장르, 배우, 감독 조건 적용)
+- 2단계: 벡터 유사도 검색 (영화 설명/내용 의미적 유사도)
+
+**기술 스택**: Python, PostgreSQL, pgvector, Embedding Models
+
+---
+
+### [AIO2O] 2. 부산관광공사 여행 스케줄링 챗봇
+
+**역할**: 벡터 DB 구축, 추천 알고리즘 개발
+
+자연어 질의 기반 여행 관광지 추천 챗봇. 현재 부산관광공사에서 상용 서비스 중.
+
+**주요 기능**
+- 여행지 관련 메타 데이터 임베딩 및 벡터 DB 구축
+- 메타 필터링 + 벡터 유사도 결합 추천 알고리즘
+- 여행 스케줄링 기능
+
+**추천 알고리즘**
+- 1단계: 메타 필터링 (지역, 여행 기간 1박/2박, 카테고리 등 조건 적용)
+- 2단계: 벡터 유사도 검색 (여행지 설명, 후기, 활용 정보 의미적 유사도)
+
+**서비스 링크**: [Visit Busan](https://www.visitbusan.net/index.do?menuCd=DOM_000000203018000000)
+
+**기술 스택**: Python, Embedding Models, Vector DB, NLP
+
+---
+
+### [Plantynet] 3. AI_LLM_API
 
 **역할**: 전체 개발 담당
 
@@ -62,7 +124,7 @@ POST /generate                  - 자유 대화
 
 ---
 
-### [Plantynet] 2. RAG 시스템 (AI_PROMPT + RAG-Chatbot)
+### [Plantynet] 4. RAG 시스템 (AI_PROMPT + RAG-Chatbot)
 
 **역할**: 데이터 전처리, 벡터 DB 구현, 검색 기능 구현
 
@@ -136,7 +198,7 @@ app/
 
 ---
 
-### [Side Project] 3. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
+### [Side Project] 5. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
 
 **역할**: DB 스키마 구성/구축, LLM 구현, Prompt 구현, 백엔드/프론트엔드 구현
 
