@@ -25,7 +25,7 @@ LLM 기반 AI 서비스 개발 경험을 보유한 백엔드/AI 엔지니어입�
 
 ## 프로젝트
 
-### 1. AI_LLM_API
+### [Plantynet] 1. AI_LLM_API
 
 **역할**: 전체 개발 담당
 
@@ -62,7 +62,7 @@ POST /generate                  - 자유 대화
 
 ---
 
-### 2. RAG 시스템 (AI_PROMPT + RAG-Chatbot)
+### [Plantynet] 2. RAG 시스템 (AI_PROMPT + RAG-Chatbot)
 
 **역할**: 데이터 전처리, 벡터 DB 구현, 검색 기능 구현
 
@@ -136,7 +136,7 @@ app/
 
 ---
 
-### 3. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
+### [Side Project] 3. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
 
 **역할**: DB 스키마 구성/구축, LLM 구현, Prompt 구현, 백엔드/프론트엔드 구현
 
