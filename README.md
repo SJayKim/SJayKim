@@ -227,35 +227,37 @@ app/
 서울 열린데이터광장 상권 데이터를 수집하고, LLM Agent로 분석하는 End-to-End 시스템.
 
 **시스템 아키텍처**
-```
-[데이터 파이프라인 - sbiz_db]
-서울 Open API (8개 서비스)
-        |
-   APISpec 파싱 (HTML -> 메타데이터 추출)
-        |
-   CSV 다운로드 (EUC-KR 인코딩)
-        |
-   ZIP 자동 해제
-        |
-   pandas DataFrame 변환 (한글 컬럼 -> 영문 매핑)
-        |
-   PostgreSQL UPSERT (INSERT ON CONFLICT DO UPDATE)
 
+```mermaid
+flowchart TB
+    subgraph DataPipeline["Data Pipeline - sbiz_db"]
+        API_SRC["Seoul Open API<br/>(8 Services)"]
+        Parse["APISpec Parser"]
+        CSV["CSV Download"]
+        ZIP["ZIP Extract"]
+        DF["pandas DataFrame"]
+        DB[("PostgreSQL")]
+        
+        API_SRC --> Parse --> CSV --> ZIP --> DF --> DB
+    end
 
-[LLM Agent - sbiz_llm]
-FastAPI /chat
-        |
-   route_query (규칙 기반 쿼리 분류)
-        |
-   +----+----+--------+
-   |         |        |
-  rag      chat    reject
-   |
-rag_agent (Tool Calling)
-   |
-postgres_search / get_sbiz_tables
-   |
-generate_response
+    subgraph LLMAgent["LLM Agent - sbiz_llm"]
+        Chat["/chat API"]
+        Router["route_query"]
+        RAG["rag_agent"]
+        ChatResp["chat"]
+        Reject["reject"]
+        Search["postgres_search"]
+        Response["generate_response"]
+        
+        Chat --> Router
+        Router --> RAG
+        Router --> ChatResp
+        Router --> Reject
+        RAG --> Search --> Response
+    end
+
+    DB -.-> Search
 ```
 
 **주요 기능**
