@@ -133,19 +133,39 @@ POST /generate                  - 자유 대화
 Milvus 기반 Agentic RAG 시스템. 한국어 매거진/문서 검색과 생성형 AI를 결합한 질의응답 챗봇.
 
 **시스템 아키텍처**
-```
-User -> Streamlit UI -> FastAPI Service -> LangGraph Agent
-                                                  |
-                        +-------------------------+-------------------------+
-                        |                         |                         |
-                  guard_input              acall_model               ToolNode
-                  (LlamaGuard)          (Safety Re-check)        (milvus_search)
-                        |                         |                         |
-                        v                         v                         v
-                  Block/Pass              Final Response           MilvusRetriever
-                                                                        |
-                                                                   Milvus DB
-                                                              (article_vectors)
+
+```mermaid
+flowchart LR
+    subgraph Frontend
+        User["User"]
+        UI["Streamlit UI"]
+    end
+
+    subgraph Backend["FastAPI Service"]
+        API["FastAPI"]
+        Agent["LangGraph Agent"]
+    end
+
+    subgraph Safety["Safety Layer"]
+        Guard["guard_input<br/>(LlamaGuard)"]
+        Recheck["acall_model<br/>(Safety Re-check)"]
+    end
+
+    subgraph Tools["Tool Layer"]
+        ToolNode["ToolNode<br/>(milvus_search)"]
+        Retriever["MilvusRetriever"]
+    end
+
+    subgraph Storage
+        Milvus[("Milvus DB<br/>(article_vectors)")]
+    end
+
+    User --> UI --> API --> Agent
+    Agent --> Guard
+    Guard -->|Pass| Recheck
+    Guard -->|Block| API
+    Agent --> ToolNode --> Retriever --> Milvus
+    Recheck --> API
 ```
 
 **주요 기능**
@@ -315,11 +335,11 @@ LLM 기반 기획 산출물 자동 생성 시스템. MCP(Model Context Protocol)
 
 ```mermaid
 flowchart TB
-    subgraph Client["🖥️ UI Client"]
+    subgraph Client["UI Client"]
         Atelier["Atelier<br/>(React)"]
     end
 
-    subgraph Host["🔧 Planner MCP Host"]
+    subgraph Host["Planner MCP Host"]
         API["FastAPI Server<br/>(REST/SSE)"]
         
         subgraph Core["Core Engine"]
@@ -342,7 +362,7 @@ flowchart TB
         end
     end
 
-    subgraph Ext["🌐 External"]
+    subgraph Ext["External Services"]
         LiteLLM["LiteLLM"]
         MCP["MCP Servers"]
     end
