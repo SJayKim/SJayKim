@@ -26,7 +26,8 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | AIO2O | [부산관광공사 여행 챗봇](#aio2o-2-부산관광공사-여행-스케줄링-챗봇) | 여행지 추천 챗봇 (상용 서비스) | 벡터 DB 구축, 추천 알고리즘 |
 | Plantynet | [AI_LLM_API](#plantynet-3-ai_llm_api) | vLLM 기반 텍스트 처리 API 서비스 | 전체 개발 |
 | Plantynet | [RAG 시스템](#plantynet-4-rag-시스템-ai_prompt--rag-chatbot) | Milvus 기반 Agentic RAG 챗봇 | 데이터 전처리, 벡터 DB, 검색 |
-| Side Project | [서울 상권분석 시스템](#side-project-5-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
+| Plantynet | [Planner MCP Host](#plantynet-5-planner-mcp-host) | AI 기획 산출물 자동 생성 시스템 | 전체 개발 |
+| Side Project | [서울 상권분석 시스템](#side-project-6-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
 
 ---
 
@@ -35,13 +36,14 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | 분류 | 기술 |
 |------|------|
 | Language | Python |
-| LLM/AI | vLLM, LangChain, LangGraph, OpenAI API, HuggingFace |
+| LLM/AI | vLLM, LangChain, LangGraph, LiteLLM, OpenAI API, HuggingFace |
 | Vector DB | Milvus, Pgvector |
 | Database | PostgreSQL, Oracle, Mysql |
 | Backend | FastAPI, Uvicorn |
 | Frontend | Streamlit, Gradio |
 | Infra | Docker, Docker Compose |
 | Embedding | BGE-M3, BGE-Reranker, Sentence-Transformers |
+| Protocol | MCP (Model Context Protocol), SSE, JSON-RPC |
 
 ---
 
@@ -198,7 +200,7 @@ app/
 
 ---
 
-### [Side Project] 5. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
+### [Side Project] 6. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
 
 **역할**: DB 스키마 구성/구축, LLM 구현, Prompt 구현, 백엔드/프론트엔드 구현
 
@@ -303,6 +305,198 @@ sbiz_llm/src/
 
 ---
 
+### [Plantynet] 5. Planner MCP Host
+
+**역할**: 전체 개발 담당
+
+LLM 기반 기획 산출물 자동 생성 시스템. MCP(Model Context Protocol) Host로서 다양한 LLM 프로바이더와 외부 도구를 통합하여 스토리 티켓, UX 플로우차트, IA(정보 아키텍처), 디자인 명세 등을 자동 생성.
+
+**시스템 아키텍처**
+
+```mermaid
+flowchart TB
+    subgraph Client["🖥️ UI Client"]
+        Atelier["Atelier<br/>(React)"]
+    end
+
+    subgraph Host["🔧 Planner MCP Host"]
+        API["FastAPI Server<br/>(REST/SSE)"]
+        
+        subgraph Core["Core Engine"]
+            Orch["Orchestrator"]
+            Router["Intent Router"]
+            DynGen["Dynamic Generator"]
+            CtxMem["Context Memory"]
+        end
+
+        subgraph RecipeSys["Recipe System"]
+            Exec["Recipe Executor"]
+            Sub["Sub-recipes"]
+        end
+
+        subgraph AgentPool["Agents"]
+            Story["Story"]
+            UX["UX Flow"]
+            IA["IA"]
+            Penpot["Penpot"]
+        end
+    end
+
+    subgraph Ext["🌐 External"]
+        LiteLLM["LiteLLM"]
+        MCP["MCP Servers"]
+    end
+
+    subgraph LLM["LLM Providers"]
+        OAI["OpenAI"]
+        Anth["Anthropic"]
+        Gem["Gemini"]
+        Other["Azure/Ollama"]
+    end
+
+    Atelier <-->|HTTP/SSE| API
+    API --> Orch
+    Orch --> Router
+    Orch --> DynGen
+    Orch --> CtxMem
+    Router --> Exec
+    DynGen --> Sub
+    Exec --> Sub
+    Exec --> AgentPool
+    AgentPool --> LiteLLM
+    LiteLLM --> LLM
+    Exec -.->|MCP Protocol| MCP
+```
+
+**처리 흐름**
+
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant A as FastAPI
+    participant O as Orchestrator
+    participant R as Intent Router
+    participant E as Recipe Executor
+    participant Ag as Agent
+    participant L as LiteLLM
+
+    U->>A: 요청 (기능 요청서 작성해줘)
+    A->>O: process()
+    O->>R: route() - 의도 분석
+    R->>L: LLM 호출
+    L-->>R: story_agent, create_story_ticket
+    O->>E: execute(recipe)
+    E->>Ag: Story Agent 실행
+    Ag->>L: 산출물 생성
+    L-->>Ag: 스토리 티켓 (Markdown)
+    Ag-->>E: AgentOutput
+    E-->>O: 결과
+    O-->>A: ProcessResult
+    A-->>U: SSE 스트리밍 응답
+```
+
+**주요 기능**
+
+[Core 시스템]
+- Intent Router: LLM 기반 사용자 의도 분석 → 적절한 Agent/Recipe 자동 라우팅
+- Context Memory: 대화 히스토리 및 산출물 저장, 세션 관리
+- Context Compaction: 토큰 한도 80% 도달 시 자동 요약/압축
+- Output Validator: 산출물 스키마 검증
+
+[Recipe 시스템 - Goose 스타일]
+- Dynamic Recipe Generator: LLM이 사용자 요청 분석 → Sub-recipe 조합으로 Recipe 동적 생성
+- Recipe Executor: 독립 세션에서 Sub-recipe 실행 (상호 영향 없는 격리된 컨텍스트)
+- YAML 기반 Recipe 정의 (재사용 가능한 워크플로우)
+
+[Agent 시스템]
+- story_agent: 스토리 티켓 작성 (배경, 목적, 인수조건 포함)
+- uxflow_agent: UX 플로우차트 생성 (Mermaid.js 다이어그램)
+- ia_agent: IA(정보 아키텍처) 설계 (사이트맵, 메뉴 트리)
+- penpot_agent: Penpot 디자인 명세 생성
+- dynamic_agent: 동적 Recipe 실행
+- general_agent: 일반 대화 처리
+
+[LLM 통합]
+- LiteLLM Provider: 100+ LLM 프로바이더 단일 인터페이스 지원
+- 지원 프로바이더: OpenAI, Anthropic, Google Gemini, Azure, Ollama 등
+- models.yaml 별칭 시스템으로 쉬운 모델 전환
+- Fallback 모델 자동 전환
+
+**지원 산출물 (Sub-recipe)**
+
+| 카테고리 | Sub-recipe | 설명 | 출력 형식 |
+|----------|------------|------|-----------|
+| Story | create_story_ticket | 스토리 티켓 작성 | Markdown |
+| Story | refine_requirements | 요구사항 정제 | Markdown |
+| UX Flow | create_userflow | 사용자 플로우 생성 | Mermaid.js |
+| UX Flow | user_journey | 사용자 여정 맵 | Markdown |
+| IA | sitemap | 사이트맵 설계 | JSON |
+| IA | design_menu_tree | 메뉴 트리 설계 | JSON |
+| Penpot | component_list | 컴포넌트 목록 | JSON |
+| Penpot | create_design_spec | 디자인 명세 생성 | JSON |
+
+**기술적 특징**
+
+[MCP 프로토콜]
+- SSE (Server-Sent Events) 기반 실시간 스트리밍
+- JSON-RPC 2.0 프로토콜 통신
+- 외부 MCP Server 연결 지원 (파일, DB, API 등)
+
+[동적 Recipe 생성]
+- Goose 스타일 Agentic 아키텍처
+- 사용자 요청에 따라 Sub-recipe 자동 조합
+- 독립 세션 실행으로 병렬 처리 가능
+
+[컨텍스트 관리]
+- ContextMemory: 대화 히스토리 + 산출물(Artifact) 통합 관리
+- ContextCompactor: 토큰 한도 초과 방지 자동 압축
+- HooksManager: 이벤트 기반 확장 지원
+
+[템플릿 시스템]
+- Jinja2 기반 산출물 템플릿
+- story_ticket.md.j2, userflow.md.j2, design_spec.json.j2 등
+
+**코드 구조**
+```
+mcp_host/
+├── src/
+│   ├── core/
+│   │   ├── orchestrator.py      - 전체 실행 흐름 조율
+│   │   ├── intent_router.py     - LLM 기반 의도 분석
+│   │   ├── context_memory.py    - 세션/컨텍스트 관리
+│   │   └── context_compaction.py - 자동 컨텍스트 압축
+│   ├── agents/
+│   │   ├── base_agent.py        - Agent 공통 인터페이스
+│   │   ├── story_agent.py       - 스토리 티켓 생성
+│   │   ├── uxflow_agent.py      - UX 플로우 생성
+│   │   ├── ia_agent.py          - IA 설계
+│   │   ├── penpot_agent.py      - 디자인 명세 생성
+│   │   └── dynamic_agent.py     - 동적 Recipe 실행
+│   ├── llm/
+│   │   ├── provider.py          - LLM 추상화 레이어
+│   │   └── litellm_provider.py  - LiteLLM 통합 (100+ 프로바이더)
+│   ├── recipe/
+│   │   ├── executor.py          - Recipe 실행 엔진
+│   │   ├── dynamic_generator.py - 동적 Recipe 생성기
+│   │   └── schema.py            - Recipe YAML 스키마
+│   ├── server/
+│   │   ├── main.py              - FastAPI 애플리케이션
+│   │   ├── routes.py            - REST/SSE API 엔드포인트
+│   │   └── sse_handler.py       - SSE 연결 관리
+│   └── mcp_client/
+│       └── sse_client.py        - 외부 MCP Server 연결
+├── sub_recipes/                  - YAML 기반 Sub-recipe 정의
+├── prompts/                      - Agent별 프롬프트 YAML
+├── templates/                    - Jinja2 산출물 템플릿
+└── config/
+    ├── settings.yaml            - 서버/MCP 설정
+    └── models.yaml              - LLM 모델 별칭 설정
+```
+
+**기술 스택**: Python, FastAPI, LiteLLM, Pydantic, Jinja2, YAML, SSE, JSON-RPC, MCP Protocol
+
+---
+
 ## 프로젝트 타임라인
 
 ```
@@ -321,11 +515,20 @@ Phase 2: RAG 시스템 (AI_PROMPT + RAG-Chatbot)
 |  - Streamlit 챗봇 UI 개발
 |
 Phase 3: 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
-   - PostgreSQL 스키마 설계 (9개 테이블)
-   - 서울 Open API 데이터 파이프라인 구축
-   - 상권분석 LLM Agent 개발
-   - Tool Calling 기반 DB 검색 구현
-   - FastAPI 백엔드 구현
+|  - PostgreSQL 스키마 설계 (9개 테이블)
+|  - 서울 Open API 데이터 파이프라인 구축
+|  - 상권분석 LLM Agent 개발
+|  - Tool Calling 기반 DB 검색 구현
+|  - FastAPI 백엔드 구현
+|
+Phase 4: Planner MCP Host
+   - MCP 프로토콜 기반 Host 아키텍처 설계
+   - LiteLLM 통합 (100+ LLM 프로바이더 지원)
+   - Goose 스타일 동적 Recipe 시스템 구현
+   - Intent Router 기반 의도 분석 및 Agent 라우팅
+   - 기획 산출물 자동 생성 Agent 개발 (Story, UX Flow, IA, Penpot)
+   - 컨텍스트 자동 압축 시스템 구현
+   - FastAPI + SSE 실시간 스트리밍 서버 구현
 ```
 
 ---
