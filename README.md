@@ -337,112 +337,180 @@ LLM 기반 기획 산출물 자동 생성 시스템. MCP(Model Context Protocol)
 
 ```mermaid
 flowchart TB
-    subgraph Client["UI Client"]
-        Atelier["Atelier<br/>(React)"]
+    subgraph Client["UI Layer"]
+        Atelier["Atelier (React)"]
     end
 
-    subgraph Host["Planner MCP Host"]
-        API["FastAPI Server<br/>(REST/SSE)"]
-        
-        subgraph Core["Core Engine"]
-            Orch["Orchestrator"]
-            Router["Intent Router"]
-            DynGen["Dynamic Generator"]
-            CtxMem["Context Memory"]
+    subgraph Server["Planner MCP Host"]
+        subgraph API["API Layer"]
+            FastAPI["FastAPI Server"]
+            SSE["SSE Handler"]
+            JSONRPC["JSON-RPC Handler"]
         end
 
-        subgraph RecipeSys["Recipe System"]
-            Exec["Recipe Executor"]
-            Sub["Sub-recipes"]
+        subgraph Core["Core Layer"]
+            Orch["Orchestrator<br/>(세션/흐름 관리)"]
+            Router["Intent Router<br/>(의도 분석)"]
+            CtxMem["Context Memory<br/>(히스토리 관리)"]
+            Compact["Context Compactor<br/>(자동 압축)"]
+            Validator["Output Validator"]
         end
 
-        subgraph AgentPool["Agents"]
-            Story["Story"]
-            UX["UX Flow"]
-            IA["IA"]
-            Penpot["Penpot"]
+        subgraph Recipe["Recipe Layer"]
+            DynGen["Dynamic Recipe<br/>Generator"]
+            Executor["Recipe Executor"]
+            SubRecipe["Sub-recipes<br/>(YAML)"]
+        end
+
+        subgraph Agent["Agent Layer"]
+            StoryAg["Story Agent"]
+            UXAg["UX Flow Agent"]
+            IAAg["IA Agent"]
+            PenpotAg["Penpot Agent"]
+            DynAg["Dynamic Agent"]
         end
     end
 
-    subgraph Ext["External Services"]
-        LiteLLM["LiteLLM"]
-        MCP["MCP Servers"]
+    subgraph External["External"]
+        LiteLLM["LiteLLM Provider"]
+        MCPServers["MCP Servers"]
     end
 
-    subgraph LLM["LLM Providers"]
-        OAI["OpenAI"]
-        Anth["Anthropic"]
-        Gem["Gemini"]
-        Other["Azure/Ollama"]
+    subgraph LLMProviders["LLM Providers"]
+        OpenAI & Anthropic & Gemini & Ollama
     end
 
-    Atelier <-->|HTTP/SSE| API
-    API --> Orch
+    Atelier <-->|HTTP/SSE| FastAPI
+    FastAPI --> Orch
     Orch --> Router
-    Orch --> DynGen
+    Router -->|의도 분석| LiteLLM
     Orch --> CtxMem
-    Router --> Exec
-    DynGen --> Sub
-    Exec --> Sub
-    Exec --> AgentPool
-    AgentPool --> LiteLLM
-    LiteLLM --> LLM
-    Exec -.->|MCP Protocol| MCP
+    CtxMem --> Compact
+    
+    Router -->|정적 Recipe| Executor
+    Router -->|동적 Recipe| DynGen
+    DynGen -->|Recipe 생성| LiteLLM
+    DynGen --> SubRecipe
+    
+    Executor --> Agent
+    Agent -->|산출물 생성| LiteLLM
+    Agent --> Validator
+    
+    LiteLLM --> LLMProviders
+    Executor -.->|Tool Call| MCPServers
 ```
 
-**처리 흐름**
+**요청 처리 흐름 (정적 Recipe)**
 
 ```mermaid
 sequenceDiagram
-    actor U as User
-    participant A as FastAPI
-    participant O as Orchestrator
-    participant R as Intent Router
-    participant E as Recipe Executor
-    participant Ag as Agent
-    participant L as LiteLLM
+    actor User
+    participant API as FastAPI
+    participant Orch as Orchestrator
+    participant Mem as Context Memory
+    participant Router as Intent Router
+    participant LLM1 as LiteLLM
+    participant Exec as Recipe Executor
+    participant Agent as Agent
+    participant LLM2 as LiteLLM
+    participant Valid as Validator
 
-    U->>A: 요청 (기능 요청서 작성해줘)
-    A->>O: process()
-    O->>R: route() - 의도 분석
-    R->>L: LLM 호출
-    L-->>R: story_agent, create_story_ticket
-    O->>E: execute(recipe)
-    E->>Ag: Story Agent 실행
-    Ag->>L: 산출물 생성
-    L-->>Ag: 스토리 티켓 (Markdown)
-    Ag-->>E: AgentOutput
-    E-->>O: 결과
-    O-->>A: ProcessResult
-    A-->>U: SSE 스트리밍 응답
+    User->>API: POST /process<br/>"로그인 기능 스토리 작성해줘"
+    API->>Orch: process(session_id, user_input)
+    
+    Note over Orch,Mem: 1. 세션 관리
+    Orch->>Mem: get_or_create_session()
+    Mem-->>Orch: ContextMemory
+    Orch->>Mem: add_message("user", input)
+    
+    Note over Orch,Router: 2. 의도 분석 (LLM 호출)
+    Orch->>Router: route(user_input, context)
+    Router->>LLM1: generate(system_prompt + recipes)
+    LLM1-->>Router: {agent: "story", recipe: "create_story_ticket"}
+    Router-->>Orch: RoutingResult
+    
+    Note over Orch,Exec: 3. Recipe 실행
+    Orch->>Exec: execute(recipe, params)
+    Exec->>Agent: execute(recipe, context)
+    
+    Note over Agent,LLM2: 4. 산출물 생성 (LLM 호출)
+    Agent->>LLM2: generate(recipe_prompt)
+    LLM2-->>Agent: 스토리 티켓 (Markdown)
+    Agent-->>Exec: AgentOutput
+    
+    Note over Exec,Valid: 5. 검증 및 저장
+    Exec->>Valid: validate(output)
+    Exec->>Mem: add_artifact(result)
+    Exec-->>Orch: 실행 결과
+    
+    Orch-->>API: ProcessResult
+    API-->>User: SSE Stream 응답
+```
+
+**동적 Recipe 처리 흐름 (복합 요청)**
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Orch as Orchestrator
+    participant Router as Intent Router
+    participant DynGen as Dynamic Generator
+    participant LLM as LiteLLM
+    participant Exec as Recipe Executor
+    participant Sub1 as Sub-recipe 1
+    participant Sub2 as Sub-recipe 2
+
+    User->>Orch: "쇼핑몰 로그인 기능 기획 전체 해줘"
+    
+    Note over Orch,Router: 1. 복합 요청 감지
+    Orch->>Router: route(user_input)
+    Router->>LLM: 의도 분석
+    LLM-->>Router: use_dynamic_recipe: true
+    
+    Note over Orch,DynGen: 2. 동적 Recipe 생성
+    Orch->>DynGen: generate(user_request)
+    DynGen->>LLM: Sub-recipe 조합 계획
+    LLM-->>DynGen: {sub_recipes: [story, userflow]}
+    
+    Note over Exec,Sub2: 3. 독립 세션에서 순차 실행
+    DynGen->>Exec: execute_sub_recipes()
+    Exec->>Sub1: create_story_ticket (독립 세션)
+    Sub1-->>Exec: 스토리 티켓 결과
+    Exec->>Sub2: create_userflow (독립 세션)
+    Sub2-->>Exec: UX 플로우 결과
+    
+    Note over Orch: 4. 결과 통합
+    Exec-->>Orch: 통합된 산출물
+    Orch-->>User: 전체 기획 문서
 ```
 
 **주요 기능**
 
 [Core 시스템]
-- Intent Router: LLM 기반 사용자 의도 분석 → 적절한 Agent/Recipe 자동 라우팅
-- Context Memory: 대화 히스토리 및 산출물 저장, 세션 관리
-- Context Compaction: 토큰 한도 80% 도달 시 자동 요약/압축
-- Output Validator: 산출물 스키마 검증
+- Orchestrator: 전체 실행 흐름 조율, 세션 관리, Hook 이벤트 처리
+- Intent Router: LLM 기반 사용자 의도 분석 → Agent/Recipe 자동 라우팅
+- Context Memory: 세션별 대화 히스토리 및 산출물(Artifact) 저장
+- Context Compactor: 토큰 한도 80% 도달 시 자동 요약 압축
+- Output Validator: 산출물 스키마 검증 및 정리
 
 [Recipe 시스템 - Goose 스타일]
-- Dynamic Recipe Generator: LLM이 사용자 요청 분석 → Sub-recipe 조합으로 Recipe 동적 생성
-- Recipe Executor: 독립 세션에서 Sub-recipe 실행 (상호 영향 없는 격리된 컨텍스트)
-- YAML 기반 Recipe 정의 (재사용 가능한 워크플로우)
+- Dynamic Recipe Generator: 복합 요청 시 LLM이 Sub-recipe 조합 계획 수립
+- Recipe Executor: YAML 기반 Recipe 실행, 독립 세션 Sub-recipe 지원
+- Sub-recipe Tool: 각 Sub-recipe를 MCP Tool로 래핑하여 독립 실행
 
 [Agent 시스템]
 - story_agent: 스토리 티켓 작성 (배경, 목적, 인수조건 포함)
 - uxflow_agent: UX 플로우차트 생성 (Mermaid.js 다이어그램)
 - ia_agent: IA(정보 아키텍처) 설계 (사이트맵, 메뉴 트리)
 - penpot_agent: Penpot 디자인 명세 생성
-- dynamic_agent: 동적 Recipe 실행
-- general_agent: 일반 대화 처리
+- dynamic_agent: 동적 Recipe 실행 (복합 산출물)
+- general_agent: 일반 대화 및 챗봇 도움말 처리
 
 [LLM 통합]
-- LiteLLM Provider: 100+ LLM 프로바이더 단일 인터페이스 지원
-- 지원 프로바이더: OpenAI, Anthropic, Google Gemini, Azure, Ollama 등
+- LiteLLM Provider: 100+ LLM 프로바이더 단일 인터페이스
+- 지원: OpenAI, Anthropic Claude, Google Gemini, Azure, Ollama 등
 - models.yaml 별칭 시스템으로 쉬운 모델 전환
-- Fallback 모델 자동 전환
+- Fallback 모델 자동 전환 (장애 대응)
 
 **지원 산출물 (Sub-recipe)**
 
