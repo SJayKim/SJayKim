@@ -26,7 +26,7 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | AIO2O | [부산관광공사 여행 챗봇](#aio2o-2-부산관광공사-여행-스케줄링-챗봇) | 여행지 추천 챗봇 (상용 서비스) | 벡터 DB 구축, 추천 알고리즘 |
 | Plantynet | [AI_LLM_API](#plantynet-3-ai_llm_api) | vLLM 기반 텍스트 처리 API 서비스 | 전체 개발 |
 | Plantynet | [RAG 시스템](#plantynet-4-rag-시스템-ai_prompt--rag-chatbot) | Milvus 기반 Agentic RAG 챗봇 | 데이터 전처리, 벡터 DB, 검색 |
-| Plantynet | [Planner MCP Host](#plantynet-5-planner-mcp-host) | AI 기획 산출물 자동 생성 시스템 | 전체 개발 |
+| Plantynet | [Reflexion Agent](#plantynet-5-reflexion-agent) | ReAct + Reflexion 패턴 AI 에이전트 | 전체 개발 |
 | Side Project | [서울 상권분석 시스템](#side-project-6-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
 
 ---
@@ -327,263 +327,212 @@ sbiz_llm/src/
 
 ---
 
-### [Plantynet] 5. Planner MCP Host
+### [Plantynet] 5. Reflexion Agent
 
 **역할**: 전체 개발 담당
 
-LLM 기반 기획 산출물 자동 생성 시스템. MCP(Model Context Protocol) Host로서 다양한 LLM 프로바이더와 외부 도구를 통합하여 스토리 티켓, UX 플로우차트, IA(정보 아키텍처), 디자인 명세 등을 자동 생성.
+LangGraph 기반 ReAct + Reflexion 패턴 AI 에이전트. 자연어 명령을 받아 도구를 활용해 작업을 수행하고, 실행 결과를 평가하여 실패 시 반성(Reflection)을 통해 교훈을 학습하는 자기 개선형 에이전트 시스템.
 
 **시스템 아키텍처**
 
 ```mermaid
 flowchart TB
-    subgraph Client["UI Layer"]
-        Atelier["Atelier (React)"]
+    subgraph ReflexionGraph["ReflexionGraph (LangGraph StateGraph)"]
+        START((START))
+        Actor["Actor<br/>(LLM)"]
+        ToolExec["Tool Executor"]
+        Evaluator["Evaluator<br/>(LLM)"]
+        Reflection["Reflection<br/>(LLM)"]
+        END_NODE((END))
+        
+        START --> Actor
+        Actor -->|"action"| ToolExec
+        Actor -->|"final_answer"| END_NODE
+        ToolExec --> Evaluator
+        Evaluator -->|"PASS"| END_NODE
+        Evaluator -->|"FAIL"| Reflection
+        Reflection -->|"lesson → LessonsStore"| Actor
     end
 
-    subgraph Server["Planner MCP Host"]
-        subgraph API["API Layer"]
-            FastAPI["FastAPI Server"]
-            SSE["SSE Handler"]
-            JSONRPC["JSON-RPC Handler"]
-        end
-
-        subgraph Core["Core Layer"]
-            Orch["Orchestrator<br/>(세션/흐름 관리)"]
-            Router["Intent Router<br/>(의도 분석)"]
-            CtxMem["Context Memory<br/>(히스토리 관리)"]
-            Compact["Context Compactor<br/>(자동 압축)"]
-            Validator["Output Validator"]
-        end
-
-        subgraph Recipe["Recipe Layer"]
-            DynGen["Dynamic Recipe<br/>Generator"]
-            Executor["Recipe Executor"]
-            SubRecipe["Sub-recipes<br/>(YAML)"]
-        end
-
-        subgraph Agent["Agent Layer"]
-            StoryAg["Story Agent"]
-            UXAg["UX Flow Agent"]
-            IAAg["IA Agent"]
-            PenpotAg["Penpot Agent"]
-            DynAg["Dynamic Agent"]
-        end
+    subgraph Memory["Memory Layer"]
+        Lessons["LessonsStore<br/>(장기 기억)"]
     end
 
-    subgraph External["External"]
-        LiteLLM["LiteLLM Provider"]
-        MCPServers["MCP Servers"]
+    subgraph Tools["Tool Layer"]
+        TaskTools["Task Management<br/>create/update/delete/list"]
+        DocTools["Document Tools<br/>create/list/search"]
+        ProjectTools["Project Status<br/>summary/help"]
     end
 
-    subgraph LLMProviders["LLM Providers"]
-        OpenAI & Anthropic & Gemini & Ollama
+    subgraph LLM["LLM Providers"]
+        Gemini["Google Gemini"]
+        OpenAI["OpenAI"]
+        Anthropic["Anthropic"]
     end
 
-    Atelier <-->|HTTP/SSE| FastAPI
-    FastAPI --> Orch
-    Orch --> Router
-    Router -->|의도 분석| LiteLLM
-    Orch --> CtxMem
-    CtxMem --> Compact
-    
-    Router -->|정적 Recipe| Executor
-    Router -->|동적 Recipe| DynGen
-    DynGen -->|Recipe 생성| LiteLLM
-    DynGen --> SubRecipe
-    
-    Executor --> Agent
-    Agent -->|산출물 생성| LiteLLM
-    Agent --> Validator
-    
-    LiteLLM --> LLMProviders
-    Executor -.->|Tool Call| MCPServers
+    Actor <--> LLM
+    Evaluator <--> LLM
+    Reflection <--> LLM
+    ToolExec --> Tools
+    Reflection --> Lessons
+    Actor -.->|"retrieve lessons"| Lessons
 ```
 
-**요청 처리 흐름 (정적 Recipe)**
+**실행 흐름 (ReAct + Reflexion)**
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant API as FastAPI
-    participant Orch as Orchestrator
-    participant Mem as Context Memory
-    participant Router as Intent Router
-    participant LLM1 as LiteLLM
-    participant Exec as Recipe Executor
-    participant Agent as Agent
-    participant LLM2 as LiteLLM
-    participant Valid as Validator
+    participant Agent as ReflexionGraph
+    participant Actor as Actor (LLM)
+    participant Tools as Tool Executor
+    participant Eval as Evaluator (LLM)
+    participant Reflect as Reflection (LLM)
+    participant Store as LessonsStore
 
-    User->>API: POST /process<br/>"로그인 기능 스토리 작성해줘"
-    API->>Orch: process(session_id, user_input)
+    User->>Agent: "로그인 기능 업무 등록해줘"
     
-    Note over Orch,Mem: 1. 세션 관리
-    Orch->>Mem: get_or_create_session()
-    Mem-->>Orch: ContextMemory
-    Orch->>Mem: add_message("user", input)
+    Note over Agent,Store: 1. 교훈 조회
+    Agent->>Store: get_relevant_lessons(query)
+    Store-->>Agent: 관련 교훈 목록
     
-    Note over Orch,Router: 2. 의도 분석 (LLM 호출)
-    Orch->>Router: route(user_input, context)
-    Router->>LLM1: generate(system_prompt + recipes)
-    LLM1-->>Router: {agent: "story", recipe: "create_story_ticket"}
-    Router-->>Orch: RoutingResult
+    Note over Agent,Actor: 2. Actor 추론
+    Agent->>Actor: Think → Action 결정
+    Actor-->>Agent: {tool: "create_task", args: {...}}
     
-    Note over Orch,Exec: 3. Recipe 실행
-    Orch->>Exec: execute(recipe, params)
-    Exec->>Agent: execute(recipe, context)
+    Note over Agent,Tools: 3. 도구 실행
+    Agent->>Tools: create_task(title, description)
+    Tools-->>Agent: Observation (결과)
     
-    Note over Agent,LLM2: 4. 산출물 생성 (LLM 호출)
-    Agent->>LLM2: generate(recipe_prompt)
-    LLM2-->>Agent: 스토리 티켓 (Markdown)
-    Agent-->>Exec: AgentOutput
+    Note over Agent,Eval: 4. 결과 평가
+    Agent->>Eval: evaluate(goal, observation)
     
-    Note over Exec,Valid: 5. 검증 및 저장
-    Exec->>Valid: validate(output)
-    Exec->>Mem: add_artifact(result)
-    Exec-->>Orch: 실행 결과
-    
-    Orch-->>API: ProcessResult
-    API-->>User: SSE Stream 응답
-```
-
-**동적 Recipe 처리 흐름 (복합 요청)**
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant Orch as Orchestrator
-    participant Router as Intent Router
-    participant DynGen as Dynamic Generator
-    participant LLM as LiteLLM
-    participant Exec as Recipe Executor
-    participant Sub1 as Sub-recipe 1
-    participant Sub2 as Sub-recipe 2
-
-    User->>Orch: "쇼핑몰 로그인 기능 기획 전체 해줘"
-    
-    Note over Orch,Router: 1. 복합 요청 감지
-    Orch->>Router: route(user_input)
-    Router->>LLM: 의도 분석
-    LLM-->>Router: use_dynamic_recipe: true
-    
-    Note over Orch,DynGen: 2. 동적 Recipe 생성
-    Orch->>DynGen: generate(user_request)
-    DynGen->>LLM: Sub-recipe 조합 계획
-    LLM-->>DynGen: {sub_recipes: [story, userflow]}
-    
-    Note over Exec,Sub2: 3. 독립 세션에서 순차 실행
-    DynGen->>Exec: execute_sub_recipes()
-    Exec->>Sub1: create_story_ticket (독립 세션)
-    Sub1-->>Exec: 스토리 티켓 결과
-    Exec->>Sub2: create_userflow (독립 세션)
-    Sub2-->>Exec: UX 플로우 결과
-    
-    Note over Orch: 4. 결과 통합
-    Exec-->>Orch: 통합된 산출물
-    Orch-->>User: 전체 기획 문서
+    alt PASS
+        Eval-->>Agent: {result: "PASS"}
+        Agent-->>User: 최종 답변
+    else FAIL
+        Eval-->>Agent: {result: "FAIL", reason: "..."}
+        
+        Note over Agent,Reflect: 5. 반성 및 교훈 도출
+        Agent->>Reflect: reflect(goal, action, observation, failure_reason)
+        Reflect-->>Agent: {problem: "...", solution: "..."}
+        
+        Note over Agent,Store: 6. 교훈 저장
+        Agent->>Store: add_lesson(problem, solution, context)
+        
+        Note over Agent,Actor: 7. 재시도 (교훈 활용)
+        Agent->>Actor: retry with lesson
+    end
 ```
 
 **주요 기능**
 
-[Core 시스템]
-- Orchestrator: 전체 실행 흐름 조율, 세션 관리, Hook 이벤트 처리
-- Intent Router: LLM 기반 사용자 의도 분석 → Agent/Recipe 자동 라우팅
-- Context Memory: 세션별 대화 히스토리 및 산출물(Artifact) 저장
-- Context Compactor: 토큰 한도 80% 도달 시 자동 요약 압축
-- Output Validator: 산출물 스키마 검증 및 정리
+[ReAct 패턴]
+- Thought → Action → Observation 루프 기반 추론
+- LLM이 상황을 분석하고 적절한 도구 선택
+- 도구 실행 결과를 관찰하여 다음 행동 결정
 
-[Recipe 시스템 - Goose 스타일]
-- Dynamic Recipe Generator: 복합 요청 시 LLM이 Sub-recipe 조합 계획 수립
-- Recipe Executor: YAML 기반 Recipe 실행, 독립 세션 Sub-recipe 지원
-- Sub-recipe Tool: 각 Sub-recipe를 MCP Tool로 래핑하여 독립 실행
+[Reflexion 패턴]
+- 실행 결과 평가 (Evaluator): 목표 달성 여부 PASS/FAIL 판정
+- 실패 원인 분석 (Reflection): 무엇이 잘못되었는지 분석
+- 교훈 도출 및 저장: problem/solution 형태로 장기 기억에 저장
+- 재시도 시 교훈 활용: 이전 실패에서 배운 내용 적용
 
-[Agent 시스템]
-- story_agent: 스토리 티켓 작성 (배경, 목적, 인수조건 포함)
-- uxflow_agent: UX 플로우차트 생성 (Mermaid.js 다이어그램)
-- ia_agent: IA(정보 아키텍처) 설계 (사이트맵, 메뉴 트리)
-- penpot_agent: Penpot 디자인 명세 생성
-- dynamic_agent: 동적 Recipe 실행 (복합 산출물)
-- general_agent: 일반 대화 및 챗봇 도움말 처리
+[LangGraph 기반 워크플로우]
+- StateGraph로 에이전트 그래프 구성
+- AgentState: messages, steps, iteration, lessons 관리
+- 조건부 엣지로 PASS/FAIL 분기 처리
 
-[LLM 통합]
-- LiteLLM Provider: 100+ LLM 프로바이더 단일 인터페이스
-- 지원: OpenAI, Anthropic Claude, Google Gemini, Azure, Ollama 등
-- models.yaml 별칭 시스템으로 쉬운 모델 전환
-- Fallback 모델 자동 전환 (장애 대응)
+[설정 기반 구성]
+- 모든 설정 YAML 파일로 중앙 관리
+- 하드코딩 없이 동적 구성 변경 가능
+- 프롬프트 템플릿 외부화 (Jinja2)
 
-**지원 산출물 (Sub-recipe)**
+**사용 가능한 도구**
 
-| 카테고리 | Sub-recipe | 설명 | 출력 형식 |
-|----------|------------|------|-----------|
-| Story | create_story_ticket | 스토리 티켓 작성 | Markdown |
-| Story | refine_requirements | 요구사항 정제 | Markdown |
-| UX Flow | create_userflow | 사용자 플로우 생성 | Mermaid.js |
-| UX Flow | user_journey | 사용자 여정 맵 | Markdown |
-| IA | sitemap | 사이트맵 설계 | JSON |
-| IA | design_menu_tree | 메뉴 트리 설계 | JSON |
-| Penpot | component_list | 컴포넌트 목록 | JSON |
-| Penpot | create_design_spec | 디자인 명세 생성 | JSON |
+| 도구 | 설명 |
+|------|------|
+| `create_task` | 새 업무 생성 |
+| `update_task` | 업무 상태/내용 수정 |
+| `delete_task` | 업무 삭제 |
+| `list_tasks` | 업무 목록 조회 |
+| `create_document` | 문서 생성 (스토리, PRD 등) |
+| `list_documents` | 문서 목록 조회 |
+| `get_project_status` | 프로젝트 현황 조회 |
+| `search` | 업무/문서 검색 |
+| `get_summary` | 기간별 활동 요약 |
+| `show_help` | 사용 가능한 기능 안내 |
 
 **기술적 특징**
 
-[MCP 프로토콜]
-- SSE (Server-Sent Events) 기반 실시간 스트리밍
-- JSON-RPC 2.0 프로토콜 통신
-- 외부 MCP Server 연결 지원 (파일, DB, API 등)
+[LangGraph StateGraph]
+- AgentState TypedDict로 상태 관리
+- 노드: actor, tool_executor, evaluator, reflection
+- 조건부 라우팅: should_continue, route_after_eval
 
-[동적 Recipe 생성]
-- Goose 스타일 Agentic 아키텍처
-- 사용자 요청에 따라 Sub-recipe 자동 조합
-- 독립 세션 실행으로 병렬 처리 가능
+[메모리 시스템]
+- LessonsStore: JSON 기반 장기 기억 저장소
+- 문제(problem) → 해결책(solution) → 컨텍스트(context) 구조
+- 관련 교훈 검색 및 프롬프트 주입
 
-[컨텍스트 관리]
-- ContextMemory: 대화 히스토리 + 산출물(Artifact) 통합 관리
-- ContextCompactor: 토큰 한도 초과 방지 자동 압축
-- HooksManager: 이벤트 기반 확장 지원
+[다중 LLM 지원]
+- LangChain ChatModel 추상화
+- Google Gemini, OpenAI, Anthropic 지원
+- YAML 설정으로 프로바이더/모델 전환
 
-[템플릿 시스템]
-- Jinja2 기반 산출물 템플릿
-- story_ticket.md.j2, userflow.md.j2, design_spec.json.j2 등
+[프롬프트 관리]
+- YAML 기반 프롬프트 템플릿
+- Jinja2 변수 치환 지원
+- actor.yaml, evaluator.yaml, self_reflection.yaml
+
+**설정 구조**
+
+```yaml
+# config/settings.yaml
+llm:
+  provider: "google"
+  model_name: "gemini-2.5-flash"
+  temperature: 0.7
+
+agent:
+  max_steps: 5          # 최대 실행 단계
+  max_reflection: 3     # 최대 반성 횟수
+
+lessons:
+  max_lessons: 100
+  storage_file: "data/lessons.json"
+```
 
 **코드 구조**
 ```
 mcp_host/
 ├── src/
-│   ├── core/
-│   │   ├── orchestrator.py      - 전체 실행 흐름 조율
-│   │   ├── intent_router.py     - LLM 기반 의도 분석
-│   │   ├── context_memory.py    - 세션/컨텍스트 관리
-│   │   └── context_compaction.py - 자동 컨텍스트 압축
-│   ├── agents/
-│   │   ├── base_agent.py        - Agent 공통 인터페이스
-│   │   ├── story_agent.py       - 스토리 티켓 생성
-│   │   ├── uxflow_agent.py      - UX 플로우 생성
-│   │   ├── ia_agent.py          - IA 설계
-│   │   ├── penpot_agent.py      - 디자인 명세 생성
-│   │   └── dynamic_agent.py     - 동적 Recipe 실행
+│   ├── agent/
+│   │   ├── state.py             - AgentState 정의
+│   │   ├── nodes.py             - 노드 함수 (actor, evaluator, reflection)
+│   │   └── graph.py             - ReflexionGraph 클래스
 │   ├── llm/
-│   │   ├── provider.py          - LLM 추상화 레이어
-│   │   └── litellm_provider.py  - LiteLLM 통합 (100+ 프로바이더)
-│   ├── recipe/
-│   │   ├── executor.py          - Recipe 실행 엔진
-│   │   ├── dynamic_generator.py - 동적 Recipe 생성기
-│   │   └── schema.py            - Recipe YAML 스키마
-│   ├── server/
-│   │   ├── main.py              - FastAPI 애플리케이션
-│   │   ├── routes.py            - REST/SSE API 엔드포인트
-│   │   └── sse_handler.py       - SSE 연결 관리
-│   └── mcp_client/
-│       └── sse_client.py        - 외부 MCP Server 연결
-├── sub_recipes/                  - YAML 기반 Sub-recipe 정의
-├── prompts/                      - Agent별 프롬프트 YAML
-├── templates/                    - Jinja2 산출물 템플릿
+│   │   └── provider.py          - LangChain ChatModel 팩토리
+│   ├── memory/
+│   │   └── lessons_store.py     - 장기 기억 (학습된 교훈)
+│   ├── tools/
+│   │   ├── project_tools.py     - 프로젝트 관리 도구
+│   │   └── langchain_tools.py   - LangChain @tool 래퍼
+│   └── config/
+│       ├── config_loader.py     - YAML 설정 로더
+│       └── prompt_loader.py     - 프롬프트 로더
+├── prompts/                      - LLM 프롬프트 템플릿
+│   ├── actor.yaml
+│   ├── evaluator.yaml
+│   └── self_reflection.yaml
+├── data/
+│   ├── tasks/                   - 업무 저장
+│   └── lessons.json             - 학습된 교훈
 └── config/
-    ├── settings.yaml            - 서버/MCP 설정
-    └── models.yaml              - LLM 모델 별칭 설정
+    └── settings.yaml            - 전체 설정 파일
 ```
 
-**기술 스택**: Python, FastAPI, LiteLLM, Pydantic, Jinja2, YAML, SSE, JSON-RPC, MCP Protocol
+**기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Pydantic, YAML, JSON
 
 ---
 
@@ -611,14 +560,14 @@ Phase 3: 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
 |  - Tool Calling 기반 DB 검색 구현
 |  - FastAPI 백엔드 구현
 |
-Phase 4: Planner MCP Host
-   - MCP 프로토콜 기반 Host 아키텍처 설계
-   - LiteLLM 통합 (100+ LLM 프로바이더 지원)
-   - Goose 스타일 동적 Recipe 시스템 구현
-   - Intent Router 기반 의도 분석 및 Agent 라우팅
-   - 기획 산출물 자동 생성 Agent 개발 (Story, UX Flow, IA, Penpot)
-   - 컨텍스트 자동 압축 시스템 구현
-   - FastAPI + SSE 실시간 스트리밍 서버 구현
+Phase 4: Reflexion Agent
+   - LangGraph 기반 ReAct + Reflexion 패턴 설계
+   - Actor → Tool Executor → Evaluator → Reflection 루프 구현
+   - 장기 기억 시스템 구현 (LessonsStore)
+   - 실패 시 교훈 도출 및 자기 개선 메커니즘
+   - 다중 LLM 지원 (Gemini, OpenAI, Anthropic)
+   - YAML 기반 설정 및 프롬프트 관리
+   - Task/Document 관리 도구 개발
 ```
 
 ---
