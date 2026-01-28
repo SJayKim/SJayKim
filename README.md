@@ -26,7 +26,7 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | AIO2O | [부산관광공사 여행 챗봇](#aio2o-2-부산관광공사-여행-스케줄링-챗봇) | 여행지 추천 챗봇 (상용 서비스) | 벡터 DB 구축, 추천 알고리즘 |
 | Plantynet | [AI_LLM_API](#plantynet-3-ai_llm_api) | vLLM 기반 텍스트 처리 API 서비스 | 전체 개발 |
 | Plantynet | [RAG 시스템](#plantynet-4-rag-시스템-ai_prompt--rag-chatbot) | Milvus 기반 Agentic RAG 챗봇 | 데이터 전처리, 벡터 DB, 검색 |
-| Plantynet | [Reflexion Agent](#plantynet-5-reflexion-agent) | ReAct + Reflexion 패턴 AI 에이전트 | 전체 개발 |
+| Plantynet | [Reflexion Agent](#plantynet-5-reflexion-agent-mcp-host) | ReAct + Reflexion 자기개선 AI 에이전트 | 전체 설계 및 개발 |
 | Side Project | [서울 상권분석 시스템](#side-project-6-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
 
 ---
@@ -327,21 +327,21 @@ sbiz_llm/src/
 
 ---
 
-### [Plantynet] 5. Reflexion Agent
+### [Plantynet] 5. Reflexion Agent (MCP Host)
 
-**역할**: MCP Host, server 개발 담당
+**역할**: 전체 설계 및 개발 담당
 
-LangGraph 기반 ReAct + Reflexion 패턴 AI 에이전트. 자연어 명령을 받아 도구를 활용해 작업을 수행하고, 실행 결과를 평가하여 실패 시 반성(Reflection)을 통해 교훈을 학습하는 자기 개선형 에이전트 시스템.
+LangGraph 기반 ReAct + Reflexion 패턴 자기 개선형 AI 에이전트. 자연어 명령으로 작업을 수행하고, 실패 시 원인을 분석하여 교훈을 학습하는 시스템. Atelier 프론트엔드와 호환되는 Product > Thread > Feed 계층 구조 리소스 관리 지원.
 
 **시스템 아키텍처**
 
 ```mermaid
 flowchart TB
-    subgraph ReflexionGraph["ReflexionGraph (LangGraph StateGraph)"]
+    subgraph ReflexionGraph["ReflexionGraph (LangGraph)"]
         START((START))
         Actor["Actor<br/>(LLM)"]
         ToolExec["Tool Executor"]
-        Evaluator["Evaluator<br/>(LLM)"]
+        Evaluator["Evaluator<br/>(규칙+LLM)"]
         Reflection["Reflection<br/>(LLM)"]
         END_NODE((END))
         
@@ -349,226 +349,67 @@ flowchart TB
         Actor -->|"action"| ToolExec
         Actor -->|"final_answer"| END_NODE
         ToolExec --> Evaluator
-        Evaluator -->|"PASS"| END_NODE
+        Evaluator -->|"PASS"| Actor
         Evaluator -->|"FAIL"| Reflection
-        Reflection -->|"lesson → LessonsStore"| Actor
+        Reflection -->|"lesson"| Actor
     end
 
-    subgraph Memory["Memory Layer"]
-        Lessons["LessonsStore<br/>(장기 기억)"]
+    subgraph Memory["Memory"]
+        LongTerm["LessonsStore<br/>(장기 기억)"]
     end
 
-    subgraph Tools["Tool Layer"]
-        TaskTools["Task Management<br/>create/update/delete/list"]
-        DocTools["Document Tools<br/>create/list/search"]
-        ProjectTools["Project Status<br/>summary/help"]
+    subgraph Resources["Atelier 리소스"]
+        Product["Product → Thread → Feed"]
     end
 
-    subgraph LLM["LLM Providers"]
-        Gemini["Google Gemini"]
-        OpenAI["OpenAI"]
-        Anthropic["Anthropic"]
-    end
-
-    Actor <--> LLM
-    Evaluator <--> LLM
-    Reflection <--> LLM
-    ToolExec --> Tools
-    Reflection --> Lessons
-    Actor -.->|"retrieve lessons"| Lessons
-```
-
-**실행 흐름 (ReAct + Reflexion)**
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Graph as ReflexionGraph
-    participant ActorLLM as Actor LLM
-    participant Tools as Tool Executor
-    participant Eval as Evaluator LLM
-    participant Reflect as Reflection LLM
-    participant Store as LessonsStore
-
-    User->>Graph: 로그인 기능 업무 등록해줘
-    
-    Note over Graph,Store: 1. 교훈 조회
-    Graph->>Store: get_relevant_lessons(query)
-    Store-->>Graph: 관련 교훈 목록
-    
-    Note over Graph,ActorLLM: 2. Actor 추론
-    Graph->>ActorLLM: Think - Action 결정
-    ActorLLM-->>Graph: tool: create_task, args: ...
-    
-    Note over Graph,Tools: 3. 도구 실행
-    Graph->>Tools: create_task(title, description)
-    Tools-->>Graph: Observation 결과
-    
-    Note over Graph,Eval: 4. 결과 평가
-    Graph->>Eval: evaluate(goal, observation)
-    
-    alt PASS
-        Eval-->>Graph: result: PASS
-        Graph-->>User: 최종 답변
-    else FAIL
-        Eval-->>Graph: result: FAIL, reason: ...
-        
-        Note over Graph,Reflect: 5. 반성 및 교훈 도출
-        Graph->>Reflect: reflect(goal, action, observation)
-        Reflect-->>Graph: problem, solution
-        
-        Note over Graph,Store: 6. 교훈 저장
-        Graph->>Store: add_lesson(problem, solution)
-        
-        Note over Graph,ActorLLM: 7. 재시도
-        Graph->>ActorLLM: retry with lesson
-    end
+    ToolExec --> Resources
+    Reflection --> LongTerm
+    Actor -.->|"교훈 조회"| LongTerm
 ```
 
 **주요 기능**
 
-[ReAct 패턴]
-- Thought → Action → Observation 루프 기반 추론
-- LLM이 상황을 분석하고 적절한 도구 선택
-- 도구 실행 결과를 관찰하여 다음 행동 결정
-
-[Reflexion 패턴]
-- 실행 결과 평가 (Evaluator): 목표 달성 여부 PASS/FAIL 판정
-- 실패 원인 분석 (Reflection): 무엇이 잘못되었는지 분석
-- 교훈 도출 및 저장: problem/solution 형태로 장기 기억에 저장
-- 재시도 시 교훈 활용: 이전 실패에서 배운 내용 적용
-
-[LangGraph 기반 워크플로우]
-- StateGraph로 에이전트 그래프 구성
-- AgentState: messages, steps, iteration, lessons 관리
-- 조건부 엣지로 PASS/FAIL 분기 처리
-
-[설정 기반 구성]
-- 모든 설정 YAML 파일로 중앙 관리
-- 하드코딩 없이 동적 구성 변경 가능
-- 프롬프트 템플릿 외부화 (Jinja2)
-
-**사용 가능한 도구**
-
-| 도구 | 설명 |
+| 기능 | 설명 |
 |------|------|
-| `create_task` | 새 업무 생성 |
-| `update_task` | 업무 상태/내용 수정 |
-| `delete_task` | 업무 삭제 |
-| `list_tasks` | 업무 목록 조회 |
-| `create_document` | 문서 생성 (스토리, PRD 등) |
-| `list_documents` | 문서 목록 조회 |
-| `get_project_status` | 프로젝트 현황 조회 |
-| `search` | 업무/문서 검색 |
-| `get_summary` | 기간별 활동 요약 |
-| `show_help` | 사용 가능한 기능 안내 |
+| **ReAct 패턴** | Thought → Action → Observation 루프 기반 추론 |
+| **Reflexion 패턴** | 실패 시 원인 분석 → 교훈 도출 → 장기 기억 저장 → 재시도 |
+| **2단계 평가** | 규칙 기반 (에러 키워드) + LLM 기반 정밀 판단 |
+| **장기 기억** | problem/solution 형태로 교훈 저장, 유사 상황에서 재활용 |
+| **Early Stopping** | 연속 실패 감지 시 조기 종료 |
+
+**리소스 계층 구조 (Atelier 호환)**
+
+```
+Product (프로덕트)
+└── Thread (스레드) - title, goal, startDate, endDate
+    └── Feed (피드) - title, content, category, comments
+```
+
+**사용 가능한 도구 (17개)**
+
+| 분류 | 도구 |
+|------|------|
+| Product | create, list, update, delete |
+| Thread | create, list, update, delete |
+| Feed | create, list, update, delete |
+| Comment | add_comment |
+| Utility | search_resources, get_summary, get_metadata |
 
 **기술적 특징**
 
-[LangGraph StateGraph]
-- AgentState TypedDict로 상태 관리
-- 노드: actor, tool_executor, evaluator, reflection
-- 조건부 라우팅: should_continue, route_after_eval
+- **LangGraph StateGraph**: 4개 노드 (Actor, Tool Executor, Evaluator, Reflection) 그래프 구성
+- **다중 LLM 지원**: Google Gemini, OpenAI, Anthropic 전환 가능
+- **설정 기반**: YAML 파일로 LLM, 에이전트, 프롬프트 설정 관리
+- **메모리 시스템**: Short-term (세션 히스토리) + Long-term (교훈 저장소)
 
-[메모리 시스템]
-- LessonsStore: JSON 기반 장기 기억 저장소
-- 문제(problem) → 해결책(solution) → 컨텍스트(context) 구조
-- 관련 교훈 검색 및 프롬프트 주입
 
-[다중 LLM 지원]
-- LangChain ChatModel 추상화
-- Google Gemini, OpenAI, Anthropic 지원
-- YAML 설정으로 프로바이더/모델 전환
-
-[프롬프트 관리]
-- YAML 기반 프롬프트 템플릿
-- Jinja2 변수 치환 지원
-- actor.yaml, evaluator.yaml, self_reflection.yaml
-
-**설정 구조**
-
-```yaml
-# config/settings.yaml
-llm:
-  provider: "google"
-  model_name: "gemini-2.5-flash"
-  temperature: 0.7
-
-agent:
-  max_steps: 5          # 최대 실행 단계
-  max_reflection: 3     # 최대 반성 횟수
-
-lessons:
-  max_lessons: 100
-  storage_file: "data/lessons.json"
-```
-
-**코드 구조**
-```
-mcp_host/
-├── src/
-│   ├── agent/
-│   │   ├── state.py             - AgentState 정의
-│   │   ├── nodes.py             - 노드 함수 (actor, evaluator, reflection)
-│   │   └── graph.py             - ReflexionGraph 클래스
-│   ├── llm/
-│   │   └── provider.py          - LangChain ChatModel 팩토리
-│   ├── memory/
-│   │   └── lessons_store.py     - 장기 기억 (학습된 교훈)
-│   ├── tools/
-│   │   ├── project_tools.py     - 프로젝트 관리 도구
-│   │   └── langchain_tools.py   - LangChain @tool 래퍼
-│   └── config/
-│       ├── config_loader.py     - YAML 설정 로더
-│       └── prompt_loader.py     - 프롬프트 로더
-├── prompts/                      - LLM 프롬프트 템플릿
-│   ├── actor.yaml
-│   ├── evaluator.yaml
-│   └── self_reflection.yaml
-├── data/
-│   ├── tasks/                   - 업무 저장
-│   └── lessons.json             - 학습된 교훈
-└── config/
-    └── settings.yaml            - 전체 설정 파일
-```
-
-**기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Pydantic, YAML, JSON
+**기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Pydantic, YAML
 
 ---
 
-## 프로젝트 타임라인
+## 연구 개발 자료
 
-```
-Phase 1: AI_LLM_API
-|  - vLLM 기반 LLM 추론 엔진 구축
-|  - 요약/분류/키워드 추출 API 개발
-|  - LangGraph 에이전트 아키텍처 설계
-|  - Gradio UI 개발
-|
-Phase 2: RAG 시스템 (AI_PROMPT + RAG-Chatbot)
-|  - Milvus 벡터 DB 설계 및 구축
-|  - 하이브리드 검색 시스템 개발 (Dense + BM25)
-|  - Reranking 파이프라인 구현
-|  - Agentic RAG 아키텍처 설계
-|  - LlamaGuard 안전성 검증 통합
-|  - Streamlit 챗봇 UI 개발
-|
-Phase 3: 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
-|  - PostgreSQL 스키마 설계 (9개 테이블)
-|  - 서울 Open API 데이터 파이프라인 구축
-|  - 상권분석 LLM Agent 개발
-|  - Tool Calling 기반 DB 검색 구현
-|  - FastAPI 백엔드 구현
-|
-Phase 4: Reflexion Agent
-   - LangGraph 기반 ReAct + Reflexion 패턴 설계
-   - Actor → Tool Executor → Evaluator → Reflection 루프 구현
-   - 장기 기억 시스템 구현 (LessonsStore)
-   - 실패 시 교훈 도출 및 자기 개선 메커니즘
-   - 다중 LLM 지원 (Gemini, OpenAI, Anthropic)
-   - YAML 기반 설정 및 프롬프트 관리
-   - Task/Document 관리 도구 개발
-```
+- 📚 [Notion 연구 개발 노트](https://www.notion.so/2f5736a271928061be4ac9554a9c670c?v=2f5736a2719280dfb9a4000c215b258e&p=2f5736a2719280d89a4ada3827ad5965&pm=s)
 
 ---
 
