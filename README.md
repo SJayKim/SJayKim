@@ -329,7 +329,7 @@ sbiz_llm/src/
 
 ### [Plantynet] 5. Reflexion Agent
 
-**역할**: 전체 개발 담당
+**역할**: MCP Host, server 개발 담당
 
 LangGraph 기반 ReAct + Reflexion 패턴 AI 에이전트. 자연어 명령을 받아 도구를 활용해 작업을 수행하고, 실행 결과를 평가하여 실패 시 반성(Reflection)을 통해 교훈을 학습하는 자기 개선형 에이전트 시스템.
 
@@ -382,46 +382,46 @@ flowchart TB
 
 ```mermaid
 sequenceDiagram
-    actor User
-    participant Agent as ReflexionGraph
-    participant Actor as Actor (LLM)
+    participant User
+    participant Graph as ReflexionGraph
+    participant ActorLLM as Actor LLM
     participant Tools as Tool Executor
-    participant Eval as Evaluator (LLM)
-    participant Reflect as Reflection (LLM)
+    participant Eval as Evaluator LLM
+    participant Reflect as Reflection LLM
     participant Store as LessonsStore
 
-    User->>Agent: "로그인 기능 업무 등록해줘"
+    User->>Graph: 로그인 기능 업무 등록해줘
     
-    Note over Agent,Store: 1. 교훈 조회
-    Agent->>Store: get_relevant_lessons(query)
-    Store-->>Agent: 관련 교훈 목록
+    Note over Graph,Store: 1. 교훈 조회
+    Graph->>Store: get_relevant_lessons(query)
+    Store-->>Graph: 관련 교훈 목록
     
-    Note over Agent,Actor: 2. Actor 추론
-    Agent->>Actor: Think → Action 결정
-    Actor-->>Agent: {tool: "create_task", args: {...}}
+    Note over Graph,ActorLLM: 2. Actor 추론
+    Graph->>ActorLLM: Think - Action 결정
+    ActorLLM-->>Graph: tool: create_task, args: ...
     
-    Note over Agent,Tools: 3. 도구 실행
-    Agent->>Tools: create_task(title, description)
-    Tools-->>Agent: Observation (결과)
+    Note over Graph,Tools: 3. 도구 실행
+    Graph->>Tools: create_task(title, description)
+    Tools-->>Graph: Observation 결과
     
-    Note over Agent,Eval: 4. 결과 평가
-    Agent->>Eval: evaluate(goal, observation)
+    Note over Graph,Eval: 4. 결과 평가
+    Graph->>Eval: evaluate(goal, observation)
     
     alt PASS
-        Eval-->>Agent: {result: "PASS"}
-        Agent-->>User: 최종 답변
+        Eval-->>Graph: result: PASS
+        Graph-->>User: 최종 답변
     else FAIL
-        Eval-->>Agent: {result: "FAIL", reason: "..."}
+        Eval-->>Graph: result: FAIL, reason: ...
         
-        Note over Agent,Reflect: 5. 반성 및 교훈 도출
-        Agent->>Reflect: reflect(goal, action, observation, failure_reason)
-        Reflect-->>Agent: {problem: "...", solution: "..."}
+        Note over Graph,Reflect: 5. 반성 및 교훈 도출
+        Graph->>Reflect: reflect(goal, action, observation)
+        Reflect-->>Graph: problem, solution
         
-        Note over Agent,Store: 6. 교훈 저장
-        Agent->>Store: add_lesson(problem, solution, context)
+        Note over Graph,Store: 6. 교훈 저장
+        Graph->>Store: add_lesson(problem, solution)
         
-        Note over Agent,Actor: 7. 재시도 (교훈 활용)
-        Agent->>Actor: retry with lesson
+        Note over Graph,ActorLLM: 7. 재시도
+        Graph->>ActorLLM: retry with lesson
     end
 ```
 
