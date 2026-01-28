@@ -1,0 +1,29 @@
+flowchart TB
+    subgraph ReflexionGraph["ReflexionGraph (LangGraph)"]
+        START((START))
+        Actor["Actor<br/>(LLM)"]
+        ToolExec["Tool Executor"]
+        Evaluator["Evaluator<br/>(규칙+LLM)"]
+        Reflection["Reflection<br/>(LLM)"]
+        END_NODE((END))
+        
+        START --> Actor
+        Actor -->|"action"| ToolExec
+        Actor -->|"final_answer"| END_NODE
+        ToolExec --> Evaluator
+        Evaluator -->|"PASS"| Actor
+        Evaluator -->|"FAIL"| Reflection
+        Reflection -->|"lesson"| Actor
+    end
+
+    subgraph Memory["Memory"]
+        LongTerm["LessonsStore<br/>(장기 기억)"]
+    end
+
+    subgraph Resources["Atelier 리소스"]
+        Product["Product → Thread → Feed"]
+    end
+
+    ToolExec --> Resources
+    Reflection --> LongTerm
+    Actor -.->|"교훈 조회"| LongTerm

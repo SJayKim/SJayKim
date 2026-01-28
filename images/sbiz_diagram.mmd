@@ -1,0 +1,29 @@
+flowchart TB
+    subgraph DataPipeline["Data Pipeline - sbiz_db"]
+        API_SRC["Seoul Open API<br/>(8 Services)"]
+        Parse["APISpec Parser"]
+        CSV["CSV Download"]
+        ZIP["ZIP Extract"]
+        DF["pandas DataFrame"]
+        DB[("PostgreSQL")]
+        
+        API_SRC --> Parse --> CSV --> ZIP --> DF --> DB
+    end
+
+    subgraph LLMAgent["LLM Agent - sbiz_llm"]
+        Chat["/chat API"]
+        Router["route_query"]
+        RAG["rag_agent"]
+        ChatResp["chat"]
+        Reject["reject"]
+        Search["postgres_search"]
+        Response["generate_response"]
+        
+        Chat --> Router
+        Router --> RAG
+        Router --> ChatResp
+        Router --> Reject
+        RAG --> Search --> Response
+    end
+
+    DB -.-> Search

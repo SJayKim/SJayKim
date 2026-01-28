@@ -1,0 +1,31 @@
+flowchart LR
+    subgraph Frontend
+        User["User"]
+        UI["Streamlit UI"]
+    end
+
+    subgraph Backend["FastAPI Service"]
+        API["FastAPI"]
+        Agent["LangGraph Agent"]
+    end
+
+    subgraph Safety["Safety Layer"]
+        Guard["guard_input<br/>(LlamaGuard)"]
+        Recheck["acall_model<br/>(Safety Re-check)"]
+    end
+
+    subgraph Tools["Tool Layer"]
+        ToolNode["ToolNode<br/>(milvus_search)"]
+        Retriever["MilvusRetriever"]
+    end
+
+    subgraph Storage
+        Milvus[("Milvus DB<br/>(article_vectors)")]
+    end
+
+    User --> UI --> API --> Agent
+    Agent --> Guard
+    Guard -->|Pass| Recheck
+    Guard -->|Block| API
+    Agent --> ToolNode --> Retriever --> Milvus
+    Recheck --> API
