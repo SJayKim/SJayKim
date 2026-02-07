@@ -26,8 +26,8 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | AIO2O | [부산관광공사 여행 챗봇](#aio2o-2-부산관광공사-여행-스케줄링-챗봇) | 여행지 추천 챗봇 (상용 서비스) | 벡터 DB 구축, 추천 알고리즘 |
 | Plantynet | [AI_LLM_API](#plantynet-3-ai_llm_api) | vLLM 기반 텍스트 처리 API 서비스 | 전체 개발 |
 | Plantynet | [RAG 시스템](#plantynet-4-rag-시스템-ai_prompt--rag-chatbot) | Milvus 기반 Agentic RAG 챗봇 | 데이터 전처리, 벡터 DB, 검색 |
-| Plantynet | [Reflexion Agent](#plantynet-5-reflexion-agent-mcp-host) | ReAct + Reflexion 자기개선 AI 에이전트 | 전체 설계 및 개발 |
-| Side Project | [서울 상권분석 시스템](#side-project-6-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
+| Side Project | [서울 상권분석 시스템](#side-project-5-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
+| Plantynet | [Reflexion Agent](#plantynet-6-reflexion-agent-mcp-host) | ReAct + Reflexion 자기개선 AI 에이전트 | 전체 설계 및 개발 |
 
 ---
 
@@ -220,7 +220,7 @@ app/
 
 ---
 
-### [Side Project] 6. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
+### [Side Project] 5. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
 
 **역할**: DB 스키마 구성/구축, LLM 구현, Prompt 구현, 백엔드/프론트엔드 구현
 
@@ -327,7 +327,7 @@ sbiz_llm/src/
 
 ---
 
-### [Plantynet] 5. Reflexion Agent (MCP Host)
+### [Plantynet] 6. Reflexion Agent (MCP Host)
 
 **역할**: 전체 설계 및 개발 담당
 
