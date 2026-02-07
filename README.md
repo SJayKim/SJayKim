@@ -1,33 +1,22 @@
-# Portfolio
+# 포트폴리오
 
 ## 소개
 
-UNIST(울산과학기술원) 산업공학과 석사 졸업 (2023)
+> **김선준** | UNIST 산업공학과 석사 (2023)
+> 벡터 검색과 LLM Agent 기반 서비스를 만드는 백엔드/AI 엔지니어
 
-LLM 기반 AI 서비스 개발 경험을 보유한 백엔드/AI 엔지니어입니다. vLLM, LangGraph, RAG 시스템 구축부터 데이터 파이프라인, API 서비스까지 End-to-End 개발 경험이 있습니다.
+석사 때 추천 시스템을 연구했고, 졸업 후에는 그 경험으로 벡터 DB 구축, vLLM 서빙, RAG, Agent 시스템 프로젝트에 참여하며 경험을 쌓음.
+
+---
 
 ## 학위 논문
 
 **Personal recommender system via convolutional autoencoder with conditioning augmentation**
 
-Recommender system and representation learning with convolutional autoencoder
+Convolutional Autoencoder로 사용자 선호를 잠재 벡터로 표현하고, 벡터 유사도로 아이템을 추천하는 연구. 이때 다룬 임베딩-검색 구조가 이후 pgvector, Milvus 프로젝트에 그대로 이어짐.
 
 Kim, Sunjun (2023) | UNIST 산업공학과 석사
-
 [논문 링크](https://apac-tc.hosted.exlibrisgroup.com/primo-explore/fulldisplay?docid=82UNIST_INST21228494070002596&vid=82UNIST&search_scope=everything&tab=everything&lang=ko_KR&context=L)
-
----
-
-## 프로젝트 목록
-
-| 구분 | 프로젝트 | 설명 | 역할 |
-|------|----------|------|------|
-| AIO2O | [Skylife 영화 추천 시스템](#aio2o-1-skylife-영화-추천-시스템) | 임베딩 벡터 기반 영화 추천 | 벡터 DB 구축, 추천 알고리즘 |
-| AIO2O | [부산관광공사 여행 챗봇](#aio2o-2-부산관광공사-여행-스케줄링-챗봇) | 여행지 추천 챗봇 (상용 서비스) | 벡터 DB 구축, 추천 알고리즘 |
-| Plantynet | [AI_LLM_API](#plantynet-3-ai_llm_api) | vLLM 기반 텍스트 처리 API 서비스 | 전체 개발 |
-| Plantynet | [RAG 시스템](#plantynet-4-rag-시스템-ai_prompt--rag-chatbot) | Milvus 기반 Agentic RAG 챗봇 | 데이터 전처리, 벡터 DB, 검색 |
-| Side Project | [서울 상권분석 시스템](#side-project-5-서울-상권분석-시스템-sbiz_db--sbiz_llm) | 상권 데이터 수집 및 LLM Agent 분석 | 전체 개발 |
-| Plantynet | [Reflexion Agent](#plantynet-6-reflexion-agent-mcp-host) | ReAct + Reflexion 자기개선 AI 에이전트 | 전체 설계 및 개발 |
 
 ---
 
@@ -35,53 +24,30 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 
 | 분류 | 기술 |
 |------|------|
-| Language | Python |
-| LLM/AI | vLLM, LangChain, LangGraph, LiteLLM, OpenAI API, HuggingFace |
-| Vector DB | Milvus, Pgvector |
-| Database | PostgreSQL, Oracle, Mysql |
-| Backend | FastAPI, Uvicorn |
-| Frontend | Streamlit, Gradio |
-| Infra | Docker, Docker Compose |
-| Embedding | BGE-M3, BGE-Reranker, Sentence-Transformers |
-| Protocol | MCP (Model Context Protocol), SSE, JSON-RPC |
+| LLM Serving & Agent | vLLM, LangGraph, LangChain, MCP |
+| Vector DB & Embedding | Milvus, Pgvector|
+| Backend & Infra | Python, FastAPI, PostgreSQL, Oracle, Docker |
 
 ---
 
 ## 프로젝트
 
-### [AIO2O] 1. Skylife 영화 추천 시스템
+### 1. Skylife 영화 추천 시스템 · Search
 
-**역할**: 벡터 DB 구축, 추천 알고리즘 개발
+**소속**: AIO2O | **역할**: 벡터 DB 구축, 추천 알고리즘 개발
 
-임베딩 벡터 기반 영화 콘텐츠 추천 시스템. 영화 메타데이터를 벡터화하여 의미 기반 유사도 검색 구현.
-
-**주요 기능**
-- 영화 메타 정보 임베딩 (장르, 내용, 감독, 배우 등)
-- PostgreSQL + pgvector 기반 벡터 DB 구축
-- 메타 필터링 + 벡터 유사도 결합 추천 알고리즘
-
-**추천 알고리즘**
-- 1단계: 메타 필터링 (장르, 배우, 감독 조건 적용)
-- 2단계: 벡터 유사도 검색 (영화 설명/내용 의미적 유사도)
+장르·배우 같은 메타 필터만으로 추천하면 비슷한 결과만 나옴. 영화 메타 정보(장르, 내용 요약, 감독, 배우)를 임베딩해서 PostgreSQL + pgvector에 넣고, 추천을 2단계로 나눔 — 메타 필터링으로 후보를 줄인 뒤, 영화 설명 벡터 유사도로 순위를 매기는 방식. 석사 때 연구한 임베딩-검색 구조를 처음으로 실서비스에 적용한 프로젝트임.
 
 **기술 스택**: Python, PostgreSQL, pgvector, Embedding Models
 
 ---
 
-### [AIO2O] 2. 부산관광공사 여행 스케줄링 챗봇
+### 2. 부산관광공사 여행 스케줄링 챗봇 · Search · Service
 
-**역할**: 벡터 DB 구축, 추천 알고리즘 개발
+**소속**: AIO2O | **역할**: 벡터 DB 구축, 추천 알고리즘 개발
 
-자연어 질의 기반 여행 관광지 추천 챗봇. 현재 부산관광공사에서 상용 서비스 중.
-
-**주요 기능**
-- 여행지 관련 메타 데이터 임베딩 및 벡터 DB 구축
-- 메타 필터링 + 벡터 유사도 결합 추천 알고리즘
-- 여행 스케줄링 기능
-
-**추천 알고리즘**
-- 1단계: 메타 필터링 (지역, 여행 기간 1박/2박, 카테고리 등 조건 적용)
-- 2단계: 벡터 유사도 검색 (여행지 설명, 후기, 활용 정보 의미적 유사도)
+기존 여행 검색은 "부산 / 1박 2일 / 맛집" 같은 고정 필터 수준이었음. "아이랑 갈 만한 조용한 곳" 같은 자연어 질의엔 대응이 안 됨.
+영화 추천에서 쓴 2단계 알고리즘을 여행 도메인에 맞게 바꿈. 메타 필터링(지역, 숙박 일수, 카테고리) → 벡터 유사도(여행지 설명, 후기, 활용 정보). 추천 결과로 일정 구성까지 해줌. **현재 부산관광공사(Visit Busan)에서 상용 운영 중.**
 
 **서비스 링크**: [Visit Busan](https://www.visitbusan.net/index.do?menuCd=DOM_000000203018000000)
 
@@ -89,29 +55,18 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 
 ---
 
-### [Plantynet] 3. AI_LLM_API
+### 3. vLLM 기반 텍스트 처리 API 서비스 · Serving
 
-**역할**: 전체 개발 담당
+**소속**: Plantynet | **역할**: LLM 서빙 및 API 개발 담당
 
-LLM 기반 텍스트 처리 API 서비스. vLLM 엔진을 FastAPI 프로세스 내에서 직접 구동하여 효율적인 추론 파이프라인 구축.
+기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌓여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 네트워크 왕복을 없앴고, 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
 
 **주요 기능**
-- 기사 요약 API (목표 길이 수렴 알고리즘 적용, 70~130% 범위 내 수렴)
-- 긴 문서 축약 (Map-Refine 파이프라인: 불릿 추출 -> 평문 기사 변환)
+- 기사 요약 (목표 길이 70~130% 범위 내 수렴 알고리즘)
+- 긴 문서 축약 (Map-Refine: 불릿 추출 → 평문 변환)
 - 주제 분류 및 분류체계(Taxonomy) 분석
 - 키워드/태그 추출 (구조화된 출력 기반)
-- Gradio UI 제공 (Chatbot, Summarization, Topic/Taxonomy Classification)
-
-**기술적 특징**
-- vLLM LLMEngine in-process 아키텍처
-  - 토큰 레벨 연속 배칭으로 동시 요청 효율 향상
-  - asyncio.Semaphore로 최대 동시 LLM 연산 슬롯 관리
-- LangGraph 기반 에이전트 구현
-  - SummarizationAgent: target_text_instructions와 적응형 재시도(+-10%)
-  - ReduceAgent: MAP-REFINE 파이프라인
-  - KeywordAgent: 구조화된 출력 기반 태깅
-  - AbstractAgent: 다중 기사 요약 통합
-- API 버전 관리 (v0: 기본, v1: LangGraph 기반)
+- Gradio UI (기획팀이 바로 테스트 가능)
 
 **API Endpoints**
 ```
@@ -122,15 +77,19 @@ POST /classify_taxonomy_from_article - 분류체계 분석
 POST /generate                  - 자유 대화
 ```
 
-**기술 스택**: Python, FastAPI, vLLM, LangGraph, LangChain, PyTorch, Gradio
+v0(기본 vLLM 서빙) / v1(LangGraph 에이전트 기반) 버전 관리로 기존 연동을 깨지 않으면서 점진 전환함. v1에서 LangGraph를 도입한 건 요약 길이 수렴처럼 조건 분기와 재시도가 필요한 작업이 늘었기 때문임. 단순 프롬프트 호출로는 "목표 길이에 안 맞으면 다시 시도" 같은 흐름을 깔끔하게 제어하기 어려워서, 에이전트 단위로 분리하고 그래프로 흐름을 관리하는 구조로 바꿈.
+
+**기술 스택**: Python, FastAPI, vLLM, LangGraph, PyTorch, Gradio
 
 ---
 
-### [Plantynet] 4. RAG 시스템 (AI_PROMPT + RAG-Chatbot)
+### 4. Milvus 기반 Agentic RAG 시스템 · Search · Safety
 
-**역할**: 데이터 전처리, 벡터 DB 구현, 검색 기능 구현
+**소속**: Plantynet | **역할**: 데이터 전처리, 벡터 DB 구현, 검색 기능 구현
 
-Milvus 기반 Agentic RAG 시스템. 한국어 매거진/문서 검색과 생성형 AI를 결합한 질의응답 챗봇.
+한국어 매거진 기사 검색에 키워드 매칭만 쓰고 있었는데, 의미 기반 질문("여름에 읽기 좋은 글")에 대응이 안 됐음. 생성형 AI 응답의 안전성 검증도 없었음.
+
+Dense 벡터(BGE-M3)와 BM25 Sparse를 합친 하이브리드 검색을 개발함. Dense는 의미를 잡는 대신 고유명사에 약하고, BM25는 고유명사 같은 키워드 검색에 특화돼서 상호보완적으로 둘 다 활용함. BGE-Reranker-v2-M3로 재정렬하고, 검색된 청크 앞뒤 문맥을 자동으로 붙이는 컨텍스트 윈도우를 넣어서 문맥 잘림을 방지함.
 
 **시스템 아키텍처**
 
@@ -168,44 +127,12 @@ flowchart LR
     Recheck --> API
 ```
 
-**주요 기능**
-
-[검색 시스템]
-- 하이브리드 검색: Dense 벡터 검색 + BM25 Sparse 키워드 검색 결합
-- Reranking: BGE-Reranker-v2-M3 모델로 검색 결과 재정렬
-- 컨텍스트 윈도우: 검색된 청크 주변 문맥 자동 확장 (window_size 설정)
-- 날짜/매거진 필터링 지원
-
-[Agent 시스템]
-- Agentic RAG Loop: Safety Guard -> Reasoning -> Tool Calling -> Response
-- LlamaGuard 기반 입출력 안전성 검증 (입력/출력 이중 검증)
-- SSE 스트리밍 (token, message, timing, error 이벤트)
-- Thread 기반 대화 히스토리 관리 (Checkpoint Store)
-- MongoDB/PostgreSQL/SQLite 체크포인터 지원
-
-**기술적 특징**
-
-[임베딩 & 검색]
-- BGE-M3 임베딩 모델 (1024차원 Dense Vector)
-- BGE-Reranker-v2-M3 재정렬 모델
-- COSINE 유사도 메트릭, nprobe=64
-- 파라미터화된 검색 설정 (settings.py 중앙 관리)
-
-[데이터 전처리]
-- 100자 이상 청크 필터링
-- 특수문자 제거 및 토큰 기반 검증
-- KoNLPy 기반 한국어 텍스트 처리 최적화
-
-[Agent 구현]
-- LangGraph StateGraph 기반 그래프 구성
-- AgentState: messages, remaining_steps, retrievals 관리
-- wrap_model: SystemMessage 주입 + Tool 바인딩
-- ToolNode로 milvus_search 실행 후 model로 재라우팅
+에이전트 흐름은 Safety Guard → Reasoning → Tool Calling → Response 순서임. 입력/출력 모두 LlamaGuard가 검사함. SSE로 토큰 단위 스트리밍, Thread 기반 Checkpoint Store로 대화 이력 관리함. 전처리에서는 100자 이하 청크 필터링, 특수문자 제거, KoNLPy 토큰 검증을 걸어서 벡터 품질을 개선함.
 
 **코드 구조**
 ```
 src/agents/
-  rag_assistant.py    - RAG Agent 그래프 정의 (guard_input -> model -> tools)
+  rag_assistant.py    - RAG Agent 그래프 정의 (guard_input → model → tools)
   milvus_tool.py      - MilvusRetriever 래퍼
   tools.py            - milvus_search 도구 등록
   llama_guard.py      - 안전성 검증
@@ -220,11 +147,11 @@ app/
 
 ---
 
-### [Side Project] 5. 서울 상권분석 시스템 (sbiz_db + sbiz_llm)
+### 5. 서울 상권분석 시스템 (Side Project) · Pipeline · Agent
 
-**역할**: DB 스키마 구성/구축, LLM 구현, Prompt 구현, 백엔드/프론트엔드 구현
+**역할**: DB 스키마 설계, LLM 구현, 프롬프트 설계, 백엔드/프론트엔드 전체 개발
 
-서울 열린데이터광장 상권 데이터를 수집하고, LLM Agent로 분석하는 End-to-End 시스템.
+서울시 상권 데이터가 공개되어 있긴 한데, API 8개에 테이블 9개가 흩어져 있어서 SQL 모르면 사실상 못 씀. "강남역 카페 매출 추이"를 자연어로 물어보면 알아서 찾아주는 게 필요하다 생각해서, 수집 파이프라인(sbiz_db)과 분석 에이전트(sbiz_llm)를 따로 만들어서 구현함.
 
 **시스템 아키텍처**
 
@@ -260,49 +187,9 @@ flowchart TB
     DB -.-> Search
 ```
 
-**주요 기능**
+수집 쪽은 서울 Open API 8개 서비스의 HTML을 APISpec 클래스로 파싱해 스키마를 자동 추출하고, pandas 컬럼 매핑(한글 → 영문) 후 PK 기반 UPSERT로 PostgreSQL에 삽입함. CLI(--sync-all, --validate 등)와 크론잡 지원함.
 
-[데이터 수집 - sbiz_db]
-- 서울 Open API 8개 상권 서비스 자동 동기화
-- APISpec 클래스로 HTML 파싱 -> 메타데이터/스키마 추출
-- download/export_csv 메서드 지원 (fallback 처리)
-- pandas DataFrame 컬럼 매핑 (한글 -> 영문)
-- UPSERT 방식 중복 없이 저장
-- CLI 지원: --inf-id, --sync-all, --list, --validate
-
-[LLM Agent - sbiz_llm]
-- 쿼리 라우팅: rag (상권 질문) / chat (일반 대화) / reject (거부)
-- Tool Calling 기반 PostgreSQL 동적 검색
-- 9개 상권 테이블 지원
-- 비동기 처리 (asyncpg)
-
-**지원 데이터 (9개 테이블)**
-
-| 테이블 | 설명 | 주요 컬럼 |
-|--------|------|-----------|
-| trdar_relm | 상권 영역 (마스터) | trdar_cd, trdar_cd_nm, signgu_cd |
-| trdar_selng | 추정 매출 | thsmon_selng_amt, ml/fml_selng_amt, 요일별/연령별 |
-| trdar_stor | 점포 수 | stor_co, opbiz_stor_co, clsbiz_stor_co |
-| trdar_flpop | 유동 인구 | tot_flpop_co, 성별/연령별/요일별 |
-| trdar_rspop | 상주 인구 | tot_rspop_co, apt_hshold_co |
-| trdar_wrcpop | 직장 인구 | tot_wrc_popltn_co, 성별/연령별 |
-| trdar_rent | 임대료 | rent_area_div_avg, rent_fee_div_avg |
-| trdar_ix | 상권 변화 지표 | trdar_chnge_ix, opbiz_rt, clsbiz_rt |
-| trdar_fclty | 집객 시설 | 병원/은행/학교/지하철역 등 시설 수 |
-
-**기술적 특징**
-
-[데이터 동기화]
-- inf_id 기반 서비스 정의 (OA-15560, OA-15572 등)
-- 스키마 검증 후 DB 저장
-- Primary Key 기반 UPSERT
-- 크론잡 자동 동기화 지원
-
-[LLM Agent]
-- LangGraph StateGraph 기반 그래프
-- Pydantic BaseModel로 Tool Input 스키마 정의
-- PostgresSearchInput: table_name, stdr_yyqu_cd, trdar_cd, limit 등
-- 시스템 프롬프트 중앙 관리 (src/core/prompts.py)
+분석 에이전트는 LangGraph 기반 쿼리 라우터(rag/chat/reject 분기)로 돌아감. 상권 질문이면 Tool Calling으로 9개 테이블(추정 매출, 점포, 유동 인구, 상주 인구, 직장 인구, 임대료, 상권 변화 지표, 집객 시설 등)에 PostgreSQL 동적 검색을 날림. Tool Input은 Pydantic BaseModel, DB 접근은 asyncpg 비동기임.
 
 **코드 구조**
 ```
@@ -312,26 +199,27 @@ sbiz_db/
   init_db/01_schema.sql - DB 스키마
 
 sbiz_llm/src/
-  agents/
-    sbiz_agent.py     - LangGraph Agent
-    tools/postgres_search.py - PostgreSQL 검색 도구
-    subagents/query_router.py - 쿼리 라우팅
-  core/
-    settings.py       - Pydantic Settings
-    prompts.py        - 시스템 프롬프트
-  service/
-    service.py        - FastAPI 서비스
+  agents/sbiz_agent.py          - LangGraph Agent
+  agents/tools/postgres_search.py - PostgreSQL 검색 도구
+  agents/subagents/query_router.py - 쿼리 라우팅
+  core/settings.py              - Pydantic Settings
+  core/prompts.py               - 시스템 프롬프트
+  service/service.py            - FastAPI 서비스
 ```
 
 **기술 스택**: Python, LangGraph, FastAPI, PostgreSQL, asyncpg, pandas, BeautifulSoup4, psycopg2, Docker
 
 ---
 
-### [Plantynet] 6. Reflexion Agent (MCP Host)
+수집부터 자연어 분석까지 전부 혼자 만든 프로젝트임.
 
-**역할**: 전체 설계 및 개발 담당
+---
 
-LangGraph 기반 ReAct + Reflexion 패턴 자기 개선형 AI 에이전트. 자연어 명령으로 작업을 수행하고, 실패 시 원인을 분석하여 교훈을 학습하는 시스템. Atelier 프론트엔드와 호환되는 Product > Thread > Feed 계층 구조 리소스 관리 지원.
+### 6. ReAct + Reflexion 자기 개선형 AI 에이전트 · Agent
+
+**소속**: Plantynet | **역할**: Agent 로직 담당
+
+에이전트가 Tool Calling에 실패하면 같은 실수를 반복하거나 멈춰버리는 게 문제였음. 사람이라면 왜 틀렸는지 생각하고 다음엔 다르게 시도하는데, 그 로직을 그대로 agent로 구현함. ReAct(Yao et al., 2023) 논문의 Reasoning + Acting 루프를 기반으로 하되, 실패 시 자기 반성(Reflexion)까지 추가한 구조임.
 
 **시스템 아키텍처**
 
@@ -367,41 +255,16 @@ flowchart TB
     Actor -.->|"교훈 조회"| LongTerm
 ```
 
-**주요 기능**
-
-| 기능 | 설명 |
-|------|------|
-| **ReAct 패턴** | Thought → Action → Observation 루프 기반 추론 |
-| **Reflexion 패턴** | 실패 시 원인 분석 → 교훈 도출 → 장기 기억 저장 → 재시도 |
-| **2단계 평가** | 규칙 기반 (에러 키워드) + LLM 기반 정밀 판단 |
-| **장기 기억** | problem/solution 형태로 교훈 저장, 유사 상황에서 재활용 |
-| **Early Stopping** | 연속 실패 감지 시 조기 종료 |
+Actor가 ReAct 루프(Thought → Action → Observation)로 추론하고, Tool Executor가 실행한 결과를 Evaluator가 평가함. 평가는 에러 키워드 규칙 필터 + LLM 정밀 판단 2단계임. FAIL이면 Reflection 노드가 원인을 분석해서 problem/solution 쌍으로 장기 기억(LessonsStore)에 저장함. 다음에 비슷한 상황이 오면 Actor가 이 교훈을 꺼내서 프롬프트에 넣어 참고함. 같은 실패가 반복되면 Early Stopping으로 끊음.
 
 **리소스 계층 구조 (Atelier 호환)**
-
 ```
 Product (프로덕트)
 └── Thread (스레드) - title, goal, startDate, endDate
     └── Feed (피드) - title, content, category, comments
 ```
 
-**사용 가능한 도구 (17개)**
-
-| 분류 | 도구 |
-|------|------|
-| Product | create, list, update, delete |
-| Thread | create, list, update, delete |
-| Feed | create, list, update, delete |
-| Comment | add_comment |
-| Utility | search_resources, get_summary, get_metadata |
-
-**기술적 특징**
-
-- **LangGraph StateGraph**: 4개 노드 (Actor, Tool Executor, Evaluator, Reflection) 그래프 구성
-- **다중 LLM 지원**: Google Gemini, OpenAI, Anthropic 전환 가능
-- **설정 기반**: YAML 파일로 LLM, 에이전트, 프롬프트 설정 관리
-- **메모리 시스템**: Short-term (세션 히스토리) + Long-term (교훈 저장소)
-
+17개 도구(CRUD + Utility)를 Tool Calling으로 실행함. LLM은 Gemini, OpenAI, Anthropic 사이에서 YAML 설정만 바꾸면 전환 가능함.
 
 **기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Pydantic, YAML
 
@@ -409,11 +272,10 @@ Product (프로덕트)
 
 ## 연구 개발 자료
 
-- 📚 [Notion 연구 개발 노트](https://www.notion.so/2f5736a271928061be4ac9554a9c670c?v=2f5736a2719280dfb9a4000c215b258e&p=2f5736a2719280d89a4ada3827ad5965&pm=s)
-
+- [Notion 연구 개발 노트](https://www.notion.so/2f5736a271928061be4ac9554a9c670c?v=2f5736a2719280dfb9a4000c215b258e&p=2f5736a2719280d89a4ada3827ad5965&pm=s)
+- [개발 연구자료 정리 저서](https://wikidocs.net/book/19070)
 ---
 
 ## 연락처
 
-- 이메일:cyon13022@gmail.com
-
+- 이메일: cyon13022@gmail.com
