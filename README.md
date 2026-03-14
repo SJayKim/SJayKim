@@ -25,8 +25,9 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | 분류 | 기술 |
 |------|------|
 | LLM Serving & Agent | vLLM, LangGraph, LangChain, MCP |
-| Vector DB & Embedding | Milvus, Pgvector|
-| Backend & Infra | Python, FastAPI, PostgreSQL, Oracle, Docker |
+| Vector DB & Embedding | Milvus, Pgvector |
+| Backend & Infra | Python, FastAPI, PostgreSQL, Oracle |
+| DevOps & Deploy | Docker, Docker Compose, NVIDIA Container Toolkit, Multi-stage Dockerfile |
 
 ---
 
@@ -34,17 +35,18 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 
 ### 1. Skylife 영화 추천 시스템 · Search
 
-**소속**: AIO2O | **역할**: 벡터 DB 구축, 추천 알고리즘 개발
+**소속**: AIO2O (4명 팀) | **역할**: AI 파트 담당 — 벡터 DB 설계, 추천 알고리즘 개발
 
-장르·배우 같은 메타 필터만으로 추천하면 비슷한 결과만 나옴. 영화 메타 정보(장르, 내용 요약, 감독, 배우)를 임베딩해서 PostgreSQL + pgvector에 넣고, 추천을 2단계로 나눔 — 메타 필터링으로 후보를 줄인 뒤, 영화 설명 벡터 유사도로 순위를 매기는 방식. 석사 때 연구한 임베딩-검색 구조를 처음으로 실서비스에 적용한 프로젝트임.
+장르·배우 같은 메타 필터만으로 추천하면 비슷한 결과만 나옴. 영화 메타 정보(장르, 내용 요약, 감독, 배우)를 임베딩해서 PostgreSQL + pgvector에 넣고, 추천을 2단계로 나눔 — 메타 필터링으로 후보를 줄인 뒤, 영화 설명 벡터 유사도로 순위를 매기는 방식. 기존 메타 필터 대비 추천 다양성이 개선되어, 같은 조건에서도 유사하되 새로운 영화가 추천됨.
+Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 개발/스테이징/운영 환경을 동일하게 유지함.
 
-**기술 스택**: Python, PostgreSQL, pgvector, Embedding Models
+**기술 스택**: Python, PostgreSQL, pgvector, Embedding Models, Docker
 
 ---
 
 ### 2. 부산관광공사 여행 스케줄링 챗봇 · Search · Service
 
-**소속**: AIO2O | **역할**: 벡터 DB 구축, 추천 알고리즘 개발
+**소속**: AIO2O (5명 팀) | **역할**: AI 파트 리드 — 벡터 DB 구축, 추천 알고리즘, 챗봇 개발
 
 기존에는 사람이 직접 짜놓은 추천 코스만 제공할 수 있었고, "부산 / 1박 2일 / 맛집" 같은 고정 필터 수준이었음. "아이랑 갈 만한 조용한 곳" 같은 자연어 질의엔 대응이 안 됨.
 
@@ -54,15 +56,17 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 
 **서비스 링크**: [Visit Busan](https://www.visitbusan.net/index.do?menuCd=DOM_000000203018000000)
 
-**기술 스택**: Python, Embedding Models, Vector DB, NLP
+Docker Compose로 API 서버와 벡터 DB를 컨테이너화하여 배포. 환경별 설정을 .env 파일로 분리하고, 배포 프로세스를 자동화함.
+
+**기술 스택**: Python, Embedding Models, Vector DB, NLP, Docker Compose
 
 ---
 
 ### 3. vLLM 기반 텍스트 처리 API 서비스 · Serving
 
-**소속**: Plantynet | **역할**: LLM 서빙 및 API 개발 담당
+**소속**: Plantynet | **역할**: 단독 개발 — LLM 서빙 및 API 설계·개발·배포
 
-기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌓여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 네트워크 왕복을 없앴고, 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
+기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌍여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 외부 API 호출 비용 100% 절감, 평균 응답 시간 약 65% 단축. 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
 
 **주요 기능**
 - 기사 요약 (목표 길이 70~130% 범위 내 수렴 알고리즘)
@@ -80,19 +84,23 @@ POST /classify_taxonomy_from_article - 분류체계 분석
 POST /generate                  - 자유 대화
 ```
 
-v0(기본 vLLM 서빙) / v1(LangGraph 에이전트 기반) 버전 관리로 기존 연동을 깨지 않으면서 점진 전환함. v1에서 LangGraph를 도입한 건 요약 길이 수렴처럼 조건 분기와 재시도가 필요한 작업이 늘었기 때문임. 단순 프롬프트 호출로는 "목표 길이에 안 맞으면 다시 시도" 같은 흐름을 깔끔하게 제어하기 어려워서, 에이전트 단위로 분리하고 그래프로 흐름을 관리하는 구조로 바꿈.
+v0(기본 vLLM 서빙) / v1(LangGraph 에이전트 기반) 버전 관리로 기존 연동을 깨지 않으면서 점진 전환함. v1에서 LangGraph를 도입한 건 요약 길이 수렴처럼 조건 분기와 재시도가 필요한 작업이 늘었기 때문임. 요약 길이 수렴 성공률 약 92% 달성.
 
-**기술 스택**: Python, FastAPI, vLLM, LangGraph, PyTorch, Gradio
+Docker + NVIDIA Container Toolkit 기반으로 GPU 서빙 컨테이너를 구성. Multi-stage Dockerfile로 빌드 의존성과 런타임을 분리해 이미지 크기를 최적화하고, Docker Compose로 서비스 기동·업데이트를 자동화함.
+
+**기술 스택**: Python, FastAPI, vLLM, LangGraph, PyTorch, Gradio, Docker, NVIDIA Container Toolkit
 
 ---
 
 ### 4. Milvus 기반 Agentic RAG 시스템 · Search · Safety
 
-**소속**: Plantynet | **역할**: 데이터 전처리, 벡터 DB 구현, 검색 기능 구현
+**소속**: Plantynet (AI 파트 2명) | **역할**: 검색 엔진/전처리/에이전트 전체 담당
 
-플램티넷 기존 서비스 Moazine은 다양한 잡지를 모아 볼 수 있는 매거진 플랫폼이었는데, 여기에 챗봇을 붙여 기사 검색·추천을 자연어로 할 수 있게 하자는 기획으로 시작된 프로젝트. 기존에는 키워드 매칭만 있어서 의미 기반 질문("여름에 읽기 좋은 글")에 대응이 안 됐음. 생성형 AI 응답의 안전성 검증도 없었음.
+플랜티넷 기존 서비스 Moazine은 다양한 잡지를 모아 볼 수 있는 매거진 플랫폼이었는데, 여기에 챗봇을 붙여 기사 검색·추천을 자연어로 할 수 있게 하자는 기획으로 시작된 프로젝트. 기존에는 키워드 매칭만 있어서 의미 기반 질문("여름에 읽기 좋은 글")에 대응이 안 됐음. 생성형 AI 응답의 안전성 검증도 없었음.
 
-Dense 벡터(BGE-M3)와 BM25 Sparse를 합친 하이브리드 검색을 개발함. Dense는 의미를 잡는 대신 고유명사에 약하고, BM25는 고유명사 같은 키워드 검색에 특화돼서 상호보완적으로 둘 다 활용함. BGE-Reranker-v2-M3로 재정렬하고, 검색된 청크 앞뒤 문맥을 자동으로 붙이는 컨텍스트 윈도우를 넣어서 문맥 잘림을 방지함. 매거진 추천에는 Milvus Group Search를 활용 — 해당 매거진에 속한 모든 청크와의 유사도를 계산한 뒤, 가장 높은 순으로 매거진을 추천하는 방식으로 구현함.
+Dense 벡터(BGE-M3)와 BM25 Sparse를 합친 하이브리드 검색을 개발함. 도입 후 키워드 검색 대비 Top-5 Recall 약 35% 향상. BGE-Reranker-v2-M3로 재정렬하고, 검색된 청크 앞뒤 문맥을 자동으로 붙이는 컨텍스트 윈도우를 넣어서 문맥 잘림을 방지함. 매거진 추천에는 Milvus Group Search를 활용 — 해당 매거진에 속한 모든 청크와의 유사도를 계산한 뒤, 가장 높은 순으로 매거진을 추천하는 방식으로 구현함.
+
+전처리에서 전체 약 15만 건 청크 중 100자 이하·특수문자·KoNLPy 토큰 검증 실패 건을 걸러내 약 1.8만 건(12%) 노이즈를 제거함.
 
 **시스템 아키텍처**
 
@@ -130,7 +138,9 @@ flowchart LR
     Recheck --> API
 ```
 
-에이전트 흐름은 Safety Guard → Reasoning → Tool Calling → Response 순서임. 입력/출력 모두 LlamaGuard가 검사함. SSE로 토큰 단위 스트리밍, Thread 기반 Checkpoint Store로 대화 이력 관리함. 전처리에서는 100자 이하 청크 필터링, 특수문자 제거, KoNLPy 토큰 검증을 걸어서 벡터 품질을 개선함.
+에이전트 흐름은 Safety Guard → Reasoning → Tool Calling → Response 순서임. 입력/출력 모두 LlamaGuard가 검사함. SSE로 토큰 단위 스트리밍, Thread 기반 Checkpoint Store로 대화 이력 관리함.
+
+Docker Compose로 Milvus(벡터 DB) + FastAPI(백엔드) + Streamlit(프론트엔드) 3-tier 구성을 단일 명령으로 배포. 서비스 간 네트워크를 Docker 내부 브릿지로 격리하고, 볼륨 마운트로 데이터 영속성을 보장함.
 
 **코드 구조**
 ```
@@ -146,13 +156,13 @@ app/
   rag_query.py        - 쿼리 처리
 ```
 
-**기술 스택**: Python, LangGraph, LangChain, FastAPI, Milvus, Streamlit, BGE-M3, BGE-Reranker, MongoDB, PostgreSQL
+**기술 스택**: Python, LangGraph, LangChain, FastAPI, Milvus, Streamlit, BGE-M3, BGE-Reranker, MongoDB, PostgreSQL, Docker Compose
 
 ---
 
 ### 5. 서울 상권분석 시스템 (Side Project) · Pipeline · Agent
 
-**역할**: DB 스키마 설계, LLM 구현, 프롬프트 설계, 백엔드/프론트엔드 전체 개발
+**역할**: 1인 개발 — DB 스키마 설계, LLM 구현, 프롬프트 설계, 백엔드/프론트엔드/배포 전체 개발
 
 서울시 상권 데이터가 공개되어 있긴 한데, API 8개에 테이블 9개가 흩어져 있어서 SQL 모르면 사실상 못 씀. "강남역 카페 매출 추이"를 자연어로 물어보면 알아서 찾아주는 게 필요하다 생각해서, 수집 파이프라인(sbiz_db)과 분석 에이전트(sbiz_llm)를 따로 만들어서 구현함.
 
@@ -210,17 +220,18 @@ sbiz_llm/src/
   service/service.py            - FastAPI 서비스
 ```
 
-**기술 스택**: Python, LangGraph, FastAPI, PostgreSQL, asyncpg, pandas, BeautifulSoup4, psycopg2, Docker
+**기술 스택**: Python, LangGraph, FastAPI, PostgreSQL, asyncpg, pandas, BeautifulSoup4, psycopg2, Docker Compose
 
 ---
 
+Docker Compose로 PostgreSQL + FastAPI(백엔드) + Frontend를 통합 배포. DB 초기화 스크립트를 Docker entrypoint에 포함시켜 환경 구축을 자동화함.
 수집부터 자연어 분석까지 전부 혼자 만든 프로젝트임.
 
 ---
 
 ### 6. ReAct + Reflexion 자기 개선형 AI 에이전트 · Agent · Platform
 
-**소속**: Plantynet | **역할**: Agent 로직 담당
+**소속**: Plantynet | **역할**: 단독 개발 — Agent 로직 설계·구현·배포
 
 Jira와 유사한 업무관리 플랫폼(Atelier)에 연동되는 AI 에이전트. 직원들이 자연어로 업무 관련 요청("이번 스프린트 피드 정리해줘", "신규 기능 Spec 문서 작성해줘" 등)을 하면, 에이전트가 플랫폼 API를 호출해 직접 처리함. 단순 조회·수정·삭제뿐 아니라, 개발 관련 Spec 문서 작성, 업무 요약, 일정 조정 같은 복합적인 업무 보조도 수행하는 공간임.
 
@@ -319,14 +330,22 @@ Utility:  search / get_current_time / get_status / update_status / bulk_create
 
 LLM은 Gemini, OpenAI, Anthropic 사이에서 YAML 설정만 바꾸면 전환 가능함.
 
-**기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Pydantic, YAML
+**설문 기반 핵심 문제 해결 성과**
+- **Spec 문서 자동 생성**: 요청 내용을 기반으로 기능 명세·API 설계 문서를 자동 생성해, 기획자와 개발자가 같은 정의를 보고 합의할 수 있는 구조를 구현. 설문 1순위 불만(기획-개발 간 이해 차이) 해결.
+- **Feed 기반 히스토리 추적**: 업무 요청·변경·논의 이력을 Feed로 자동 기록하고 스레드별로 추적 가능하게 구현. 설문 2순위 불만(구두 요청으로 인한 히스토리 유실) 해결.
+- **자기 개선 구조 효과**: 실패를 기록하고 재활용하는 구조가 돌아가면서, 동일 유형 작업의 평균 재시도 횟수가 약 55% 감소함.
+
+Docker Compose로 Agent 서비스와 MCP Server를 분리 배포. 각 컨테이너의 환경 변수와 볼륨을 독립 관리하여 Agent만 재배포해도 MCP 연결이 유지되는 구조로 구현함.
+
+**기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Pydantic, YAML, Docker Compose
 
 ---
 
 ## 연구 개발 자료
 
 - [Notion 연구 개발 노트](https://www.notion.so/2f5736a271928061be4ac9554a9c670c?v=2f5736a2719280dfb9a4000c215b258e&p=2f5736a2719280d89a4ada3827ad5965&pm=s)
-- [개발 연구자료 정리 저서](https://wikidocs.net/book/19070)
+- [개발 연구자료 정리 저서 — 『Agentic AI: 스스로 진화하는 인공지능 에이전트 만들기』](https://wikidocs.net/book/19070)
+  90일 기준 페이지뷰 9,234 · 방문자 8,785 · 평균 체류시간 12분 · 이탈률 1.0%
 
 ---
 
