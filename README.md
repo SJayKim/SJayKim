@@ -5,6 +5,10 @@
 > **김선준** | UNIST 산업공학과 석사 (2023)
 > 벡터 검색과 LLM Agent 기반 서비스를 만드는 백엔드/AI 엔지니어
 
+[![GitHub](https://img.shields.io/badge/GitHub-SJayKim-181717?style=flat&logo=github)](https://github.com/SJayKim)
+[![Email](https://img.shields.io/badge/Email-cyon13022%40gmail.com-EA4335?style=flat&logo=gmail)](mailto:cyon13022@gmail.com)
+[![Wikidocs](https://img.shields.io/badge/Wikidocs-Agentic%20AI%20%EC%A0%80%EC%84%9C-4285F4?style=flat&logo=gitbook)](https://wikidocs.net/book/19070)
+
 석사 때 추천 시스템을 연구했고, 졸업 후에는 그 경험으로 벡터 DB 구축, vLLM 서빙, RAG, Agent 시스템 프로젝트에 참여하며 경험을 쌓음.
 
 ---
@@ -25,7 +29,8 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | 분류 | 기술 |
 |------|------|
 | LLM Serving & Agent | vLLM, LangGraph, LangChain, MCP |
-| Vector DB & Embedding | Milvus, Pgvector |
+| ML/DL | scikit-learn, LightGBM, HuggingFace Transformers, Fine-tuning (BERT) |
+| Vector DB & Embedding | Milvus, Pgvector, BGE-M3, BGE-Reranker |
 | Backend & Infra | Python, FastAPI, PostgreSQL, Oracle |
 | DevOps & Deploy | Docker, Docker Compose, NVIDIA Container Toolkit, Multi-stage Dockerfile |
 
@@ -66,7 +71,7 @@ Docker Compose로 API 서버와 벡터 DB를 컨테이너화하여 배포. 환�
 
 **소속**: Plantynet | **역할**: 단독 개발 — LLM 서빙 및 API 설계·개발·배포
 
-기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌍여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 외부 API 호출 비용 100% 절감, 평균 응답 시간 약 65% 단축. 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
+기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌓여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 외부 API 호출 비용 100% 절감, 평균 응답 시간 약 65% 단축. 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
 
 **주요 기능**
 - 기사 요약 (목표 길이 70~130% 범위 내 수렴 알고리즘)
@@ -160,7 +165,65 @@ app/
 
 ---
 
-### 5. 서울 상권분석 시스템 (Side Project) · Pipeline · Agent
+### 5. URL 기반 스미싱 탐지 시스템 · Security · ML · Pipeline
+
+**소속**: Plantynet | **역할**: 단독 개발 — 기존 시스템 분석, 모델 선정·Fine-tuning, 동적 URL 파이프라인 설계·구현
+
+기존 스미싱 탐지는 외부 스캐닝 API(Criminal IP)로 URL 메타데이터(dgaScore, domainDiff 등)를 수집한 뒤 Random Forest로 분류하는 구조였음. API 실패율 70%, 데이터 생존율 2.1%, 실환경(9:1) F1 28.79%로 운영에 한계가 있었음. 특히 단축 URL(bitly, 2ms.kr 등)은 Whois 정보가 없어서 domainDiff=0으로 처리되면서 대부분 오분류됨.
+
+이 문제를 두 가지 접근으로 해결함 — **URL 텍스트 기반 딥러닝(URLBert)**과 **HTML 구조 기반 동적 URL 분석**.
+
+**[접근 1] URLBert Fine-tuning**
+
+외부 API 의존을 제거하기 위해 URL 텍스트 자체에서 패턴을 학습하는 방식을 택함. CrabInHoney/urlbert-tiny-v4(BERT 기반, 3.69M 파라미터, 14.8MB)를 선택한 이유는: ① URL 도메인 특화 사전학습, ② CPU만으로 학습·추론 가능(사내 GPU 미보유), ③ PhishBERT(영문 특화)·BERT-base(110M, 과도)보다 한국형 단축 URL에 적합.
+
+| 항목 | 설정 |
+|------|------|
+| 학습 데이터 | 4,296건 (스미싱 2,148 + 정상 2,148, 1:1 균형) |
+| 분할 | Train 80% (3,436건) / Eval 20% (860건) |
+| 에포크 | 3 |
+| 학습 시간 | 142초 (CPU) |
+
+**모델 성능 비교 (1:1 균형 데이터):**
+
+| 모델 | Accuracy | Precision | Recall | F1 |
+|:---:|:---:|:---:|:---:|:---:|
+| 기존 Random Forest | 51.54% | 51.18% | 66.96% | 58.02% |
+| URLBert Zero-Shot | 58.31% | 65.19% | 35.66% | 46.10% |
+| **URLBert Fine-Tuned** | **96.16%** | **97.60%** | **94.65%** | **96.10%** |
+
+실환경(9:1 불균형)에서도 F1 95%+, Precision 97%+ 유지. 추론 속도 0.05ms/URL.
+
+**[접근 2] HTML 구조 기반 동적 URL 탐지**
+
+bitly/2ms.kr 같은 단축 URL은 원본 URL과 랜딩 페이지가 다름. HTTP 리다이렉트를 따라간 뒤 최종 랜딩 페이지의 HTML 구조를 분석하는 파이프라인을 구축함.
+
+피싱 웹사이트 탐지 오픈소스에서 15개 피처를 포팅하고, 한국형 스미싱 특화 2개 피처(has_tel_input, has_kr_keyword)를 추가해 총 17개 HTML 피처를 설계함.
+
+| 평가 방법 | Accuracy | Precision | Recall | F1 |
+|:---:|:---:|:---:|:---:|:---:|
+| 1:1 균형 | 96.51% | 97.62% | 95.35% | 96.47% |
+| 9:1 불균형 | 98.36% | 95.00% | 88.37% | 91.57% |
+
+**[접근 3] 파이프라인 오케스트레이션 + 모니터링 시스템**
+
+메모리 기반 3단계 파이프라인(Oracle ETL → 모델 평가 → 이메일 알림) 오케스트레이션 설계. history.json에 최근 20회 실행 이력을 유지하면서 시계열 분석으로 이상을 감지함.
+
+**모니터링 핵심 지표:**
+
+| 모니터링 그룹 | 핵심 지표 | 임계값 |
+|:---:|------|------|
+| 시스템 건강 상태 | 실행 성공/실패율, 스텝별 소요 시간 | 크론잡 중단·병목 즉시 파악 |
+| 데이터 수집 효율 | URL 처리량, API 실패 건수, 레이블 비율 변화 | ±5%p warning, ±15%p critical |
+| AI 모델 성능 | F1·Accuracy 시계열 (최근 20회) | ±10%p warning, ±20%p critical |
+
+**실증 사례**: 실제 운영 중 외부 API 전면 장애(수집 0건, 실패 586건, 실패율 100%)를 자동 감지. 기존에는 담당자가 로그를 수동 확인하기 전까지 인지할 수 없었던 장애.
+
+**기술 스택**: Python, HuggingFace Transformers, scikit-learn, LightGBM, BeautifulSoup4, pandas, Oracle, PostgreSQL
+
+---
+
+### 6. 서울 상권분석 시스템 (Side Project) · Pipeline · Agent
 
 **역할**: 1인 개발 — DB 스키마 설계, LLM 구현, 프롬프트 설계, 백엔드/프론트엔드/배포 전체 개발
 
@@ -229,7 +292,7 @@ Docker Compose로 PostgreSQL + FastAPI(백엔드) + Frontend를 통합 배포. D
 
 ---
 
-### 6. ReAct + Reflexion 자기 개선형 AI 에이전트 · Agent · Platform
+### 7. ReAct + Reflexion 자기 개선형 AI 에이전트 · Agent · Platform
 
 **소속**: Plantynet | **역할**: 단독 개발 — Agent 로직 설계·구현·배포
 
@@ -337,7 +400,50 @@ LLM은 Gemini, OpenAI, Anthropic 사이에서 YAML 설정만 바꾸면 전환 �
 
 Docker Compose로 Agent 서비스와 MCP Server를 분리 배포. 각 컨테이너의 환경 변수와 볼륨을 독립 관리하여 Agent만 재배포해도 MCP 연결이 유지되는 구조로 구현함.
 
-**기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Pydantic, YAML, Docker Compose
+**LLMOps Observability 설계**
+
+LLM 기반 Agent는 비결정적(non-deterministic) 특성으로 운영 단계에서 문제가 발생함. 이를 해결하기 위해 5개 Observability Spec을 설계함.
+
+```mermaid
+flowchart LR
+    subgraph Problem["운영 문제"]
+        P1["블랙박스 추론"]
+        P2["비용 불투명"]
+        P3["병목 미식별"]
+        P4["에러 무분류"]
+    end
+
+    subgraph Specs["5개 Spec"]
+        A["Request Tracing"]
+        B["Prompt/Response Logging"]
+        C["Token Usage Tracker"]
+        D["Latency Monitoring"]
+        E["Error Tracking"]
+    end
+
+    subgraph Tools["도구"]
+        Langfuse["Langfuse"]
+        Sentry["Sentry"]
+        Grafana["Grafana"]
+    end
+
+    Problem --> Specs --> Tools
+```
+
+| Spec | 핵심 질문 | 설계 내용 |
+|------|-----------|----------|
+| A. Request Tracing | "이 요청이 어떤 경로로 처리되었는가?" | 7개 노드를 trace_id로 연결, 조건부 엣지 흐름 기록 |
+| B. Prompt/Response Logging | "어떤 프롬프트로 어떤 응답이 나왔는가?" | LLM 호출 입력/출력 구조화 저장, A/B 테스트·Hallucination 탐지 근거 |
+| C. Token Usage Tracker | "토큰이 어디서 얼마나 소모되는가?" | 노드별·모델별 소비 집계 → 비용 주범 특정 |
+| D. Latency Monitoring | "어느 단계가 느린가?" | TTFT, node_duration_ms 측정, 병목 식별 |
+| E. Error Tracking | "어떤 에러가 왜 발생하는가?" | 5개 카테고리 + 20여 개 세부 유형 분류 |
+
+**도구 선정:**
+- **Langfuse**: LLM 특화 오픈소스, self-host 가능, A~D 일괄 커버
+- **Sentry**: 에러 분류·그룹핑·알림 특화
+- **Grafana + Prometheus**: 커스텀 메트릭 집계, 알림 규칙 유연성
+
+**기술 스택**: Python, LangGraph, LangChain, Google Gemini, OpenAI, Anthropic, Langfuse, Sentry, Grafana, Pydantic, YAML, Docker Compose
 
 ---
 
@@ -352,3 +458,5 @@ Docker Compose로 Agent 서비스와 MCP Server를 분리 배포. 각 컨테이�
 ## 연락처
 
 - 이메일: cyon13022@gmail.com
+- GitHub: [github.com/SJayKim](https://github.com/SJayKim)
+- Wikidocs 저서: [『Agentic AI: 스스로 진화하는 인공지능 에이전트 만들기』](https://wikidocs.net/book/19070)
