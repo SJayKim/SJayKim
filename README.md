@@ -439,9 +439,7 @@ Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 �
 <details>
 <summary><b>Demo Video</b></summary>
 
-https://github.com/user-attachments/assets/marketscope_demo.mp4
-
-<video src="images/marketscope_demo.mp4" width="960" controls></video>
+<video src="https://github.com/SJayKim/SJayKim/releases/download/v1.0-demo/marketscope_demo.mp4" width="960" controls></video>
 
 </details>
 
