@@ -438,7 +438,7 @@ Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 �
 
 **Demo Video**
 
-<video src="images/marketscope_demo.mp4" controls muted width="960"></video>
+https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 
 **기존 서비스 대비 차별점**: 기존 상권분석 서비스는 정적 대시보드 + 수동 필터 방식으로, 사용자가 직접 지표를 찾아 비교해야 함. MarketScope AI는 "강남역 카페 매출 추이", "홍대랑 비교해줘" 같은 자연어 한 줄로 AI가 실시간 분석하고 지도와 연동해 시각화까지 해주는 것이 핵심 차별 기능.
 
