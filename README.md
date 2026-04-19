@@ -421,9 +421,9 @@ Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 �
 
 ### 7. MarketScope AI — 지도 기반 AI 상권분석 서비스 (Side Project) · Full-Stack · Agent · SaaS
 
-**역할**: 1인 Full-Stack 개발 (기획 · 설계 · 프론트엔드 · 백엔드 · AI Agent · 인프라) | 2026.01 ~ 현재 (진행 중)
+**역할**: 1인 Full-Stack 개발 (기획 · 설계 · 프론트엔드 · 백엔드 · AI Agent · 인프라) | 2026.01 ~ 현재 (운영 중)
 
-지도에서 상권을 선택하면 AI가 자연어로 분석해주는 Freemium SaaS. 소상공인/부동산 투자자 대상.
+지도에서 상권을 선택하면 AI가 자연어로 분석해주는 Freemium SaaS. 소상공인/부동산 투자자 대상. 현재 서울시 **1,650개 상권** 실데이터를 적재해 [marketscope.robitlabs.co.kr](https://marketscope.robitlabs.co.kr) 에서 운영 중.
 
 <table>
 <tr>
@@ -471,10 +471,10 @@ https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 │   AI Agent Layer │          │         Data Layer               │
 │  (LangGraph)     │          │                                  │
 │  ┌────────────┐  │  tool    │  ┌────────────┐ ┌────────────┐   │
-│  │  ReAct     │──┼──call───►│  │ PostgreSQL │ │   Redis    │   │
-│  │  Agent     │  │          │  │ + PostGIS  │ │  (Cache)   │   │
-│  │  Loop      │  │          │  └────────────┘ └────────────┘   │
-│  └────────────┘  │          └──────────────────────────────────┘
+│  │  PAE       │──┼──call───►│  │ PostgreSQL │ │   Redis    │   │
+│  │  Planner→  │  │          │  │ + PostGIS  │ │  (Cache)   │   │
+│  │  Actor→    │  │          │  └────────────┘ └────────────┘   │
+│  │  Evaluator │  │          └──────────────────────────────────┘
 │  ┌────────────┐  │
 │  │ Langfuse   │  │
 │  │ (Tracing)  │  │
@@ -487,7 +487,7 @@ https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 | 레이어 | 기술 | 선정 이유 |
 |--------|------|-----------|
 | Frontend | Next.js 14 (App Router, TypeScript), Kakao Map SDK, deck.gl, Recharts, Zustand, shadcn/ui + Tailwind | SSR 지원, 한국 지도 데이터 정확도, 고성능 지도 시각화, 경량 상태 관리 |
-| Backend | FastAPI (Python 3.12, async), LangGraph (ReAct Agent), Claude API | 비동기 SSE 스트리밍, ReAct 패턴 네이티브 지원, 한국어 Tool Use 성능 |
+| Backend | FastAPI (Python 3.12, async), LangGraph (커스텀 PAE 그래프), Claude Sonnet 4 + Gemini | 비동기 SSE 스트리밍, 의도 분류·병렬 실행·충분성 평가 분리, 역할별 LLM 최적화 |
 | Database | PostgreSQL 16 + PostGIS, Redis 7 | 상권 폴리곤 공간 쿼리(ST_Contains, ST_Within), 분기별 캐싱 |
 | Infra | Docker Compose, Playwright E2E, GitHub Actions CI/CD | 로컬 개발 환경 통합, 자동화 테스트, 지속적 통합 |
 | Observability | Langfuse | LLM 호출 트레이싱, 비용 추적, 프롬프트 버전 관리 |
@@ -495,29 +495,34 @@ https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 **주요 기능 및 구현 상세**
 
 **① AI Chat 기반 상권분석 (핵심 차별 기능)**
-LangGraph ReAct 패턴(Reason → Act → Observe, 최대 5회)으로 Agent를 구현함. 7종 Tool(유동인구 조회, 매출 분석, 점포 정보, 상권 비교, 업종 추천, 리스크 분석, 인구 정보)을 자동 선택·조합해 복합 질의를 처리함. 예: "강남역에서 카페하면 어때?"라는 질문에 Agent가 매출 Tool → 점포 Tool → 추천 Tool을 순차 호출해 종합 분석을 생성함.
+초기엔 `create_react_agent` 기반 ReAct 루프로 시작했는데, 툴 호출이 늘면서 의도 분류 → 병렬 실행 → 충분성 평가를 분리할 필요가 생겨 **LangGraph 커스텀 PAE(Planner-Actor-Evaluator) 그래프**로 재설계함. Planner가 50+ 규칙으로 intent를 분류하고(LLM fallback), Actor가 Plan을 DAG로 위상 정렬해 `asyncio.gather`로 Tool을 병렬 실행하며, Evaluator가 결과 충분성을 판정해 insufficient이면 최대 3 rounds까지 재진입함. 9종 Tool(유동인구, 매출, 점포, 상권 요약, 상권 비교, 업종 추천, 매출 시뮬레이션, 리스크 분석, 인구 정보)을 자동 선택·조합해 복합 질의를 처리함. 역할별 LLM 분리 — Planner는 Claude Sonnet 4(tool_use 정확도), Evaluator는 Gemini flash(저비용), Respond는 Gemini pro(한국어 스트리밍). Circuit Breaker + Singleflight로 LLM/DB 장애 시 graceful degradation 동작.
 
 **② 지도-챗봇 양방향 동기화**
 Zustand store 기반으로 지도 ↔ 챗봇 상태를 실시간 연동함. 지도에서 상권 폴리곤을 클릭하면 AI가 자동으로 해당 상권 분석을 시작하고, 채팅 응답에 포함된 map_cmd 이벤트로 지도 하이라이트/이동/줌을 제어함.
 
-**③ Rich Card UI 4종 + SSE 스트리밍**
+**③ Rich Card UI 5종 + SSE 스트리밍**
 - **SummaryCard**: 상권 기본 리포트 (유동인구, 매출, 점포 현황 + Recharts 바차트)
 - **CompareCard**: 최대 3개 상권 비교표 + AI 종합 의견
 - **RecommendCard**: 업종별 추천 점수바 + 추천 근거 + 면책 조항
 - **RiskCard**: 점포 안정성 게이지 + 생존 기간 바차트
+- **SimulationCard**: 업종별 월매출 p25/평균/p75 시뮬레이션 + 서울 평균 대비 비교
 
-FastAPI SSE로 thinking → tool → text → card → done 이벤트를 실시간 스트리밍해, 사용자가 AI의 사고 과정을 실시간으로 확인할 수 있음.
+FastAPI SSE로 thinking → plan → tool → tool_end → card → text → suggestion → done 9종 이벤트를 실시간 스트리밍해, 사용자가 AI의 사고 과정을 실시간으로 확인할 수 있음.
 
 **④ Freemium SaaS 비즈니스 모델**
 무료(일 5회 질의 + 기본 리포트) / Premium(무제한 + 업종 심층 분석 + 히트맵 + 매출 시뮬레이션 + PDF 리포트)로 Tier를 나누고, Tier 게이팅 인프라를 설계함.
 
 **E2E 검증**
-Playwright 기반 7개 시나리오, E2E 테스트로 전체 흐름을 검증함:
+Playwright로 feature 7종 + Ring 0~3 시나리오 구조(preflight · features · journeys · negative)로 전체 흐름을 검증함:
 - 폴리곤 클릭 → Agent 응답 → SummaryCard 렌더링
 - 대화 컨텍스트 유지, 지도-챗봇 양방향 동기화
 - SSE 스트리밍 진행 표시, Card 렌더링, 에러 처리
+- Mock/Real 2개 모드에서 동일 시나리오 회귀
 
-**현재 상태**: Phase 1A (E2E Mock 검증) 완료, Phase 1B (실제 공공데이터 연결) 진행 중
+**데이터 파이프라인**
+서울 열린데이터 4개 서비스(`VwsmTrdarFlpopQq` 외) + SHP 폴리곤을 분기별로 수집하는 ETL 파이프라인 구축. 적재량 약 14.6만 건(유동인구 9,888 / 추정매출 21,333 / 점포 75,985 / 상주·직장인구 39,288). Repository 패턴(9개 프로토콜)으로 Mock(JSON fixture) · Real(SQLAlchemy async) 두 구현체를 두어, `USE_MOCK` 환경변수 하나로 DB 없이 FastAPI 단독 기동과 실데이터 모드를 전환함.
+
+**현재 상태**: Phase 1A(Mock E2E) / Phase 1B(실데이터 ETL + 1,650개 상권) / Phase 3(히트맵 · 매출 시뮬레이션 · PDF 리포트) 완료. [marketscope.robitlabs.co.kr](https://marketscope.robitlabs.co.kr) 프로덕션 운영 중. Phase 2(OAuth2 · 결제 · Tier 게이팅) 진행 예정.
 
 ---
 
