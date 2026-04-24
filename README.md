@@ -425,6 +425,11 @@ Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 �
 
 지도에서 상권을 선택하면 AI가 자연어로 분석해주는 Freemium SaaS. 소상공인/부동산 투자자 대상. 현재 서울시 **1,650개 상권** 실데이터를 적재해 [marketscope.robitlabs.co.kr](https://marketscope.robitlabs.co.kr) 에서 운영 중.
 
+<p align="center">
+  <img src="images/marketscope_landingpage.png" alt="MarketScope AI - Landing Page" width="960"/>
+</p>
+<p align="center"><i>랜딩 페이지 — 역할 선택(소상공인 · 투자자 · 창업 준비) + 스타터 칩 + "지도에서 시작하기" CTA</i></p>
+
 <table>
 <tr>
 <td align="center"><b>Light Mode</b></td>
@@ -495,7 +500,7 @@ https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 **주요 기능 및 구현 상세**
 
 **① AI Chat 기반 상권분석 (핵심 차별 기능)**
-초기엔 `create_react_agent` 기반 ReAct 루프로 시작했는데, 툴 호출이 늘면서 의도 분류 → 병렬 실행 → 충분성 평가를 분리할 필요가 생겨 **LangGraph 커스텀 PAE(Planner-Actor-Evaluator) 그래프**로 재설계함. Planner가 50+ 규칙으로 intent를 분류하고(LLM fallback), Actor가 Plan을 DAG로 위상 정렬해 `asyncio.gather`로 Tool을 병렬 실행하며, Evaluator가 결과 충분성을 판정해 insufficient이면 최대 3 rounds까지 재진입함. 9종 Tool(유동인구, 매출, 점포, 상권 요약, 상권 비교, 업종 추천, 매출 시뮬레이션, 리스크 분석, 인구 정보)을 자동 선택·조합해 복합 질의를 처리함. 역할별 LLM 분리 — Planner는 Claude Sonnet 4(tool_use 정확도), Evaluator는 Gemini flash(저비용), Respond는 Gemini pro(한국어 스트리밍). Circuit Breaker + Singleflight로 LLM/DB 장애 시 graceful degradation 동작.
+초기엔 `create_react_agent` 기반 ReAct 루프로 시작했는데, 툴 호출이 늘면서 의도 분류 → 병렬 실행 → 충분성 평가를 분리할 필요가 생겨 **LangGraph 커스텀 PAE(Planner-Actor-Evaluator) 그래프**로 재설계함. Planner가 50+ 규칙으로 intent를 분류하고(LLM fallback), Actor가 Plan을 DAG로 위상 정렬해 `asyncio.gather`로 Tool을 병렬 실행하며, Evaluator가 결과 충분성을 판정해 insufficient이면 최대 3 rounds까지 재진입함. **11종 Tool**(상권 요약, 유동인구, 매출, 점포, 인구, 점포 이력, 상권 비교, 업종 추천, 매출 시뮬레이션, 상권 벤치마크, 유동인구 이상 감지)을 자동 선택·조합해 복합 질의를 처리함. 역할별 LLM 분리 — Planner는 Claude Sonnet 4(tool_use 정확도), Evaluator는 Gemini flash(저비용), Respond는 Gemini pro(한국어 스트리밍). Circuit Breaker + 재시도/폴백으로 LLM/DB 장애 시 graceful degradation 동작.
 
 **② 지도-챗봇 양방향 동기화**
 Zustand store 기반으로 지도 ↔ 챗봇 상태를 실시간 연동함. 지도에서 상권 폴리곤을 클릭하면 AI가 자동으로 해당 상권 분석을 시작하고, 채팅 응답에 포함된 map_cmd 이벤트로 지도 하이라이트/이동/줌을 제어함.
@@ -512,6 +517,9 @@ FastAPI SSE로 thinking → plan → tool → tool_end → card → text → sug
 **④ Freemium SaaS 비즈니스 모델**
 무료(일 5회 질의 + 기본 리포트) / Premium(무제한 + 업종 심층 분석 + 히트맵 + 매출 시뮬레이션 + PDF 리포트)로 Tier를 나누고, Tier 게이팅 인프라를 설계함.
 
+**⑤ 랜딩/앱 라우트 분리 + 응답 정확성 개선**
+`/` 랜딩(역할 선택 · 스타터 칩 · Hero/Bento/HowItWorks) 과 `/app` 챗맵을 라우트로 분리해 첫 진입 맥락과 실사용 화면을 구분함. 응답 정확성을 끌어올리기 위해 (a) **Entity Linking** — 상권명 prefix/trigram 매칭 + `learned_aliases` 테이블로 약칭·오탈자 학습, (b) **Abstention** — Tool 실패·빈 결과 시 추측 대신 부재 고지 템플릿 강제, (c) **Query Rewriter** — 이전 턴 맥락을 반영한 질의 재작성으로 follow-up 정확도 보강. `/api/feedback/score` 엔드포인트로 사용자 피드백을 **Langfuse trace score** 로 역연동해 실데이터 기반 개선 루프 구축.
+
 **E2E 검증**
 Playwright로 feature 7종 + Ring 0~3 시나리오 구조(preflight · features · journeys · negative)로 전체 흐름을 검증함:
 - 폴리곤 클릭 → Agent 응답 → SummaryCard 렌더링
@@ -522,7 +530,7 @@ Playwright로 feature 7종 + Ring 0~3 시나리오 구조(preflight · features 
 **데이터 파이프라인**
 서울 열린데이터 4개 서비스(`VwsmTrdarFlpopQq` 외) + SHP 폴리곤을 분기별로 수집하는 ETL 파이프라인 구축. 적재량 약 14.6만 건(유동인구 9,888 / 추정매출 21,333 / 점포 75,985 / 상주·직장인구 39,288). Repository 패턴(9개 프로토콜)으로 Mock(JSON fixture) · Real(SQLAlchemy async) 두 구현체를 두어, `USE_MOCK` 환경변수 하나로 DB 없이 FastAPI 단독 기동과 실데이터 모드를 전환함.
 
-**현재 상태**: Phase 1A(Mock E2E) / Phase 1B(실데이터 ETL + 1,650개 상권) / Phase 3(히트맵 · 매출 시뮬레이션 · PDF 리포트) 완료. [marketscope.robitlabs.co.kr](https://marketscope.robitlabs.co.kr) 프로덕션 운영 중. Phase 2(OAuth2 · 결제 · Tier 게이팅) 진행 예정.
+**현재 상태**: Phase 1A(Mock E2E) / Phase 1B(실데이터 ETL + 1,650개 상권) / Phase 3(히트맵 · 매출 시뮬레이션 · PDF 리포트) 완료 · **v0.4.0 프로덕션 라이브** ([marketscope.robitlabs.co.kr](https://marketscope.robitlabs.co.kr)). Playwright E2E ring0~3 chromium 66/66 PASS + prod-smoke 28/28 PASS. Langfuse SDK v3 포팅으로 프로덕션 trace 실발행 · `done.trace_id` ↔ 서버 로그 매핑 확인. Phase 2(OAuth2 · 결제 · Tier 게이팅) 진행 예정.
 
 ---
 
