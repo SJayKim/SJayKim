@@ -536,7 +536,7 @@ Playwright로 feature 7종 + Ring 0~3 시나리오 구조(preflight · features 
 
 ## 연구 개발 자료
 
-- [Notion 연구 개발 노트](https://www.notion.so/LLM-Agent-Memory-32d736a27192815fa75ef771df5934c5)
+- [Notion 연구 개발 노트](https://www.notion.so/76-Inside-the-Scaffold-A-Source-Code-Taxonomy-of-Coding-Agent-Architectures-341736a271928198b64adeca0b3eec43)
 - [개발 연구자료 정리 저서 — 『Agentic AI: 스스로 진화하는 인공지능 에이전트 만들기』](https://wikidocs.net/book/19070)
   90일 기준 페이지뷰 9,234 · 방문자 8,785 · 평균 체류시간 12분 · 이탈률 1.0%
 
