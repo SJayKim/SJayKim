@@ -24,6 +24,13 @@ flowchart TB
         Product["Product → Thread → Feed"]
     end
 
+    subgraph KG["Knowledge Graph"]
+        KGQuery["query_knowledge_graph<br/>(hybrid · local · global)"]
+        LightRAG[("LightRAG<br/>Entity · Relation · Chunk")]
+        KGQuery --> LightRAG
+    end
+
     ToolExec --> Resources
+    ToolExec --> KGQuery
     Reflection --> LongTerm
     Actor -.->|"교훈 조회"| LongTerm

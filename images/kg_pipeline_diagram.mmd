@@ -1,0 +1,29 @@
+flowchart LR
+    subgraph Sources["플랫폼 데이터"]
+        Thread["Thread<br/>(업무 스레드)"]
+        Feed["Feed<br/>(논의 · 이력)"]
+        Files["첨부파일<br/>(PDF · 문서 · 이미지)"]
+    end
+
+    subgraph Pipeline["인제스트 파이프라인"]
+        Convert["Document Converter<br/>(텍스트 추출)"]
+        Summarize["LLM 구조화 요약<br/>(노이즈 제거)"]
+        Extract["LightRAG<br/>엔티티/관계 자동 추출"]
+    end
+
+    subgraph KGStore["Knowledge Graph"]
+        Entity["엔티티<br/>(Person · Project · Team ·<br/>Document · Concept ...)"]
+        Relation["관계<br/>(소속 · 포함 · 참조 ...)"]
+        Chunk["원본 청크<br/>(source_id 매핑)"]
+    end
+
+    subgraph AgentQuery["Agent Tool"]
+        Tool["query_knowledge_graph<br/>(mode: hybrid / local / global)"]
+    end
+
+    Thread --> Convert
+    Feed --> Convert
+    Files --> Convert
+    Convert --> Summarize --> Extract
+    Extract --> Entity & Relation & Chunk
+    Tool -.->|검색| Entity & Relation & Chunk

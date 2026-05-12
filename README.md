@@ -98,11 +98,18 @@ flowchart TB
         Utility["검색 · 목록 · 상태 변경"]
     end
 
+    subgraph KG["Knowledge Graph (검색 도구)"]
+        KGQuery["query_knowledge_graph<br/>(hybrid · local · global)"]
+        LightRAG[("LightRAG<br/>Entity · Relation · Chunk")]
+        KGQuery --> LightRAG
+    end
+
     Request --> START
     ToolExec --> ProjectAPI
     ToolExec --> TaskAPI
     ToolExec --> ActivityAPI
     ToolExec --> Utility
+    ToolExec --> KGQuery
     Reflection --> LongTerm
     Actor -.->|"교훈 조회"| LongTerm
 ```
@@ -121,6 +128,65 @@ flowchart TB
 - **자기 개선 구조 효과**: 실패를 기록하고 재활용하는 구조가 돌아가면서, 동일 유형 작업의 재시도 횟수가 크게 감소함.
 
 Docker Compose로 Agent 서비스와 MCP Server를 분리 배포. 각 컨테이너의 환경 변수와 볼륨을 독립 관리하여 Agent만 재배포해도 MCP 연결이 유지되는 구조로 구현함.
+
+**Knowledge Graph 구축 및 검색 도구화**
+
+CRUD 도구만으로는 "관련 스레드 찾아줘", "지난 분기 개발계획 요약해줘", "이 첨부 PDF에서 의사결정 근거 찾아줘" 같은 **의미 기반 질의**에 답하기 어려웠음. 플랫폼에 축적되는 Thread·Feed·첨부파일을 LightRAG 기반 Knowledge Graph로 인덱싱하고, 이를 에이전트의 검색 도구로 노출해 해결함.
+
+```mermaid
+flowchart LR
+    subgraph Sources["플랫폼 데이터"]
+        Thread["Thread<br/>(업무 스레드)"]
+        Feed["Feed<br/>(논의 · 이력)"]
+        Files["첨부파일<br/>(PDF · 문서 · 이미지)"]
+    end
+
+    subgraph Pipeline["인제스트 파이프라인"]
+        Convert["Document Converter<br/>(텍스트 추출)"]
+        Summarize["LLM 구조화 요약<br/>(노이즈 제거)"]
+        Extract["LightRAG<br/>엔티티/관계 자동 추출"]
+    end
+
+    subgraph KGStore["Knowledge Graph"]
+        Entity["엔티티<br/>(Person · Project · Team ·<br/>Document · Concept ...)"]
+        Relation["관계<br/>(소속 · 포함 · 참조 ...)"]
+        Chunk["원본 청크<br/>(source_id 매핑)"]
+    end
+
+    subgraph AgentQuery["Agent Tool"]
+        Tool["query_knowledge_graph<br/>(mode: hybrid / local / global)"]
+    end
+
+    Thread --> Convert
+    Feed --> Convert
+    Files --> Convert
+    Convert --> Summarize --> Extract
+    Extract --> Entity & Relation & Chunk
+    Tool -.->|검색| Entity & Relation & Chunk
+```
+
+**파이프라인 설계**
+
+1. **텍스트 추출**: 첨부파일 형식별(PDF·문서·이미지 OCR 등) 변환기를 두어 원본을 텍스트로 정규화함.
+2. **LLM 구조화 요약**: 원문에서 OCR 노이즈, URL, 보일러플레이트를 제거하고 핵심 엔티티/관계가 명시되도록 재구성함. KG 추출 품질을 직접 끌어올리는 단계.
+3. **KG 추출**: LightRAG가 요약본에서 엔티티와 관계를 자동 추출. 도메인 특화 엔티티 타입(Person, Organization, Project, Team, Skill, Technology, Document, Metric 등)을 정의해 업무 도메인 신호를 잃지 않도록 함.
+4. **source_id 매핑**: 추출된 엔티티/관계마다 원본 청크의 ID를 유지해, 검색 결과에 원문 근거를 함께 반환할 수 있도록 구성.
+
+**Agent Tool로 노출 — 3가지 검색 모드**
+
+KG 검색은 별도 도구(`query_knowledge_graph`)로 등록되어, 에이전트가 질의 의도에 맞게 모드를 선택함.
+
+| 모드 | 동작 | 사용 시점 |
+|------|------|----------|
+| `hybrid` (기본) | Local + Global 결과를 Round-Robin 병합 | 대부분의 자연어 질의 |
+| `local` | 엔티티 카드를 먼저 찾고 연결된 관계 탐색 | "이 사람/이 프로젝트 주변 맥락" 질의 |
+| `global` | 관계를 먼저 찾고 양쪽 엔티티 수집 | 주제·요약 중심 질의 |
+
+**운영상 고려 사항**
+
+- **이벤트 루프 격리**: LightRAG 내부 워커가 최초 이벤트 루프에 바인딩되는 특성 때문에, FastAPI/LangGraph 메인 루프와 분리된 **전용 백그라운드 이벤트 루프**에서 쿼리를 실행하도록 구성. 같은 인스턴스로 반복 호출해도 `Event loop is closed` 에러가 발생하지 않게 함.
+- **환각 억제**: LLM 답변 단계에서 "Context 안의 정보만 사용" 제약을 걸고, 엔티티·관계·원본 청크를 함께 컨텍스트로 전달.
+- **CRUD 도구와의 분업**: 파일 목록·메타 정보는 기존 CRUD 도구로, 내용 기반 의미 검색은 KG 도구로 라우팅하도록 도구 설명을 명시해 Tool Calling 충돌을 줄임.
 
 **LLMOps Observability 설계**
 
@@ -164,7 +230,7 @@ flowchart TB
 
 도구는 Langfuse(LLM 특화 tracing, self-host 가능) + Sentry(에러 분류·알림) + Grafana(대시보드)를 선정함.
 
-**기술 스택**: Python, LangGraph, FastAPI, Gemini API, Langfuse, Sentry, Grafana, Prometheus, SSE, Docker Compose
+**기술 스택**: Python, LangGraph, FastAPI, Gemini API, LightRAG (Knowledge Graph), Langfuse, Sentry, Grafana, Prometheus, SSE, Docker Compose
 
 ---
 
