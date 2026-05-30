@@ -458,107 +458,45 @@ Docker + NVIDIA Container Toolkit 기반으로 GPU 서빙 컨테이너를 구성
 
 ### 5. 한국어 뉴스 요약 LLM 평가 파이프라인 · Evaluation · LLMOps · Pipeline
 
-**소속**: Plantynet (2명 팀) | **역할**: deepeval 기반 평가 파이프라인 전체 담당 — 평가 메트릭 설계, 5단계 파이프라인 구현, Postgres 적재, cron 자동화·모니터링 | **기간**: 2026.01 ~ 2026.05
+**소속**: Plantynet (2명 팀) | **역할**: deepeval 기반 평가 파이프라인 전체 담당 — 평가 메트릭 설계, 파이프라인 구현, Postgres 적재, cron 자동화 | **기간**: 2026.04 ~ 2026.05
 
-요약 LLM이 운영에 투입되면서, 매일 누적되는 대량의 요약 결과(`*_res.json`)에 대해 ① 정상 응답률, ② 길이 비율, ③ 한국어 편집 압축 품질을 일관된 기준으로 측정해야 했음. 기존엔 샘플을 사람이 정성 확인했지만, 데이터 규모와 폴더 변형(`naver_4_2000_3000`, `naver_5_800_2000` 등)이 늘면서 LLM-as-judge로 자동화하는 게 필수가 됨.
+**문제** — 운영에 투입된 요약 LLM의 결과물 **약 60만 건**을 짧은 기간 안에 평가해야 했음. 사람이 샘플을 정성 확인하던 방식으로는 규모를 감당할 수 없어 LLM-as-judge 자동화가 필수였지만, 60만 건 × 평가 축마다 LLM을 호출하면 토큰 비용과 처리 시간이 폭증하는 게 핵심 난점이었음.
 
-핵심 문제는 단순 채점이 아니라 **운영 데이터 전체에 대한 자동·재현 가능 평가**였음 — 폴더 단위 stratified 샘플링, OpenAI 쿼터 실패 자동 재시도, 결과의 결정론적 후검증, 시계열 추적, 보고서·이메일 자동화까지 한 파이프라인으로 묶음.
+**해결 — LLM 추론 횟수 최소화** — 평가 지표를 **2개**로 압축하되, prompt engineering으로 평가 기준을 정리해 품질은 유지함:
 
-**시스템 아키텍처 — 5-Stage 파이프라인**
+- ① **정량 지표 (LLM 불필요)** — 정상 응답률 + 길이 비율을 `*_res.json`에서 결정론적으로 계산
+- ② **품질 지표 (1건당 LLM 1회)** — 단일 GEval `deepeval_score`(0~1) + 한국어 사유
 
-```mermaid
-flowchart TB
-    subgraph Source["요약 결과 데이터"]
-        Req["*_req.json<br/>(원문 + issued_date)"]
-        Res["*_res.json<br/>(요약 + success)"]
-    end
+품질 평가는 내용·날짜·허위·문체·형식 5개 기준이 서로 맞물려 분리 채점이 부적절한 도메인. 축마다 metric을 두면 1건당 LLM이 5회 호출되므로, `GEvalTemplate`을 한국어로 오버라이드한 `KoreanGEvalTemplate`에 5개 기준을 `evaluation_steps`로 묶어 **단일 호출에서 점수+사유**를 받도록 설계 — 추론 횟수를 1/5로 줄이면서 평가 품질은 유지.
 
-    subgraph S1["Stage 1: evaluate_summarizations.py"]
-        Match["req ↔ res 매칭"]
-        Sample["Stratified 샘플링<br/>(폴더당 15%)"]
-        GEval["GEval 단일 스코어<br/>(deepeval_score 0~1)"]
-        Retry1["쿼터 실패 자동 재시도"]
-    end
-
-    subgraph S2["Stage 2: validate_results.py"]
-        Judge["LLM Judge<br/>(gpt-4.1-mini)"]
-        Validate["is_validated<br/>+ is_date_issue<br/>+ validation_reason"]
-    end
-
-    subgraph S3["Stage 3: rescore_nonvalidated.py"]
-        Rescore["부적합 행만<br/>deepeval 재산출"]
-    end
-
-    subgraph S4["Stage 4: generate_report.py"]
-        Report["gpt-5-mini<br/>한국어 Markdown 보고서"]
-    end
-
-    subgraph S5["Stage 5: send_report_email.py"]
-        Email["SMTP 발송<br/>(STARTTLS)"]
-    end
-
-    subgraph Storage["저장소"]
-        Excel["Excel<br/>(Summary + Details)"]
-        PG[("PostgreSQL<br/>eval_runs / eval_details")]
-        Views["뷰<br/>(run_stats / breakdown / latest)"]
-    end
-
-    Req & Res --> Match --> Sample --> GEval --> Retry1
-    Retry1 --> Excel & PG
-    Excel --> Judge --> Validate
-    Validate -->|"is_validated==False"| Rescore --> Judge
-    Validate --> Report --> Email
-    PG --> Views
-```
-
-**핵심 평가 메트릭 — 단일 GEval 5축 평가**
-
-deepeval의 GEval은 보통 평가 축마다 metric을 따로 두지만, 한국어 편집 압축은 5개 축(내용·날짜·허위·문체·형식)이 서로 맞물려 한 덩어리로 평가해야 하는 도메인이었음. 5개를 분리하면 같은 입력에 대해 LLM judge가 5번 호출되어 토큰 비용이 약 5배로 늘어나는 것도 문제.
-
-`GEvalTemplate`을 한국어로 오버라이드한 `KoreanGEvalTemplate`을 만들고 5축을 `evaluation_steps`로 묶어, **단일 호출에서 점수 + 한국어 사유**를 한 번에 받도록 설계함.
-
-| 평가 축 | 검증 항목 |
+| 평가 기준 | 검증 항목 |
 |------|------|
-| 내용 보존 | 핵심 사실·인용·통계·고유명사 유지, 서로 다른 개체의 속성 혼합 금지 |
+| 내용 보존 | 핵심 사실·인용·통계·고유명사 유지, 개체 간 속성 혼합 금지 |
 | 날짜 변환 | `issued_date` 기준 상대→절대 날짜 변환 정확도 (예: '지난해' → '2024년') |
 | 허위 정보 | input에 없는 주장·이름·수치 도입 금지 (정상 날짜 변환은 제외) |
 | 문체 보존 | 어미 혼용·비한국어 텍스트 보존 |
 | 형식 준수 | 줄글만 허용, 표·글머리기호·태그 금지 |
 
-`issued_date`를 프롬프트 컨텍스트로 주입해 기사 작성일을 기준으로 절대 날짜 변환의 정확도를 평가 — 운영 단계에서 가장 흔한 오류 유형이었음.
+`issued_date`를 프롬프트 컨텍스트로 주입해, 운영에서 가장 흔한 오류인 상대→절대 날짜 오변환을 정밀 평가.
 
-**LLM Judge로 결정론적 후검증 + 불변식 enforcement**
+**자동화 파이프라인**
 
-GEval만으로도 점수는 나오지만, 점수와 자연어 사유가 운영 의사결정에는 직접 쓰기 어려움. Stage 2에서 별도 LLM judge(gpt-4.1-mini)가 `deepeval_score`와 `deepeval_reason`을 보고 ① 운영 사용 가능 여부(`is_validated`), ② 날짜 결함 여부(`is_date_issue`), ③ 한국어 사유를 JSON으로 반환.
+cron 기반 무인 파이프라인으로 데이터 수집부터 보고서 발송까지 연결:
 
-이때 핵심은 **결정론적 불변식 enforcement** — judge LLM이 어떤 응답을 내든 후처리 단계에서 "`is_validated=True` ⇒ `is_date_issue=False`"를 코드로 강제. 적합 판정은 부적합 사유가 없으므로 날짜 이슈도 정의상 없음. 프롬프트로만 규칙을 거는 방식은 LLM이 종종 위반하기 때문에, 응답 직후 enforce하는 구조로 일관성 확보.
+`매시간` → ① 신규 요약 결과 평가(Incremental) → ② Excel·Postgres 적재 → `일 1회` → ③ 누적 보고서 생성 → ④ 이메일 발송
 
-**Stratified 샘플링 + 쿼터 실패 자동 재시도**
-
-폴더(`naver_4_2000_3000`, `naver_5_800_2000` 등) 단위로 데이터 분포가 다르기 때문에, 전체 무작위 샘플로는 폴더 간 비교가 불가. `--sample-pct-per-folder 0.15` 같은 **폴더 단위 stratified 샘플링**을 구현해 success==True 데이터에서 폴더별 일정 비율을 뽑도록 함.
-
-deepeval/judge 모두 OpenAI 호출이라 쿼터·rate limit으로 score=None 행이 산발적으로 발생함. Stage 1과 Stage 2 양쪽에 retry 루프를 구현 — `--retry-failed-max-attempts 3 / --retry-failed-wait-seconds 300 / --retry-failed-workers <half>` 로, OpenAI 자동충전 사이클을 고려한 대기 후 절반의 worker로 재시도. 실패 0건이면 sleep 자체를 skip해 정상 경로 성능에 영향 없음.
-
-**Postgres 적재 + Incremental 평가**
-
-`--save-db` 시 `eval_runs`(실행 단위 집계)와 `eval_details`(파일 단위)를 적재. 핵심은 `(input_root, output_root, source, subdir, filename)` UNIQUE 제약 — 같은 파일이 여러 run에 걸쳐 평가돼도 한 행으로 UPSERT되고 `run_id`는 최근 run을 가리킴.
-
-그 위에 `--incremental` 모드를 얹어, DB에서 이미 평가된 `(source, subdir, filename)` 집합을 빼고 미평가분만 처리. cron으로 매시간 돌리면 누적된 신규 데이터만 채점되어, 자정에 대량 데이터가 들어와도 백로그가 누적되지 않음. `--incremental` 사용 시 `--deepeval-everything`을 자동 강제 — 기본 100건 샘플링이 나머지 행을 NULL 상태로 두면 다음 실행이 그 행을 "완료"로 오인해 침묵 차단하는 함정 방지.
-
-**운영 자동화 — cron + flock**
-
-- 매시 `cron_hourly_eval.sh` (`flock -n /tmp/naver_eval_hourly.lock`로 중복 실행 방지, lock 점유 시 skip 로그 후 exit 0 → 정상 cron 패턴 유지)
-- 일 1회 누적 보고서 + 이메일(`cron_cumulative_report.sh`, `cron_send_email.sh` 01:00 UTC / 10:00 KST)
-- `MAX_FILES=2000` 시간당 throughput 캡으로 초기 백로그가 한 run을 독점해 다음 cron을 starve시키는 걸 방지
+- **Incremental 평가** — Postgres에 적재된 `(source, subdir, filename)` 기준으로 미평가분만 채점(나머지는 UPSERT). cron 매시간 실행으로 60만 건을 백로그 없이 점진 소화
+- **쿼터 실패 자동 재시도** — OpenAI rate limit으로 발생하는 score=None 행만 대기 후 재시도, 실패 0건이면 sleep skip
+- **cron + flock** — `flock -n` 중복 실행 방지 + 시간당 throughput 캡으로 무중단 운영
+- 결과는 Excel(Summary/Details)과 Postgres(`eval_runs`/`eval_details` + 집계 뷰)에 저장, 일 1회 보고서 이메일 자동 발송
 
 **결과**
 
-- 운영 데이터 시간당 수천 건을 사람 개입 없이 평가·검증·보고서화하는 무중단 파이프라인 완성
-- 단일 GEval 설계로 토큰 비용을 5축 분리 대비 약 1/5 수준으로 절감
-- `is_date_issue` 후검증 도입으로 운영에서 가장 흔한 오류 유형(상대→절대 날짜 오변환)을 별도 지표로 시계열 추적
-- Stratified 샘플링 + Postgres 누적 적재로 폴더별·시계열 품질 추이가 자동 산출되어 모델 변경의 회귀 여부를 다음 cron 주기에 바로 감지 가능
+- 60만 건 규모를 사람 개입 없이 평가·적재·보고서화하는 무중단 파이프라인 완성
+- 5개 기준을 단일 GEval로 통합해 LLM 추론 횟수·토큰 비용을 약 1/5로 절감하면서 평가 품질 유지
+- Incremental + 폴더별 집계로 모델 변경 시 품질 회귀 여부를 다음 cron 주기에 즉시 감지
 
-**기술 스택**: Python, deepeval (GEval), OpenAI API (gpt-4.1-mini, gpt-5-mini), PostgreSQL, openpyxl, ThreadPoolExecutor, cron + flock, SMTP (STARTTLS)
+**기술 스택**: Python, deepeval (GEval), OpenAI API (gpt-4.1-mini), PostgreSQL, openpyxl, ThreadPoolExecutor, cron + flock, SMTP
 
 ---
 
