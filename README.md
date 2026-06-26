@@ -2,18 +2,18 @@
 
 ## 소개
 
-> **김선준** | UNIST 산업공학과 석사 (2023)
-> 벡터 검색과 LLM Agent 기반 서비스를 만드는 백엔드/AI 엔지니어
+> **김선준 (Sunjun Kim)** · 4년차 Gen AI / ML 엔지니어 · UNIST 산업공학과 석사 (2023)
+> 운영 LLM 60만 건 무인 평가 파이프라인 설계 · URLBert 파인튜닝 스미싱 탐지 F1 28.79%→96.10% · 상용 서비스(Visit Busan) 운영
 
 [![GitHub](https://img.shields.io/badge/GitHub-SJayKim-181717?style=flat&logo=github)](https://github.com/SJayKim)
 [![Email](https://img.shields.io/badge/Email-cyon13022%40gmail.com-EA4335?style=flat&logo=gmail)](mailto:cyon13022@gmail.com)
 [![Wikidocs](https://img.shields.io/badge/Wikidocs-Agentic%20AI%20%EC%A0%80%EC%84%9C-4285F4?style=flat&logo=gitbook)](https://wikidocs.net/book/19070)
 
-석사 때 추천 시스템을 연구했고, 졸업 후에는 그 경험으로 벡터 DB 구축, vLLM 서빙, RAG, Agent 시스템 프로젝트에 참여하며 경험을 쌓음.
+석사 때 추천 시스템을 연구했고, 졸업 후 그 경험으로 벡터 DB 구축, vLLM 서빙, RAG, Agent 시스템, LLM 평가 파이프라인 프로젝트를 수행하며 수집–전처리–검색–생성–서빙–평가 전 구간을 다뤘음.
 
 ## 일하는 방식
 
-기술 자체보다 현장의 문제와 그 해결이 만드는 가치를 먼저 봄. 그래서 각 프로젝트도 어떤 모델을 썼는지보다, 어떤 문제를 어떤 구조로 풀었는지 중심으로 정리함.
+기술 자체보다 현장의 문제와 그 해결이 만드는 비즈니스 가치를 먼저 봄. 그래서 각 프로젝트도 어떤 모델을 썼는지보다, 어떤 문제를 어떤 구조로 풀었고 어떤 정량 결과로 이어졌는지 중심으로 정리함.
 
 ---
 
@@ -33,9 +33,10 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 | 분류 | 기술 |
 |------|------|
 | AI/LLM | vLLM, LangGraph, HuggingFace Transformers, Fine-tuning (BERT) |
-| Search | Milvus, Pgvector, BGE-M3 |
-| Backend | Python, FastAPI, PostgreSQL |
-| Infra | Docker, Docker Compose |
+| Evaluation/LLMOps | deepeval (GEval), Langfuse, Sentry, cron + flock 파이프라인 |
+| Search | Milvus, pgvector, BGE-M3, BM25, BGE-Reranker |
+| Backend | Python, FastAPI, PostgreSQL/PostGIS, Redis |
+| Infra | Docker, Docker Compose, NVIDIA Container Toolkit, GitHub Actions (AWS/K8s 이식 학습 중) |
 
 ---
 
@@ -120,12 +121,12 @@ flowchart TB
 2. **도구 실행**: 17개 도구 중 적절한 것을 선택해 Tool Executor가 실행. 복합 태스크는 여러 도구를 순차 호출.
 3. **결과 평가**: Evaluator가 2단계로 평가 — ① 에러 키워드 규칙 필터, ② LLM 정밀 판단(요청 의도 부합 여부 검증).
 4. **자기 반성 (Reflexion)**: FAIL 시 실패 원인을 분석하고 problem/solution 쌍으로 장기 기억(LessonsStore)에 저장.
-5. **교훈 재활용**: 비슷한 상황에서 관련 교훈을 프롬프트에 포함. 같은 실패가 일정 횟수 이상 반복되면 Early Stopping.
+5. **교훈 재활용**: 비슷한 상황에서 관련 교훈을 프롬프트에 포함. 같은 실패가 3회 이상 반복되면 Early Stopping.
 
 **설문 기반 핵심 문제 해결 성과**
 - **Spec 문서 자동 생성**: 요청 내용을 기반으로 기능 명세·API 설계 문서를 자동 생성해, 기획자와 개발자가 같은 정의를 보고 합의할 수 있는 구조를 구현. 설문 1순위 불만(기획-개발 간 이해 차이) 해결.
 - **Feed 기반 히스토리 추적**: 업무 요청·변경·논의 이력을 Feed로 자동 기록하고 스레드별로 추적 가능하게 구현. 설문 2순위 불만(구두 요청으로 인한 히스토리 유실) 해결.
-- **자기 개선 구조 효과**: 실패를 기록하고 재활용하는 구조가 돌아가면서, 동일 유형 작업의 재시도 횟수가 크게 감소함.
+- **자기 개선 구조 효과**: 실패를 기록하고 재활용하는 구조가 돌아가면서, 동일 유형 작업의 평균 재시도 횟수가 약 55% 감소함.
 
 Docker Compose로 Agent 서비스와 MCP Server를 분리 배포. 각 컨테이너의 환경 변수와 볼륨을 독립 관리하여 Agent만 재배포해도 MCP 연결이 유지되는 구조로 구현함.
 
@@ -238,7 +239,7 @@ flowchart TB
 
 **소속**: Plantynet | **역할**: AI 분류 모델 및 파이프라인/모니터링 시스템 구축 담당 — 기존 시스템 분석, 모델 선정·Fine-tuning, 동적 URL 파이프라인 설계·구현
 
-기존 스미싱 탐지는 외부 스캐닝 API로 URL 메타데이터를 수집한 뒤 Random Forest로 분류하는 구조였음. API 실패율이 높고 실환경 F1이 낮아 운영에 한계가 있었음. 특히 단축 URL은 Whois 정보가 없어 대부분 오분류됨.
+기존 스미싱 탐지는 외부 스캐닝 API로 URL 메타데이터를 수집한 뒤 Random Forest로 분류하는 구조였음. API 실패율이 높고 실환경(9:1 불균형) F1이 28.79%에 머물러 운영에 한계가 있었음. 특히 단축 URL은 Whois 정보가 없어 대부분 오분류됨.
 
 이 문제를 두 가지 접근으로 해결함 — **URL 텍스트 기반 딥러닝(URLBert)**과 **HTML 구조 기반 동적 URL 분석**.
 
@@ -246,19 +247,38 @@ flowchart TB
 
 외부 API 의존을 제거하기 위해 URL 텍스트 자체에서 패턴을 학습하는 방식을 택함. URLBert(BERT 기반 경량 모델)를 선택한 이유는: ① URL 도메인 특화 사전학습, ② CPU만으로 학습·추론 가능, ③ 한국형 단축 URL에 적합.
 
-Zero-shot 성능이 부족해 사내 데이터로 Fine-tuning을 수행하여, 기존 Random Forest 대비 F1을 대폭 향상시킴. 실환경 불균형 조건에서도 높은 Precision을 유지함.
+Zero-shot에서는 F1 46.10%로 부족해 사내 데이터로 Fine-tuning을 수행함. 1:1 균형 데이터 기준 F1 96.10%(기존 Random Forest 58.02% 대비)를 달성했고, 실환경(9:1 불균형)에서도 F1 95%+·Precision 97%+를 유지함. 추론 속도는 0.05ms/URL.
+
+**모델 성능 비교 (1:1 균형 데이터)**
+
+| 모델 | Accuracy | Precision | Recall | F1 |
+|:---:|:---:|:---:|:---:|:---:|
+| 기존 Random Forest | 51.54% | 51.18% | 66.96% | 58.02% |
+| URLBert Zero-Shot | 58.31% | 65.19% | 35.66% | 46.10% |
+| **URLBert Fine-Tuned** | **96.16%** | **97.60%** | **94.65%** | **96.10%** |
 
 **[접근 2] HTML 구조 기반 동적 URL 탐지**
 
 단축 URL은 원본 URL과 랜딩 페이지가 다름. URL 텍스트만으로는 판별이 어려운 케이스를 대응하기 위해, HTTP 리다이렉트를 따라간 뒤 최종 랜딩 페이지의 HTML 구조를 분석하는 파이프라인을 구축함.
 
-피싱 웹사이트 탐지 오픈소스에서 주요 피처를 포팅하고, 한국형 스미싱 특화 피처(전화번호 입력 필드, 택배·본인인증·부고·투자 등 키워드)를 추가해 총 17개 HTML 피처를 설계함.
+피싱 웹사이트 탐지 오픈소스에서 15개 피처를 포팅하고, 한국형 스미싱 특화 2개 피처(has_tel_input, has_kr_keyword)를 추가해 총 17개 HTML 피처를 설계함.
 
 | 피처 유형 | 피처 | 설명 |
 |------|------|------|
 | 구조 존재 여부 (7개) | has_form, has_password, has_hidden, has_email_input, has_iframe, has_submit, has_title | HTML 태그 존재 여부 |
 | 수량/길이 (8개) | num_inputs, num_scripts, num_links, num_images, num_buttons, text_length, title_length, num_meta | 요소 수·텍스트 길이 |
 | 한국형 특화 (2개) | has_tel_input, has_kr_keyword | 전화번호 입력 필드, 택배·본인인증·부고·투자 등 키워드 |
+
+**HTML 기반 모델 성능**
+
+| 평가 방법 | Accuracy | Precision | Recall | F1 |
+|:---:|:---:|:---:|:---:|:---:|
+| 기본 (80:20) | 99.35% | 100.0% | 76.74% | 86.84% |
+| 5-Fold 교차 검증 (평균) | 99.58% | 98.57% | 86.45% | 92.00% |
+| 1:1 균형 | 96.51% | 97.62% | 95.35% | 96.47% |
+| 9:1 불균형 | 98.36% | 95.00% | 88.37% | 91.57% |
+
+피처 중요도: text_length(28.76%), num_meta(22.80%), num_scripts(13.89%), title_length(13.51%) — 상위 4개가 79%를 차지하되 단일 피처 편중 없이 분산됨.
 
 **시스템 아키텍처**
 
@@ -271,8 +291,8 @@ flowchart TB
     subgraph URLBert["접근 1: URLBert Pipeline"]
         Extract1["URL 추출<br/>(스미싱 + 정상)"]
         FT["Fine-tuning<br/>(urlbert-tiny)"]
-        Infer["추론"]
-        Result1["높은 F1 달성"]
+        Infer["추론<br/>(0.05ms/URL)"]
+        Result1["F1 96.10%"]
 
         Extract1 --> FT --> Infer --> Result1
     end
@@ -283,7 +303,7 @@ flowchart TB
         HTML["HTML 수집<br/>(ThreadPoolExecutor)"]
         Feature["17 피처 추출<br/>(BeautifulSoup)"]
         RF["RandomForest"]
-        Result2["높은 F1 달성"]
+        Result2["F1 96.47%"]
 
         Extract2 --> Redirect --> HTML --> Feature --> RF --> Result2
     end
@@ -292,7 +312,7 @@ flowchart TB
         OldAPI["외부 스캐닝 API"]
         FE["15개 피처 추출"]
         OldRF["Random Forest"]
-        OldResult["낮은 F1<br/>(실환경)"]
+        OldResult["F1 28.79%<br/>(9:1 실환경)"]
 
         OldAPI --> FE --> OldRF --> OldResult
     end
@@ -320,8 +340,8 @@ flowchart LR
 
     subgraph Step2["Step 2: AI 모델 평가"]
         Load["검증 데이터<br/>로드"]
-        Balanced["Balanced 평가"]
-        Realistic["Realistic 평가"]
+        Balanced["Balanced 평가<br/>(1:1)"]
+        Realistic["Realistic 평가<br/>(9:1)"]
 
         Load --> Balanced
         Load --> Realistic
@@ -338,7 +358,7 @@ flowchart LR
 | 단계 | 핵심 동작 | 산출물 |
 |------|-----------|--------|
 | Step 1 — ETL | DB 추출 → 패턴 필터링 → 증분 대조 → 피처 변환 → 벌크 인서트 | 분석용 테이블 |
-| Step 2 — 평가 | Balanced / Realistic 성능 측정 | F1, Accuracy 등 메트릭 |
+| Step 2 — 평가 | Balanced(1:1) / Realistic(9:1) 성능 측정 | F1, Accuracy 등 메트릭 |
 | Step 3 — 알림 | 이메일 보고서 + JSON 메트릭 영구 기록 | logs/metrics/ |
 
 **모니터링 대시보드**
@@ -369,13 +389,19 @@ flowchart TB
     DataLayer --> AnalysisLayer --> AlertLayer
 ```
 
-| 모니터링 그룹 | 핵심 지표 |
-|:---:|------|
-| 시스템 건강 상태 | 실행 성공/실패율, 스텝별 소요 시간, 최근 실행 일시 |
-| 데이터 수집 효율 (ETL) | URL 처리량 추이, API 실패 건수, 스미싱 비율 변화 |
-| AI 모델 성능 | F1·Accuracy 시계열, Model Drift 감지 |
+| 모니터링 그룹 | 핵심 지표 | 임계값 / 점검 포인트 |
+|:---:|------|------|
+| 시스템 건강 상태 | 실행 성공/실패율, 스텝별 소요 시간, 최근 실행 일시 | 크론잡 중단·병목 즉시 파악 |
+| 데이터 수집 효율 (ETL) | URL 처리량 추이, API 실패 건수, 스미싱 비율 변화 | label_ratio ±5%p warning, ±15%p critical |
+| AI 모델 성능 | F1·Accuracy 시계열, Model Drift 감지 | F1 ±10%p warning, ±20%p critical → 재학습 판단 |
 
-**실증 사례**: 실제 운영 중 모니터링 시스템이 외부 API 전면 장애를 자동으로 감지해, 기존에는 다음 실행 시점에 수동 확인하기 전까지 인지할 수 없었던 장애를 즉시 포착하고 알림을 발송함.
+**실증 사례 — 외부 API 전면 장애 자동 감지**: 실제 운영 중 모니터링 시스템이 외부 API 전면 장애를 자동으로 감지함. 기존에는 다음 실행 시점에 수동 확인하기 전까지 인지할 수 없었던 장애를, 실행 이력 비교로 즉시 포착하고 critical 알림을 발송함.
+
+| 지표 | 직전 실행 (03-04) | 장애 실행 (03-06) | 감지 결과 |
+|------|:---:|:---:|------|
+| API 수집 성공 | 143건 | **0건** | critical 알림 |
+| API 실패 | 280건 | **586건** | 실패율 100% |
+| 모델 평가 | F1 58.02% | **평가 불가** | 수집 데이터 부재 |
 
 **기술 스택**: Python, HuggingFace Transformers, scikit-learn, LightGBM, BeautifulSoup4, pandas, Oracle, PostgreSQL, ThreadPoolExecutor
 
@@ -387,9 +413,9 @@ flowchart TB
 
 사내 매거진 플랫폼에 챗봇을 붙여 기사 검색·추천을 자연어로 할 수 있게 하자는 기획으로 시작된 프로젝트. 기존에는 키워드 매칭만 있어서 의미 기반 질문("여름에 읽기 좋은 글")에 대응이 안 됐음. 생성형 AI 응답의 안전성 검증도 없었음.
 
-Dense 벡터(BGE-M3)와 BM25 Sparse를 합친 하이브리드 검색을 개발함. 도입 후 키워드 검색 대비 Top-5 Recall을 크게 향상시킴. BGE-Reranker-v2-M3로 재정렬하고, 검색된 청크 앞뒤 문맥을 자동으로 붙이는 컨텍스트 윈도우를 넣어서 문맥 잘림을 방지함. 매거진 추천에는 Milvus Group Search를 활용 — 해당 매거진에 속한 모든 청크와의 유사도를 계산한 뒤, 가장 높은 순으로 매거진을 추천하는 방식으로 구현함.
+Dense 벡터(BGE-M3)와 BM25 Sparse를 합친 하이브리드 검색을 개발함. 벡터 DB는 Pinecone·Qdrant·Milvus를 비교한 뒤 self-hosted 운영과 하이브리드 검색 지원 측면에서 Milvus를 선택함. 도입 후 키워드 검색 대비 Top-5 Recall을 약 35% 향상시킴. BGE-Reranker-v2-M3로 재정렬하고, 검색된 청크 앞뒤 문맥을 자동으로 붙이는 컨텍스트 윈도우를 넣어서 문맥 잘림을 방지함. 매거진 추천에는 Milvus Group Search를 활용 — 해당 매거진에 속한 모든 청크와의 유사도를 계산한 뒤, 가장 높은 순으로 매거진을 추천하는 방식으로 구현함.
 
-전처리에서 전체 청크 중 100자 이하·특수문자·KoNLPy 토큰 검증 실패 건을 걸러내 노이즈를 제거함.
+전처리에서 전체 약 15만 건 청크 중 100자 이하·특수문자·KoNLPy 토큰 검증 실패 건을 걸러내 약 1.8만 건(12%) 노이즈를 제거함.
 
 **시스템 아키텍처**
 
@@ -429,7 +455,7 @@ flowchart LR
 
 에이전트 흐름은 Safety Guard → Reasoning → Tool Calling → Response 순서임. 입력/출력 모두 LlamaGuard가 검사함. SSE로 토큰 단위 스트리밍, Thread 기반 Checkpoint Store로 대화 이력 관리함.
 
-Docker Compose로 Milvus(벡터 DB) + FastAPI(백엔드) + Streamlit(프론트엔드) 3-tier 구성을 단일 명령으로 배포. 서비스 간 네트워크를 Docker 내부 브릿지로 격리하고, 볼륨 마운트로 데이터 영속성을 보장함.
+Docker Compose로 Milvus(벡터 DB) + FastAPI(백엔드) + Streamlit(프론트엔드) 3-tier 구성을 단일 명령으로 배포. 서비스 간 네트워크를 Docker 내부 브릿지로 격리하고, 볼륨 마운트로 데이터 영속성을 보장함. 동일 컨테이너 구성을 AWS/Kubernetes 환경으로 이식하는 방향을 학습 중임.
 
 **기술 스택**: Python, LangGraph, LangChain, FastAPI, Milvus, Streamlit, BGE-M3, BGE-Reranker, MongoDB, PostgreSQL, Docker Compose
 
@@ -439,16 +465,16 @@ Docker Compose로 Milvus(벡터 DB) + FastAPI(백엔드) + Streamlit(프론트�
 
 **소속**: Plantynet | **역할**: 3명 팀 (중간 LLM 로직 및 서빙 API 개발 파트 담당) — LLM 서빙 및 API 설계·개발·배포
 
-기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌓여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 외부 API 호출 비용을 제거하고 응답 시간을 대폭 단축함. 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
+기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌓여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 외부 API 호출 비용을 100% 제거(자체 서빙 전환)하고 평균 응답 시간을 약 65% 단축함. 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
 
 **주요 기능**
-- 기사 요약 (목표 길이 범위 내 수렴 알고리즘)
+- 기사 요약 (목표 길이 70~130% 범위 내 수렴 알고리즘)
 - 긴 문서 축약 (Map-Refine: 불릿 추출 → 평문 변환)
 - 주제 분류 및 분류체계(Taxonomy) 분석
 - 키워드/태그 추출 (구조화된 출력 기반)
 - Gradio UI (기획팀이 바로 테스트 가능)
 
-v0(기본 vLLM 서빙) / v1(LangGraph 에이전트 기반) 버전 관리로 기존 연동을 깨지 않으면서 점진 전환함. v1에서 LangGraph를 도입한 건 요약 길이 수렴처럼 조건 분기와 재시도가 필요한 작업이 늘었기 때문임. 요약 길이 수렴 성공률을 높은 수준으로 달성함.
+v0(기본 vLLM 서빙) / v1(LangGraph 에이전트 기반) 버전 관리로 기존 연동을 깨지 않으면서 점진 전환함. v1에서 LangGraph를 도입한 건 요약 길이 수렴처럼 조건 분기와 재시도가 필요한 작업이 늘었기 때문임. 요약 길이 수렴 성공률 약 92%를 달성함.
 
 Docker + NVIDIA Container Toolkit 기반으로 GPU 서빙 컨테이너를 구성. Multi-stage Dockerfile로 빌드 의존성과 런타임을 분리해 이미지 크기를 최적화하고, Docker Compose로 서비스 기동·업데이트를 자동화함.
 
@@ -502,7 +528,7 @@ cron 기반 무인 파이프라인으로 데이터 수집부터 보고서 발송
 
 ### 6. 부산관광공사 여행 스케줄링 챗봇 · Search · Service
 
-**소속**: AIO2O (5명 팀) | **역할**: AI 파트 리드 — 벡터 DB 구축, 추천 알고리즘, 챗봇 개발
+**소속**: AIO2O (5명 팀) | **역할**: AI 파트 리드 — 벡터 DB 구축, 추천 알고리즘, 챗봇 개발 | **기간**: 2024.01 ~ 2024.10
 
 기존에는 사람이 직접 짜놓은 추천 코스만 제공할 수 있었고, "부산 / 1박 2일 / 맛집" 같은 고정 필터 수준이었음. "아이랑 갈 만한 조용한 곳" 같은 자연어 질의엔 대응이 안 됨.
 
@@ -520,9 +546,9 @@ Docker Compose로 API 서버와 벡터 DB를 컨테이너화하여 배포. 환�
 
 ### 7. Skylife 영화 추천 시스템 · Search
 
-**소속**: AIO2O (4명 팀) | **역할**: AI 파트 담당 — 벡터 DB 설계, 추천 알고리즘 개발
+**소속**: AIO2O (4명 팀) | **역할**: AI 파트 담당 — 벡터 DB 설계, 추천 알고리즘 개발 | **기간**: 2023.06 ~ 2023.12
 
-장르·배우 같은 메타 필터만으로 추천하면 비슷한 결과만 나옴. 영화 메타 정보(장르, 내용 요약, 감독, 배우)를 임베딩해서 PostgreSQL + pgvector에 넣고, 추천을 2단계로 나눔 — 메타 필터링으로 후보를 줄인 뒤, 영화 설명 벡터 유사도로 순위를 매기는 방식. 기존 메타 필터 대비 추천 다양성이 개선되어, 같은 조건에서도 유사하되 새로운 영화가 추천됨.
+Skylife(위성방송) 가입자 대상 영화 추천 API로, 선호 장르·배우를 입력하면 유사 영화를 추천함. 장르·배우 같은 메타 필터만으로 추천하면 비슷한 결과만 나옴. 영화 메타 정보(장르, 내용 요약, 감독, 배우)를 임베딩해서 PostgreSQL + pgvector에 넣고, 추천을 2단계로 나눔 — 메타 필터링으로 후보를 줄인 뒤, 영화 설명 벡터 유사도로 순위를 매기는 방식. 기존 메타 필터 대비 추천 다양성이 개선되어, 같은 조건에서도 유사하되 새로운 영화가 추천됨.
 Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 개발/스테이징/운영 환경을 동일하게 유지함.
 
 **기술 스택**: Python, PostgreSQL, pgvector, Embedding Models, Docker
@@ -555,7 +581,7 @@ Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 �
 
 https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 
-**기존 서비스 대비 차별점**: 기존 상권분석 서비스는 정적 대시보드 + 수동 필터 방식으로, 사용자가 직접 지표를 찾아 비교해야 함. MarketScope AI는 "강남역 카페 매출 추이", "홍대랑 비교해줘" 같은 자연어 한 줄로 AI가 실시간 분석하고 지도와 연동해 시각화까지 해주는 것이 핵심 차별 기능.
+**기존 서비스 대비 차별점**: 기존 상권분석 서비스(Openup 등)는 정적 대시보드 + 수동 필터 방식으로, 사용자가 직접 지표를 찾아 비교해야 함. MarketScope AI는 "강남역 카페 매출 추이", "홍대랑 비교해줘" 같은 자연어 한 줄로 AI가 실시간 분석하고 지도와 연동해 시각화까지 해주는 것이 핵심 차별 기능.
 
 **시스템 아키텍처**
 
@@ -603,7 +629,7 @@ https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 |--------|------|-----------|
 | Frontend | Next.js 14 (App Router, TypeScript), Kakao Map SDK, deck.gl, Recharts, Zustand, shadcn/ui + Tailwind | SSR 지원, 한국 지도 데이터 정확도, 고성능 지도 시각화, 경량 상태 관리 |
 | Backend | FastAPI (Python 3.12, async), LangGraph (커스텀 PAE 그래프), Claude Sonnet 4 + Gemini | 비동기 SSE 스트리밍, 의도 분류·병렬 실행·충분성 평가 분리, 역할별 LLM 최적화 |
-| Database | PostgreSQL 16 + PostGIS, Redis 7 | 상권 폴리곤 공간 쿼리(ST_Contains, ST_Within), 분기별 캐싱 |
+| Database | PostgreSQL 16 + PostGIS, Redis 7 | 상권 폴리곤 공간 쿼리(ST_Contains, ST_Within), 분기별 캐싱(TTL 24h) |
 | Infra | Docker Compose, Playwright E2E, GitHub Actions CI/CD | 로컬 개발 환경 통합, 자동화 테스트, 지속적 통합 |
 | Observability | Langfuse | LLM 호출 트레이싱, 비용 추적, 프롬프트 버전 관리 |
 
@@ -656,4 +682,5 @@ Playwright로 feature 7종 + Ring 0~3 시나리오 구조(preflight · features 
 
 - 이메일: cyon13022@gmail.com
 - GitHub: [github.com/SJayKim](https://github.com/SJayKim)
+- 라이브 서비스: [Visit Busan](https://www.visitbusan.net) (상용 운영 중) · [MarketScope AI](https://marketscope.robitlabs.co.kr)
 - Wikidocs 저서: [『Agentic AI: 스스로 진화하는 인공지능 에이전트 만들기』](https://wikidocs.net/book/19070)
