@@ -42,6 +42,8 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 
 ## 프로젝트
 
+> **다이어그램 범례** · 🟦 진입·클라이언트 · 🟪 AI·LLM 핵심 로직 · 🟨 데이터·저장소 · 🟥 안전·평가 게이트 · 🟩 성과·결과 · ⬜ 외부 시스템(점선)
+
 ### 1. ReAct + Reflexion 자기 개선형 AI 에이전트 · Agent · Platform
 
 **소속**: Plantynet | **역할**: 3명 팀 (Front 1, Back 1, AI 1) AI Agent 로직 개발 담당 — Agent 로직 설계·구현·배포
@@ -65,54 +67,46 @@ Kim, Sunjun (2023) | UNIST 산업공학과 석사
 
 ```mermaid
 flowchart TB
-    subgraph Platform["업무관리 플랫폼"]
-        User["직원"]
-        Request["자연어 요청<br/>('Spec 문서 작성해줘')"]
-        User --> Request
+    User(["직원 · 자연어 요청<br/>'Spec 문서 작성해줘'"])
+
+    subgraph Loop["ReflexionGraph · LangGraph — 자기개선 루프"]
+        direction TB
+        Actor["Actor<br/>추론 · 도구 계획"]
+        Tool["Tool Executor"]
+        Eval{"Evaluator<br/>규칙 + LLM 판정"}
+        Reflect["Reflection<br/>실패 원인 분석"]
+        Done(["최종 응답"])
+        Actor -->|action| Tool --> Eval
+        Eval -->|PASS| Done
+        Eval -->|FAIL| Reflect
+        Reflect -->|lesson 재투입| Actor
     end
 
-    subgraph ReflexionGraph["ReflexionGraph (LangGraph)"]
-        START((START))
-        Actor["Actor<br/>(LLM)"]
-        ToolExec["Tool Executor"]
-        Evaluator["Evaluator<br/>(규칙+LLM)"]
-        Reflection["Reflection<br/>(LLM)"]
-        END_NODE((END))
+    Lessons[("LessonsStore<br/>장기 기억")]
 
-        START --> Actor
-        Actor -->|"action"| ToolExec
-        Actor -->|"final_answer"| END_NODE
-        ToolExec --> Evaluator
-        Evaluator -->|"PASS"| Actor
-        Evaluator -->|"FAIL"| Reflection
-        Reflection -->|"lesson"| Actor
+    subgraph Ext["플랫폼 API · 17개 도구"]
+        direction TB
+        CRUD["프로젝트 · 업무 · 활동<br/>CRUD + 검색/상태변경"]
+        KGT["query_knowledge_graph<br/>hybrid · local · global"]
     end
+    KGDB[("Knowledge Graph<br/>LightRAG")]
 
-    subgraph Memory["Memory"]
-        LongTerm["LessonsStore<br/>(장기 기억)"]
-    end
+    User --> Actor
+    Tool --> CRUD
+    Tool --> KGT --> KGDB
+    Reflect -. 교훈 저장 .-> Lessons
+    Actor -. 교훈 조회 .-> Lessons
 
-    subgraph Resources["플랫폼 API (17개 도구)"]
-        ProjectAPI["프로젝트 CRUD"]
-        TaskAPI["업무 CRUD"]
-        ActivityAPI["활동 CRUD"]
-        Utility["검색 · 목록 · 상태 변경"]
-    end
-
-    subgraph KG["Knowledge Graph (검색 도구)"]
-        KGQuery["query_knowledge_graph<br/>(hybrid · local · global)"]
-        LightRAG[("LightRAG<br/>Entity · Relation · Chunk")]
-        KGQuery --> LightRAG
-    end
-
-    Request --> START
-    ToolExec --> ProjectAPI
-    ToolExec --> TaskAPI
-    ToolExec --> ActivityAPI
-    ToolExec --> Utility
-    ToolExec --> KGQuery
-    Reflection --> LongTerm
-    Actor -.->|"교훈 조회"| LongTerm
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef guard fill:#FEE2E2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef ext fill:#F9FAFB,stroke:#9CA3AF,stroke-width:1.2px,stroke-dasharray:4 3,color:#374151;
+    class User entry;
+    class Actor,Reflect ai;
+    class Eval guard;
+    class Lessons,KGDB data;
+    class CRUD,KGT ext;
 ```
 
 **에이전트 프로세스 상세**
@@ -136,34 +130,42 @@ CRUD 도구만으로는 "관련 스레드 찾아줘", "지난 분기 개발계�
 
 ```mermaid
 flowchart LR
-    subgraph Sources["플랫폼 데이터"]
-        Thread["Thread<br/>(업무 스레드)"]
-        Feed["Feed<br/>(논의 · 이력)"]
-        Files["첨부파일<br/>(PDF · 문서 · 이미지)"]
+    subgraph Src["플랫폼 데이터"]
+        direction TB
+        Thread["Thread"]
+        Feed["Feed · 논의/이력"]
+        Files["첨부파일<br/>PDF · 문서 · 이미지"]
     end
 
-    subgraph Pipeline["인제스트 파이프라인"]
-        Convert["Document Converter<br/>(텍스트 추출)"]
-        Summarize["LLM 구조화 요약<br/>(노이즈 제거)"]
-        Extract["LightRAG<br/>엔티티/관계 자동 추출"]
+    subgraph Pipe["인제스트 파이프라인"]
+        direction TB
+        Conv(["Document Converter<br/>텍스트 추출"])
+        Summ(["LLM 구조화 요약<br/>노이즈 제거 · 핵심 강조"])
+        Extr(["LightRAG<br/>엔티티 · 관계 추출"])
+        Conv --> Summ --> Extr
     end
 
-    subgraph KGStore["Knowledge Graph"]
-        Entity["엔티티<br/>(Person · Project · Team ·<br/>Document · Concept ...)"]
-        Relation["관계<br/>(소속 · 포함 · 참조 ...)"]
-        Chunk["원본 청크<br/>(source_id 매핑)"]
+    subgraph Store["Knowledge Graph"]
+        direction TB
+        Ent[("엔티티")]
+        Rel[("관계")]
+        Chunk[("원본 청크<br/>source_id 매핑")]
     end
 
-    subgraph AgentQuery["Agent Tool"]
-        Tool["query_knowledge_graph<br/>(mode: hybrid / local / global)"]
-    end
+    Tool["Agent Tool<br/>query_knowledge_graph"]
 
-    Thread --> Convert
-    Feed --> Convert
-    Files --> Convert
-    Convert --> Summarize --> Extract
-    Extract --> Entity & Relation & Chunk
-    Tool -.->|검색| Entity & Relation & Chunk
+    Src --> Conv
+    Extr --> Ent & Rel & Chunk
+    Tool -. 검색 .-> Ent & Rel & Chunk
+
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef ext fill:#F9FAFB,stroke:#9CA3AF,stroke-width:1.2px,stroke-dasharray:4 3,color:#374151;
+    class Thread,Feed,Files ext;
+    class Summ ai;
+    class Ent,Rel,Chunk data;
+    class Tool entry;
 ```
 
 **파이프라인 설계**
@@ -194,29 +196,39 @@ KG 검색은 별도 도구(`query_knowledge_graph`)로 등록되어, 에이전�
 LLM 기반 Agent는 비결정적(non-deterministic) 특성으로 운영 단계에서 문제가 발생함. 이를 해결하기 위해 5개 Observability Spec을 설계하고, Langfuse + Sentry + Grafana 도구를 선정함.
 
 ```mermaid
-flowchart TB
-    subgraph Problem["운영 단계 문제"]
-        P1["블랙박스 추론<br/>왜 이런 답변인지 재현 불가"]
-        P2["비용 불투명<br/>토큰 소모 파악 불가"]
-        P3["병목 미식별<br/>LLM? API? 어디가 느린지 모름"]
-        P4["에러 무분류<br/>except Exception 일괄 처리"]
+flowchart LR
+    subgraph Prob["운영 단계 문제"]
+        direction TB
+        P1["블랙박스 추론<br/>재현 불가"]
+        P2["비용 불투명<br/>토큰 소모 미파악"]
+        P3["병목 미식별"]
+        P4["에러 무분류"]
     end
 
-    subgraph Specs["5개 Observability Spec"]
-        A["Spec A<br/>Request Tracing<br/>trace_id로 경로 연결"]
-        B["Spec B<br/>Prompt/Response Logging<br/>재현성 확보"]
-        C["Spec C<br/>Token Usage<br/>노드별 비용 추적"]
-        D["Spec D<br/>Latency Monitoring<br/>TTFT, 병목 식별"]
-        E["Spec E<br/>Error Tracking<br/>5카테고리 분류"]
+    subgraph Spec["Observability Spec 5종"]
+        direction TB
+        SA["A · Request Tracing"]
+        SB["B · Prompt/Response 로깅"]
+        SC["C · Token Usage"]
+        SD["D · Latency · TTFT"]
+        SE["E · Error Tracking<br/>5카테고리"]
     end
 
-    subgraph Tools["도구 선정"]
-        Langfuse["Langfuse<br/>A~D 일괄 커버<br/>LLM 특화, self-host"]
-        Sentry["Sentry<br/>에러 분류·알림"]
-        Grafana["Grafana + Prometheus<br/>대시보드"]
+    subgraph Tool["도구 선정"]
+        direction TB
+        LF["Langfuse<br/>A~D 커버 · self-host"]
+        SN["Sentry<br/>에러 분류 · 알림"]
+        GF["Grafana + Prometheus"]
     end
 
-    Problem --> Specs --> Tools
+    Prob ==> Spec ==> Tool
+
+    classDef guard fill:#FEE2E2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef ext fill:#F9FAFB,stroke:#9CA3AF,stroke-width:1.2px,stroke-dasharray:4 3,color:#374151;
+    class P1,P2,P3,P4 guard;
+    class SA,SB,SC,SD,SE ai;
+    class LF,SN,GF ext;
 ```
 
 **5개 Observability Spec:**
@@ -284,41 +296,37 @@ Zero-shot에서는 F1 46.10%로 부족해 사내 데이터로 Fine-tuning을 수
 
 ```mermaid
 flowchart TB
-    subgraph Source["데이터 소스"]
-        Oracle[("사내 DB<br/>스미싱 URL 테이블")]
+    Oracle[("사내 DB<br/>스미싱 URL")]
+
+    subgraph A1["접근 1 · URLBert Pipeline"]
+        direction LR
+        FT(["Fine-tuning<br/>urlbert-tiny"]) --> Inf(["추론 0.05ms/URL"]) --> R1["F1 96.10%"]
     end
 
-    subgraph URLBert["접근 1: URLBert Pipeline"]
-        Extract1["URL 추출<br/>(스미싱 + 정상)"]
-        FT["Fine-tuning<br/>(urlbert-tiny)"]
-        Infer["추론<br/>(0.05ms/URL)"]
-        Result1["F1 96.10%"]
-
-        Extract1 --> FT --> Infer --> Result1
+    subgraph A2["접근 2 · Dynamic HTML Pipeline"]
+        direction LR
+        Redir(["HTTP Redirect 추적"]) --> Coll(["HTML 수집<br/>ThreadPool"]) --> Feat(["17 피처 추출"]) --> RF(["RandomForest"]) --> R2["F1 96.47%"]
     end
 
-    subgraph DynamicHTML["접근 2: Dynamic HTML Pipeline"]
-        Extract2["URL 추출"]
-        Redirect["HTTP Redirect 추적"]
-        HTML["HTML 수집<br/>(ThreadPoolExecutor)"]
-        Feature["17 피처 추출<br/>(BeautifulSoup)"]
-        RF["RandomForest"]
-        Result2["F1 96.47%"]
-
-        Extract2 --> Redirect --> HTML --> Feature --> RF --> Result2
+    subgraph Old["기존 시스템 · 대체 대상"]
+        direction LR
+        OAPI["외부 스캐닝 API"] --> OFE["15 피처"] --> ORF["Random Forest"] --> OR["F1 28.79%<br/>9:1 실환경"]
     end
 
-    subgraph Legacy["기존 시스템 (대체 대상)"]
-        OldAPI["외부 스캐닝 API"]
-        FE["15개 피처 추출"]
-        OldRF["Random Forest"]
-        OldResult["F1 28.79%<br/>(9:1 실환경)"]
+    Oracle --> FT
+    Oracle --> Redir
 
-        OldAPI --> FE --> OldRF --> OldResult
-    end
-
-    Oracle --> Extract1
-    Oracle --> Extract2
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:1.5px,color:#166534;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef guard fill:#FEE2E2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    classDef ext fill:#F9FAFB,stroke:#9CA3AF,stroke-width:1.2px,stroke-dasharray:4 3,color:#374151;
+    class Oracle data;
+    class FT,RF ai;
+    class R1,R2 result;
+    class OAPI,OFE,ORF ext;
+    class OR guard;
+    style Old fill:#F9FAFB,stroke:#9CA3AF,stroke-dasharray:5 4;
 ```
 
 **[접근 3] 파이프라인 오케스트레이션 + 성능 모니터링 시스템**
@@ -329,30 +337,30 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    subgraph Step1["Step 1: 데이터 수집 및 적재 (ETL)"]
-        Extract["DB에서<br/>URL 추출"]
-        Filter["URL 필터링<br/>+ 증분 처리"]
-        API["피처 변환"]
-        Bulk["분석 테이블<br/>벌크 인서트"]
-
-        Extract --> Filter --> API --> Bulk
+    subgraph S1["Step 1 · 데이터 수집·적재 (ETL)"]
+        direction TB
+        Ex(["DB URL 추출"]) --> Fil(["필터링 + 증분"]) --> Cv(["피처 변환"]) --> Bulk[("분석 테이블")]
     end
 
-    subgraph Step2["Step 2: AI 모델 평가"]
-        Load["검증 데이터<br/>로드"]
-        Balanced["Balanced 평가<br/>(1:1)"]
-        Realistic["Realistic 평가<br/>(9:1)"]
-
-        Load --> Balanced
-        Load --> Realistic
+    subgraph S2["Step 2 · AI 모델 평가"]
+        direction TB
+        Bal(["Balanced 1:1"])
+        Real(["Realistic 9:1"])
     end
 
-    subgraph Step3["Step 3: 알림 및 로깅"]
-        Email["이메일 보고서<br/>발송"]
-        Metrics["JSON 메트릭<br/>영구 기록"]
+    subgraph S3["Step 3 · 알림·로깅"]
+        direction TB
+        Mail["이메일 보고서"]
+        Met[("JSON 메트릭<br/>영구 기록")]
     end
 
-    Step1 --> Step2 --> Step3
+    Bulk --> Bal & Real
+    S2 ==> S3
+
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:1.5px,color:#166534;
+    class Bulk,Met data;
+    class Bal,Real result;
 ```
 
 | 단계 | 핵심 동작 | 산출물 |
@@ -367,26 +375,36 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    subgraph DataLayer["Data Layer"]
-        ExecJSON["실행별 메트릭<br/>JSON"]
-        History["실행 이력"]
+    subgraph DL["Data Layer"]
+        direction LR
+        EJ[("실행별 메트릭<br/>JSON")]
+        Hist[("실행 이력")]
         PG[("PostgreSQL<br/>운영 요약")]
     end
 
-    subgraph AnalysisLayer["Analysis Layer"]
-        Check1["시스템 건강 상태<br/>실행 성공/실패, 소요 시간"]
-        Check2["데이터 수집 효율<br/>URL 처리량, API 실패율,<br/>레이블 비율 변화"]
-        Check3["AI 모델 성능<br/>F1/Accuracy 시계열,<br/>Model Drift 감지"]
-        LLM["LLM 보고서 생성"]
+    subgraph AL["Analysis Layer"]
+        direction LR
+        C1(["시스템 건강<br/>성공·소요시간"])
+        C2(["수집 효율<br/>처리량 · 실패율 · 레이블 변화"])
+        C3(["모델 성능<br/>F1 시계열 · Drift 감지"])
+        LLM(["LLM 보고서 생성"])
     end
 
-    subgraph AlertLayer["Alert & Presentation"]
-        Report["자동 보고서"]
-        EmailAlert["이메일 알림<br/>(warning / critical)"]
-        Dashboard["시계열 대시보드"]
+    subgraph PL["Alert & Presentation"]
+        direction LR
+        Rep["자동 보고서"]
+        EA["이메일 알림<br/>warning · critical"]
+        Dash["시계열 대시보드"]
     end
 
-    DataLayer --> AnalysisLayer --> AlertLayer
+    DL ==> AL ==> PL
+
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef guard fill:#FEE2E2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    class EJ,Hist,PG data;
+    class LLM ai;
+    class EA guard;
 ```
 
 | 모니터링 그룹 | 핵심 지표 | 임계값 / 점검 포인트 |
@@ -421,36 +439,37 @@ Dense 벡터(BGE-M3)와 BM25 Sparse를 합친 하이브리드 검색을 개발�
 
 ```mermaid
 flowchart LR
-    subgraph Frontend
-        User["User"]
-        UI["Streamlit UI"]
+    User(["User"]) --> UI["Streamlit UI"] --> API["FastAPI"]
+
+    subgraph Core["LangGraph Agent"]
+        direction TB
+        Agent["Agent<br/>Reasoning"]
+        Guard{"guard_input<br/>LlamaGuard"}
+        Recheck{"출력 Safety<br/>Re-check"}
     end
 
-    subgraph Backend["FastAPI Service"]
-        API["FastAPI"]
-        Agent["LangGraph Agent"]
+    subgraph Ret["하이브리드 검색"]
+        direction TB
+        ToolNode["ToolNode<br/>milvus_search"]
+        Retr["MilvusRetriever<br/>BGE-M3 + BM25 · Reranker"]
     end
+    Milvus[("Milvus DB")]
 
-    subgraph Safety["Safety Layer"]
-        Guard["guard_input<br/>(LlamaGuard)"]
-        Recheck["acall_model<br/>(Safety Re-check)"]
-    end
-
-    subgraph Tools["Tool Layer"]
-        ToolNode["ToolNode<br/>(milvus_search)"]
-        Retriever["MilvusRetriever"]
-    end
-
-    subgraph Storage
-        Milvus[("Milvus DB")]
-    end
-
-    User --> UI --> API --> Agent
+    API --> Agent
     Agent --> Guard
     Guard -->|Pass| Recheck
     Guard -->|Block| API
-    Agent --> ToolNode --> Retriever --> Milvus
+    Agent --> ToolNode --> Retr --> Milvus
     Recheck --> API
+
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef guard fill:#FEE2E2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    class User entry;
+    class Agent ai;
+    class Guard,Recheck guard;
+    class Milvus data;
 ```
 
 에이전트 흐름은 Safety Guard → Reasoning → Tool Calling → Response 순서임. 입력/출력 모두 LlamaGuard가 검사함. SSE로 토큰 단위 스트리밍, Thread 기반 Checkpoint Store로 대화 이력 관리함.
@@ -466,6 +485,36 @@ Docker Compose로 Milvus(벡터 DB) + FastAPI(백엔드) + Streamlit(프론트�
 **소속**: Plantynet | **역할**: 3명 팀 (중간 LLM 로직 및 서빙 API 개발 파트 담당) — LLM 서빙 및 API 설계·개발·배포
 
 기사 요약, 분류, 태깅을 각각 따로 처리하고 있었는데, 외부 API 호출 비용과 레이턴시가 쌓여서 자체 서빙이 필요해짐. vLLM LLMEngine을 FastAPI 프로세스 안에서 직접 구동하는 in-process 아키텍처로 외부 API 호출 비용을 100% 제거(자체 서빙 전환)하고 평균 응답 시간을 약 65% 단축함. 토큰 레벨 연속 배칭으로 동시 요청 효율을 높이고 asyncio.Semaphore로 GPU 메모리 초과를 방지함.
+
+**시스템 아키텍처 — in-process vLLM 서빙**
+
+```mermaid
+flowchart LR
+    subgraph Proc["FastAPI 프로세스 · in-process 서빙"]
+        direction TB
+        FA["FastAPI"]
+        Sem{"asyncio.Semaphore<br/>GPU 메모리 가드"}
+        subgraph Eng["vLLM LLMEngine · 연속 배칭"]
+            direction LR
+            V0["v0 · 기본 서빙"]
+            V1["v1 · LangGraph<br/>길이 수렴 · 재시도"]
+        end
+        FA --> Sem --> Eng
+    end
+
+    Client(["기획팀 · API 요청"]) --> Gradio["Gradio UI<br/>바로 테스트"] --> FA
+    Client --> FA
+    Eng --> Out["요약 · 분류 · 태깅<br/>외부 API 비용 0 · 응답 -65%"]
+
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef guard fill:#FEE2E2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:1.5px,color:#166534;
+    class Client entry;
+    class V0,V1 ai;
+    class Sem guard;
+    class Out result;
+```
 
 **주요 기능**
 - 기사 요약 (목표 길이 70~130% 범위 내 수렴 알고리즘)
@@ -509,6 +558,37 @@ Docker + NVIDIA Container Toolkit 기반으로 GPU 서빙 컨테이너를 구성
 
 cron 기반 무인 파이프라인으로 데이터 수집부터 보고서 발송까지 연결:
 
+```mermaid
+flowchart LR
+    Res["요약 결과 60만 건<br/>*_res.json"]
+
+    subgraph Eval["평가 · LLM 호출 최소화"]
+        direction TB
+        Quant(["정량 지표<br/>정상응답률 · 길이비율<br/>LLM 불필요"])
+        Qual(["품질 지표 · 단일 GEval<br/>5기준 1회 호출<br/>추론 1/5 절감"])
+    end
+
+    subgraph Auto["cron 무인 파이프라인"]
+        direction TB
+        Inc(["Incremental<br/>미평가분만 채점"])
+        Store[("PostgreSQL + Excel")]
+        Mail["일 1회 보고서 · 이메일"]
+        Inc --> Store --> Mail
+    end
+
+    Res --> Quant & Qual
+    Quant & Qual --> Inc
+
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:1.5px,color:#166534;
+    class Res entry;
+    class Qual ai;
+    class Quant result;
+    class Store data;
+```
+
 `매시간` → ① 신규 요약 결과 평가(Incremental) → ② Excel·Postgres 적재 → `일 1회` → ③ 누적 보고서 생성 → ④ 이메일 발송
 
 - **Incremental 평가** — Postgres에 적재된 `(source, subdir, filename)` 기준으로 미평가분만 채점(나머지는 UPSERT). cron 매시간 실행으로 60만 건을 백로그 없이 점진 소화
@@ -536,6 +616,36 @@ cron 기반 무인 파이프라인으로 데이터 수집부터 보고서 발송
 
 영화 추천에서 쓴 2단계 알고리즘을 여행 도메인에 맞게 바꿈. 메타 필터링(지역, 숙박 일수, 카테고리) → 벡터 유사도(여행지 설명, 후기 키워드, 해시태그를 포함한 통합 벡터). 추천 결과로 일정 구성까지 해줌. **현재 부산관광공사(Visit Busan)에서 상용 운영 중.**
 
+**추천 구조 — 2단계 추천**
+
+```mermaid
+flowchart LR
+    User(["자연어 질의<br/>'아이랑 갈 조용한 곳'"]) --> Chat["여행 챗봇"]
+
+    subgraph Rec["2단계 추천"]
+        direction TB
+        Meta(["① 메타 필터링<br/>지역 · 숙박일수 · 카테고리"])
+        Vec(["② 벡터 유사도<br/>설명 + 후기 키워드 + 해시태그"])
+        Meta --> Vec
+    end
+
+    VDB[("Vector DB<br/>관광지 · 리뷰 임베딩")]
+    Plan["일정 구성<br/>상용 운영 · Visit Busan"]
+
+    Chat --> Meta
+    Vec -. 검색 .-> VDB
+    Vec --> Plan
+
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:1.5px,color:#166534;
+    class User entry;
+    class Vec ai;
+    class VDB data;
+    class Plan result;
+```
+
 **서비스 링크**: [Visit Busan](https://www.visitbusan.net/index.do?menuCd=DOM_000000203018000000)
 
 Docker Compose로 API 서버와 벡터 DB를 컨테이너화하여 배포. 환경별 설정을 .env 파일로 분리하고, 배포 프로세스를 자동화함.
@@ -549,6 +659,37 @@ Docker Compose로 API 서버와 벡터 DB를 컨테이너화하여 배포. 환�
 **소속**: AIO2O (4명 팀) | **역할**: AI 파트 담당 — 벡터 DB 설계, 추천 알고리즘 개발 | **기간**: 2023.06 ~ 2023.12
 
 Skylife(위성방송) 가입자 대상 영화 추천 API로, 선호 장르·배우를 입력하면 유사 영화를 추천함. 장르·배우 같은 메타 필터만으로 추천하면 비슷한 결과만 나옴. 영화 메타 정보(장르, 내용 요약, 감독, 배우)를 임베딩해서 PostgreSQL + pgvector에 넣고, 추천을 2단계로 나눔 — 메타 필터링으로 후보를 줄인 뒤, 영화 설명 벡터 유사도로 순위를 매기는 방식. 기존 메타 필터 대비 추천 다양성이 개선되어, 같은 조건에서도 유사하되 새로운 영화가 추천됨.
+
+**추천 구조 — 2단계 추천**
+
+```mermaid
+flowchart LR
+    User(["선호 장르 · 배우 입력"]) --> API["추천 API"]
+
+    subgraph Rec["2단계 추천"]
+        direction TB
+        Meta(["① 메타 필터링<br/>장르 · 배우로 후보 축소"])
+        Vec(["② 벡터 유사도<br/>영화 설명 임베딩"])
+        Meta --> Vec
+    end
+
+    PG[("PostgreSQL<br/>+ pgvector")]
+    Out["유사하되 다양한<br/>영화 추천"]
+
+    API --> Meta
+    Vec -. 유사도 검색 .-> PG
+    Vec --> Out
+
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:1.5px,color:#166534;
+    class User entry;
+    class Vec ai;
+    class PG data;
+    class Out result;
+```
+
 Docker 기반으로 API 서버를 컨테이너화하여 배포. Dockerfile로 개발/스테이징/운영 환경을 동일하게 유지함.
 
 **기술 스택**: Python, PostgreSQL, pgvector, Embedding Models, Docker
@@ -585,42 +726,46 @@ https://github.com/user-attachments/assets/48b6440a-f1d1-4e5e-b3e3-527d8b5deddf
 
 **시스템 아키텍처**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        CLIENT (Browser)                             │
-│  ┌─────────────────────────┬───────────────────────────────────┐    │
-│  │     Map Panel (Left)    │       Chat Panel (Right)          │    │
-│  │  ┌───────────────────┐  │  ┌─────────────────────────────┐  │    │
-│  │  │  Kakao Map SDK    │  │  │  Natural Language Input     │  │    │
-│  │  │  + Polygon Layer  │  │  │  + Streaming Response       │  │    │
-│  │  │  + Heatmap Layer  │  │  │  + Rich Cards (chart/table) │  │    │
-│  │  │  + Marker Layer   │  │  │  + Suggestion Chips         │  │    │
-│  │  └───────────────────┘  │  └─────────────────────────────┘  │    │
-│  └─────────────────────────┴───────────────────────────────────┘    │
-│                         Next.js 14 (App Router)                     │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │  REST + SSE Streaming
-                               ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                        API GATEWAY (FastAPI)                        │
-│  /api/chat    /api/districts    /api/reports    /api/map-data       │
-└──────────┬──────────────────────────────────────────────────────────┘
-           │
-     ┌─────┴──────────────────────────────┐
-     ▼                                    ▼
-┌──────────────────┐          ┌──────────────────────────────────┐
-│   AI Agent Layer │          │         Data Layer               │
-│  (LangGraph)     │          │                                  │
-│  ┌────────────┐  │  tool    │  ┌────────────┐ ┌────────────┐   │
-│  │  PAE       │──┼──call───►│  │ PostgreSQL │ │   Redis    │   │
-│  │  Planner→  │  │          │  │ + PostGIS  │ │  (Cache)   │   │
-│  │  Actor→    │  │          │  └────────────┘ └────────────┘   │
-│  │  Evaluator │  │          └──────────────────────────────────┘
-│  ┌────────────┐  │
-│  │ Langfuse   │  │
-│  │ (Tracing)  │  │
-│  └────────────┘  │
-└──────────────────┘
+```mermaid
+flowchart TB
+    subgraph Client["Client · Next.js 14 (App Router)"]
+        direction LR
+        Map["Map Panel<br/>Kakao SDK · deck.gl<br/>Polygon · Heatmap · Marker"]
+        Chat["Chat Panel<br/>자연어 입력 · 스트리밍<br/>Rich Card 5종 · Suggestion"]
+    end
+
+    API["API Gateway · FastAPI<br/>/chat · /districts · /reports · /map-data"]
+
+    subgraph Agent["AI Agent · LangGraph PAE"]
+        direction LR
+        Plan["Planner<br/>50+ 규칙 intent 분류"]
+        Actor["Actor<br/>DAG 병렬 실행 · 11 Tool"]
+        Eval{"Evaluator<br/>충분성 판정 · 최대 3R"}
+        Plan --> Actor --> Eval
+        Eval -. insufficient .-> Actor
+    end
+
+    subgraph Data["Data Layer"]
+        direction LR
+        PG[("PostgreSQL<br/>+ PostGIS")]
+        Redis[("Redis · 분기 캐시")]
+    end
+    LF["Langfuse<br/>Tracing"]
+
+    Client -->|REST + SSE| API --> Agent
+    Actor -->|tool call| PG & Redis
+    Agent -. trace .-> LF
+
+    classDef entry fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A;
+    classDef ai fill:#EDE9FE,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
+    classDef guard fill:#FEE2E2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    classDef data fill:#FEF3C7,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef ext fill:#F9FAFB,stroke:#9CA3AF,stroke-width:1.2px,stroke-dasharray:4 3,color:#374151;
+    class Map,Chat entry;
+    class Plan,Actor ai;
+    class Eval guard;
+    class PG,Redis data;
+    class LF ext;
 ```
 
 **기술 스택**
