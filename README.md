@@ -199,26 +199,17 @@ LLM 기반 Agent는 비결정적(non-deterministic) 특성으로 운영 단계�
 flowchart LR
     subgraph Prob["운영 단계 문제"]
         direction TB
-        P1["블랙박스 추론<br/>재현 불가"]
-        P2["비용 불투명<br/>토큰 소모 미파악"]
-        P3["병목 미식별"]
-        P4["에러 무분류"]
+        P1["블랙박스 추론<br/>재현 불가"] ~~~ P2["비용 불투명<br/>토큰 소모 미파악"] ~~~ P3["병목 미식별"] ~~~ P4["에러 무분류"]
     end
 
     subgraph Spec["Observability Spec 5종"]
         direction TB
-        SA["A · Request Tracing"]
-        SB["B · Prompt/Response 로깅"]
-        SC["C · Token Usage"]
-        SD["D · Latency · TTFT"]
-        SE["E · Error Tracking<br/>5카테고리"]
+        SA["A · Request Tracing"] ~~~ SB["B · Prompt/Response 로깅"] ~~~ SC["C · Token Usage"] ~~~ SD["D · Latency · TTFT"] ~~~ SE["E · Error Tracking<br/>5카테고리"]
     end
 
     subgraph Tool["도구 선정"]
         direction TB
-        LF["Langfuse<br/>A~D 커버 · self-host"]
-        SN["Sentry<br/>에러 분류 · 알림"]
-        GF["Grafana + Prometheus"]
+        LF["Langfuse<br/>A~D 커버 · self-host"] ~~~ SN["Sentry<br/>에러 분류 · 알림"] ~~~ GF["Grafana + Prometheus<br/>대시보드"]
     end
 
     Prob ==> Spec ==> Tool
