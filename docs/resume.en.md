@@ -8,13 +8,13 @@ AI/ML engineer building retrieval, evaluation, model-serving and agent systems. 
 
 ## Experience
 
-**Wishket | Project Reliability and connected systems**
+**Wishket | AI Software Maintenance Platform**
 
 Active engineering projects, November 2026
 
 - Develop the Rust control plane, isolated agent runner and operator CLI for an AI maintenance workflow, with PostgreSQL-backed task state, model-call budgets and auditable external changes.
-- Design the handover-to-maintenance system spanning Relay, Context App, FDE Ontology, data-structure analysis, customer panel, operations dashboard and Company Brain; keep component verification separate from pending operational integration.
-- Build local evidence retrieval and briefing workflows that preserve source revisions, access restrictions, conflicting records and explicit corrections; production integration remains in progress.
+- Design software handover, code/document retrieval, shared project data models and database analysis, with customer and operations interfaces; operational integration remains in progress.
+- Build an evidence search and decision-support app with PostgreSQL access controls, source review and a local Ollama model; verify workflows using synthetic data.
 
 **Plantynet | AI / ML engineering projects**
 
@@ -33,9 +33,9 @@ Documented project periods: June 2023 - October 2024
 
 ## Projects
 
-**MarketScope AI | Solo full-stack developer | Started January 2026**
+**Map-Based Commercial District Analysis | Solo developer | Started January 2026**
 
-- Built a map-based analysis service using data for 1,650 Seoul commercial districts; implemented a LangGraph planner-actor-evaluator workflow with 11 tools, synchronized map/chat state and SSE responses.
+- Built MarketScope AI, an analysis service using data for 1,650 Seoul commercial districts; implemented a LangGraph planner-actor-evaluator workflow with 11 tools, synchronized map/chat state and SSE responses.
 
 ## Skills
 
