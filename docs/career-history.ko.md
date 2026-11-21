@@ -1,0 +1,91 @@
+# 김선준 경력기술서
+
+AI/ML·AI Agent 엔지니어. 추천 시스템 연구를 시작으로 검색, 모델 서빙, 평가 자동화와 업무 에이전트를 개발했다. 현재는 Project Reliability와 인수·컨텍스트·데이터 분석 시스템을 설계·개발하며, AI가 코드를 수정하는 과정의 근거·검증·승인을 관리하는 데 집중하고 있다.
+
+이메일: [cyon13022@gmail.com](mailto:cyon13022@gmail.com) · [GitHub](https://github.com/SJayKim) · [영문 이력서](resume.en.md)
+
+아래 기간은 확인된 프로젝트 수행 기간이며 회사의 공식 재직기간과 다르다. 직책 대신 확인된 기여 범위를 적었다. 현재 작업은 2026-11-21, 과거 성과는 기존 공개 포트폴리오를 기준으로 작성했다.
+
+## Project Reliability 및 연계 시스템 | 위시켓
+
+기간·상태: 2026.11 기준 진행 중. 역할: 시스템 설계, AI 코딩 에이전트를 활용한 구현 진행, 검증 기준·근거 관리.
+
+문제: 인수 자료와 실제 코드가 분리돼 유지보수할 때마다 맥락을 다시 조사해야 했다. AI의 코드 수정 결과를 신뢰하려면 작업 범위, 근거의 판, 시험 결과, 승인 대상과 실제 외부 변경을 연결해야 했다.
+
+주요 기여:
+
+- 요청 접수에서 계획·근거 확정, 격리 실행, 검증, Draft MR·수용 확인으로 이어지는 Reliability 제어부·Runner·CLI를 개발했다. Rust 구현과 TypeScript 기준 구현의 계약 의미를 대조하는 시험 구조를 유지했다.
+- PostgreSQL 작업 큐, 모델 호출 Gateway, 예산·사용량 기록, 외부 효과 원장, 감사·가림 기능을 구성했다. 일부 실제 모델·GitLab·원격 Docker 시나리오와 Mac·Linux 검증 기록을 확보했다.
+- 운영 관제판 단계 A에 5개 읽기 화면을 구현하고 합성 검증 기록을 확보했다. 관제판 B/C는 소스 작성 후 검증·통합 전이다. 고객 Workflow Panel은 P2 게이트웨이를 로컬 구현하고 P3 고객 상태·목록·상세 조회 소스를 작성했다. P3 검증·통합과 P4~P7 요청·응답·승인·배포 기록 구현은 남아 있다.
+- Reliability Demo에는 요청·계획·검토·승인·배포를 설명하는 HTML 시연을 구현했다. 실제 시스템에 연결하지 않은 가상 처리이며 시나리오·브라우저 검증은 남아 있다.
+- AIDP Relay의 인수 양식·검사기·인계 패키지와 Context App의 근거 검색·재확인 기능을 개발했다. FDE Ontology에는 21종 결정, 37종 객체, 30종 관계, 17종 행동을 정의했다.
+- DCA의 오프라인 데이터 사전·키·관계 후보 분석과 사람 검토 흐름을 구현했다. Company Brain에는 상충·정정·시점·근거 부재를 구분하는 브리핑과 원문 대조 화면을 구현했다.
+- 시스템 간 식별 매핑, 인계 전달, 서비스 등록, 맥락 수입, 실행 전 재확인, 결과 환류와 연결 기록을 7개 연결부로 설계했다.
+
+결과·한계: 핵심 시스템의 구현과 구성요소별 검증 기록을 확보했다. 전체 시스템의 운영 통합, 실제 고객 업무 성과, 자동 merge·배포, AWS 운영은 완료 실적으로 표기하지 않는다. Company Brain과 DCA는 로컬 시제품 단계다.
+
+기술: Rust, Python, TypeScript, Tokio, axum, SQLx, PostgreSQL, SQLite, FastAPI, React, MCP, JSON Schema, Docker, Playwright, GitLab.
+
+상세: [전체 시스템 구성·설계 판단·상태](projects/project-reliability.md).
+
+## LLM 평가 파이프라인 | Plantynet
+
+기간: 2026.01~2026.07. 역할: 2명 팀에서 평가 메트릭, 파이프라인, PostgreSQL 적재, 정기 실행 담당.
+
+약 60만 건 규모의 뉴스 요약을 평가하기 위해 정상 응답률·길이 비율은 코드로 계산하고, 품질 기준 5개는 한국어 GEval의 단일 평가 요청으로 통합했다. 발행일 기반 날짜 검증, 증분 처리, 실패 재시도, 중복 실행 방지와 일일 보고서를 구현했다.
+
+결과: 평가·적재·보고를 자동화하고 기준별 평가 요청을 5회에서 1회로 줄이는 구조를 만들었다. 토큰 비용과 평가 품질 동등성은 호출 수만으로 추정하지 않는다.
+
+기술: Python, deepeval, PostgreSQL, openpyxl, cron, flock.
+
+## 스미싱 탐지·RAG·LLM 서빙·업무 에이전트 | Plantynet
+
+기간: 프로젝트별 시작·종료일 미확인. 각 프로젝트의 AI 모델·검색·에이전트·서빙 구현을 담당했다.
+
+URL 기반 스미싱 탐지에서는 외부 스캐닝 API 의존을 줄이기 위해 URLBert를 파인튜닝했다. 같은 1:1 균형 평가에서 F1을 58.02%에서 96.10%로 개선했으며, 별도로 리다이렉트 이후 HTML 피처 17개를 분석하는 경로와 성능 모니터링을 구현했다.
+
+매거진 Agentic RAG에서는 BGE-M3·BM25 하이브리드 검색과 reranker, 앞뒤 문맥 결합, LlamaGuard 입력·출력 검사를 구현했다. 약 15만 청크에서 노이즈 약 1.8만 건을 제외했다. vLLM 서비스에서는 기사 요약·분류·태깅을 자체 서빙 API로 전환하고, 조건부 재시도와 요약 길이 조정을 LangGraph로 구성했다.
+
+업무 에이전트에서는 3명 팀의 AI 담당으로 ReAct·Reflexion 루프, 실패 교훈 저장·재사용, 17개 플랫폼 도구 연동을 구현했다. LightRAG 기반 지식 그래프에 업무 기록과 첨부파일을 색인해 원문 근거를 검색하도록 했다.
+
+결과: 모델 분류, 검색, 생성·서빙, 업무 실행으로 이어지는 AI 처리 경험을 쌓았다. 비교 조건이 확인되지 않은 응답 시간·Recall·재시도 개선율은 요약 성과에서 제외했다.
+
+기술: Python, Hugging Face Transformers, LangGraph, FastAPI, Milvus, BGE-M3, BM25, BGE-Reranker, vLLM, LightRAG, Docker Compose.
+
+## 부산관광공사 여행 챗봇 | AIO2O
+
+기간: 2024.01~2024.10. 역할: 5명 팀의 AI 파트 리드, 벡터 DB·추천 알고리즘·챗봇 개발.
+
+자연어 여행 의도를 추천과 일정으로 바꾸기 위해 관광지 설명·리뷰 키워드·해시태그를 임베딩했다. 지역·숙박일수·카테고리 필터 이후 벡터 유사도로 후보를 정렬하고, 추천 결과를 여행 일정에 연결했다. API와 벡터 DB를 컨테이너로 배포했다.
+
+결과: Visit Busan 서비스에 적용한 이력이 있다. 현재 이용량이나 운영 지표는 별도로 제시하지 않는다.
+
+기술: Python, Embedding Models, Vector DB, NLP, Docker Compose.
+
+## Skylife 영화 추천 | AIO2O
+
+기간: 2023.06~2023.12. 역할: 4명 팀에서 AI 추천·벡터 DB 설계 담당.
+
+장르·배우 필터만으로 반복되는 추천을 개선하기 위해 영화 설명·감독·배우·장르를 임베딩했다. PostgreSQL·pgvector로 메타데이터 필터와 의미 유사도 순위를 결합한 추천 API를 개발하고 Docker로 배포했다.
+
+결과: 사용자 조건과 영화 내용의 유사도를 함께 고려하는 추천을 구현했다. 추천 다양성의 수치나 클릭률 개선은 측정값이 없어 기재하지 않았다.
+
+기술: Python, PostgreSQL, pgvector, Embedding Models, Docker.
+
+## MarketScope AI | 개인 프로젝트
+
+기간: 2026.01 시작, 상세 상태는 2026-09 공개 기록 기준. 역할: 기획부터 프론트엔드·백엔드·AI Agent·인프라까지 1인 개발.
+
+서울시 1,650개 상권 자료를 적재하고 지도와 자연어 분석을 연결했다. LangGraph의 Planner·Actor·Evaluator가 11종 분석 도구를 선택·조합하며, SSE와 리포트 카드로 실행 진행과 결과를 표시한다. 데이터 ETL, 지도·대화 동기화, 검색 실패 시 부재 안내, Langfuse 피드백 연결을 구현했다.
+
+결과: v0.4.0 공개 및 당시 Playwright Chromium 66/66·production smoke 28/28 통과 기록이 있다. 유료 결제·고객 매출이나 현재 가동 여부는 이번 기록의 범위에 포함하지 않는다.
+
+기술: Python, FastAPI, LangGraph, PostgreSQL/PostGIS, React, TypeScript, Zustand, SSE, Playwright, Langfuse.
+
+## 학력·연구·집필
+
+UNIST 산업공학과 석사, 2023. 학위 논문은 *Personal recommender system via convolutional autoencoder with conditioning augmentation*이다. 사용자 선호의 잠재 표현과 벡터 유사도를 이용한 추천 시스템을 연구했다.
+
+[『Agentic AI: 스스로 진화하는 인공지능 에이전트 만들기』](https://wikidocs.net/book/19070)에 에이전트 개발·연구 자료를 정리했다. 열람 통계는 측정 기간을 다시 확인하지 않아 최신 성과 수치로 사용하지 않는다.
+
+[기존 8개 프로젝트 상세](projects/prior-projects.md) · [작성 기준과 근거](editorial-notes.md) · [포트폴리오](../README.md)
