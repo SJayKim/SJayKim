@@ -7,7 +7,7 @@
 | [영문 이력서](resume.en.md) · [PDF](resume.en.pdf) | AI/ML·AI Agent 엔지니어 지원용 요약 |
 | [국문 이력서](resume.ko.md) | 국내 채용·협업용 경력 요약 |
 | [경력기술서](career-history.ko.md) | 문제, 역할, 실행 내용, 결과, 기술을 설명하는 상세 경력 |
-| [Project Reliability 및 연계 시스템](projects/project-reliability.md) | 진행 중인 전체 시스템의 구성·기여·구현 상태 |
+| [AI 소프트웨어 유지보수 플랫폼](projects/project-reliability.md) | 진행 중인 전체 시스템의 구성·기여·구현 상태 |
 | [기존 프로젝트 상세](projects/prior-projects.md) | 기존 8개 프로젝트의 기술적 의사결정과 결과 |
 | [작성 기준과 근거](editorial-notes.md) | 참고 가이드, 수치 정정, 확인 범위와 남은 사실 확인 |
 | [1회 재검토 기록](review.md) | 독립 검토 결과와 반영 사항 |
