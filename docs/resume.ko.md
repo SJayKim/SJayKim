@@ -1,50 +1,59 @@
+<!-- Generated from resume.ko.yaml by render_korean.py; edit the YAML source. -->
+
 # 김선준 (Sunjun Kim)
 
-AI/ML 엔지니어 | AI Agent · 검색 · 평가 · 모델 서빙
+AI/ML 엔지니어 | AI 서비스 개발 · 검색·추천 · 품질 평가
 
-[cyon13022@gmail.com](mailto:cyon13022@gmail.com) · [GitHub](https://github.com/SJayKim) · [상세 경력기술서](career-history.ko.md)
+[cyon13022@gmail.com](mailto:cyon13022@gmail.com) · [GitHub](https://github.com/SJayKim) · [1쪽 PDF](resume.ko.pdf) · [경력기술서](career-history.ko.md)
 
-추천 시스템 연구를 바탕으로 벡터 검색, LLM 서빙, 평가 자동화와 업무 에이전트를 개발했다. 현재는 AI 소프트웨어 유지보수 플랫폼에서 AI 유지보수의 근거·검증·승인 흐름을 설계·개발하고 있다. UNIST 산업공학과 석사.
+## 소개
+
+추천 시스템 연구를 시작으로 문서를 찾아 답하는 AI, 뉴스 요약 품질 평가, 업무 도구를 실행하는 AI를 개발함. 모델 개발부터 데이터 처리와 서비스 연결까지 맡아 왔음. 현재 위시켓에서 AI 소프트웨어 유지보수 플랫폼을 개발 중임.
 
 ## 경력 및 주요 프로젝트
 
 **위시켓 | AI 소프트웨어 유지보수 플랫폼**
 
-2026.11 기준 진행 중인 개발 프로젝트
+2026.11 기준 개발 중
 
-- Rust 제어부·격리 Runner·운영자 CLI, PostgreSQL 작업 큐, 모델 호출 예산과 외부 변경 기록을 구현하며 AI 유지보수 실행 흐름을 구성했다.
-- 소프트웨어 인수인계 검증, 코드·문서 검색, 업무·데이터 관계 모델, DB 분석, 고객 포털·대시보드를 포함한 전체 흐름과 7개 연결부를 설계했다.
-- 업무 근거 검색·의사결정 지원 시스템에 PostgreSQL 권한 제어, 원문 대조·검토, 로컬 모델 연동을 구현했다. 합성 자료로 검증했으며 실제 회사 원천·운영 연동은 진행 전이다.
+- AI가 소프트웨어를 수정할 때 자료를 확인하고 별도 환경에서 작업을 실행·검사해 변경 내역을 남기는 기능을 개발함. 시스템 설계와 검증 기준·근거 관리를 담당함.
+- 인수 자료·코드·검증 기록을 연결하는 방식을 설계함. 구성요소별 검증을 진행 중이며 전체 운영 통합과 고객 업무 효과 확인은 남아 있음.
 
-**Plantynet | AI 모델·검색·서빙·평가 프로젝트**
+**Plantynet | AI 모델·검색·평가·업무 자동화**
 
-평가 파이프라인 수행 기간: 2026.01~2026.07
+평가 프로젝트 2026.01-07
 
-- 약 60만 건 규모의 뉴스 요약 평가 파이프라인을 구축했다. 품질 기준 5개를 단일 GEval 요청으로 묶고 증분 처리·PostgreSQL 적재·일일 보고를 자동화했다.
-- URLBert 파인튜닝으로 1:1 균형 평가의 F1을 58.02%에서 96.10%로 개선하고, HTML 피처 17개를 쓰는 동적 URL 분석을 별도로 구현했다.
-- Milvus 하이브리드 검색·reranker, vLLM 자체 서빙 API, 17개 업무 도구를 연결한 LangGraph ReAct·Reflexion 에이전트를 개발했다.
+- 약 60만 건 규모의 뉴스 요약을 평가하는 자동 처리 시스템을 개발함. 품질 기준 5개를 한 번의 AI 평가 요청으로 묶고 결과 저장·일일 보고를 자동화함.
+- 스미싱 URL 탐지에 URLBert를 추가 학습함. 정상·스미싱 URL 비율이 같은 1:1 평가에서 기존 Random Forest의 F1 58.02% 대비 96.10%를 기록함. F1은 오탐과 누락을 함께 반영하는 지표임.
+- 업무 도구 17개를 AI에 연결하고 업무 문서에서 답변 근거를 찾도록 구현함. 실패 원인과 해결 방법을 저장·재사용하는 처리도 개발함.
 
-**AIO2O | 추천 시스템·여행 챗봇 프로젝트**
+**AIO2O | 여행·영화 추천 서비스**
 
-확인된 프로젝트 수행 기간: 2023.06~2024.10
+프로젝트 2023.06-2024.10
 
-- 부산관광공사 여행 챗봇의 5명 팀에서 AI 파트를 리드했다. 관광지·리뷰 임베딩과 메타 필터를 결합해 자연어 추천과 일정 구성을 구현했다.
-- Skylife 영화 추천에서 PostgreSQL·pgvector를 이용해 장르·배우 조건과 영화 설명의 벡터 유사도를 결합한 추천 API를 개발했다.
+- Visit Busan의 5명 팀에서 AI 파트를 리드함. 말로 표현한 여행 의도를 관광지 추천과 일정으로 연결했으며 서비스 적용 이력이 있음.
+- Skylife 영화 추천에서 장르·배우 조건과 영화 설명의 의미를 함께 반영함. 추천 기능을 다른 서비스에서 호출할 수 있는 API로 개발·배포함.
 
 ## 개인 프로젝트
 
-**지도 기반 상권 분석 AI 서비스 | 1인 Full-stack 개발 | 2026.01 시작**
+**MarketScope AI | 지도 기반 상권 분석**
 
-MarketScope AI에 서울시 1,650개 상권 데이터를 적재하고 지도 기반 분석 서비스를 개발했다. LangGraph Planner·Actor·Evaluator와 11종 도구, 지도·챗봇 동기화, SSE 응답·리포트 카드를 구현했다. 상태와 수치는 2026-09 공개 기록 기준이다.
+2026.01 시작
+
+- 기획·데이터 처리·화면·서버·AI 기능을 1인 개발함. 서울시 1,650개 상권 자료와 11종 분석 도구를 지도·대화에 연결함. 상세 상태는 2026.09 공개 기록 기준임.
 
 ## 기술
 
-Python, Rust, TypeScript · LangGraph, vLLM, Hugging Face Transformers, deepeval · FastAPI, React · PostgreSQL, SQLite, Milvus, pgvector · Docker, Playwright, MCP, GitLab.
+- AI·검색: LangGraph, LightRAG, URLBert, vLLM, deepeval/GEval, Milvus, pgvector
+
+- 개발·데이터: Python, Rust, TypeScript, FastAPI, PostgreSQL, React, Docker
 
 ## 학력·집필
 
-UNIST 산업공학과 석사, 2023. 추천 시스템 학위 논문: *Personal recommender system via convolutional autoencoder with conditioning augmentation*.
+UNIST 산업공학과 석사, 2023. 사용자 선호를 학습하는 추천 시스템을 연구함.
 
-Wikidocs [『Agentic AI: 스스로 진화하는 인공지능 에이전트 만들기』](https://wikidocs.net/book/19070) 집필.
+Wikidocs [『Agentic AI: 스스로 진화하는 인공지능 에이전트 만들기』](https://wikidocs.net/book/19070) 집필함.
 
-표기한 기간은 프로젝트 기록 기준이다. 회사별 재직기간과 공식 직함은 별도 확인이 필요하다.
+## 작성 기준
+
+기간은 프로젝트 기록 기준이며 회사별 공식 재직기간·직함은 확인이 필요함. 현재 프로젝트는 2026.11.21까지 확인한 자료를 사용함. [상세 경력기술서](career-history.ko.md)에서 역할과 구현 상태를 확인할 수 있음.
