@@ -1,43 +1,159 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="690" viewBox="0 0 720 690" role="img" aria-labelledby="title description">
-<title id="title">매거진 검색·추천 AI 챗봇 · Plantynet · 설계 개념도</title><desc id="description">검색 질문 의미 · 키워드 · 검색 결과 재정렬 추천 · 답변 · 안전성 확인. 기존 README의 구성 요소와 연결 방향을 유지한 기능 개념도.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1260" viewBox="0 0 1440 1260" role="img" aria-labelledby="title description">
+<title id="title">매거진 검색·추천 AI 챗봇 · 컴포넌트 구성도</title><desc id="description">문서 준비와 대화 처리를 분리하고, 검색·재정렬·안전성 검사를 단계별로 구성</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#15334f" flood-opacity="0.045"/></filter></defs>
 <style>text{font-family:"Noto Sans CJK KR",Arial,sans-serif} text{font-kerning:normal}</style>
-<rect x="0" y="0" width="720" height="690" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6"/>
-<text data-slot="eyebrow" x="50" y="40" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">PROJECT ARCHITECTURE</text>
-<text data-slot="title" x="50" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">매거진 검색·추천</text>
-<rect x="540" y="22" width="130" height="30" rx="15" fill="#e5edf9" stroke="none" stroke-width="1.6"/>
-<text data-slot="status" x="605" y="43" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">기능 개념도</text>
-<rect x="374" y="148" width="320" height="468" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6"/>
-<text data-slot="zone.title" x="398" y="185" font-size="23" fill="#097f78" font-weight="700" text-anchor="start">검색·정렬</text>
-<path data-edge="QUERY-&gt;SEARCH" data-retry="false" d="M322 280 H398" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="SEARCH-&gt;RANK" data-retry="false" d="M534 350 V448" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="RANK-&gt;ANSWER" data-retry="false" d="M398 518 H322" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<g role="group" data-node="QUERY" aria-label="검색 질문">
-<rect x="50" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="228" width="4" height="104" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
-<text data-slot="QUERY.role" x="74" y="240" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">입력</text>
-<text data-slot="QUERY.line1" x="74" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">검색 질문</text>
+<rect x="0" y="0" width="1440" height="1260" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="eyebrow" x="60" y="38" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">COMPONENT ARCHITECTURE</text>
+<text data-slot="title" x="60" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">매거진 검색·추천 AI 챗봇</text>
+<text data-slot="subtitle" x="60" y="146" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">문서 준비와 대화 처리를 분리하고, 검색·재정렬·안전성 검사를 단계별로 구성</text>
+<rect x="1180" y="17" width="200" height="32" rx="16" fill="#e5edf9" stroke="none" stroke-width="1.6" />
+<text data-slot="status" x="1280" y="39" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">컴포넌트 설계</text>
+<rect x="40" y="170" width="430" height="970" rx="26" fill="#eaf1fb" stroke="#bfcee5" stroke-width="1.6" />
+<text data-slot="zone.0" x="60" y="208" font-size="26" fill="#245ec7" font-weight="700" text-anchor="start">문서 준비·색인</text>
+<rect x="505" y="170" width="430" height="970" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6" />
+<text data-slot="zone.1" x="525" y="208" font-size="26" fill="#097f78" font-weight="700" text-anchor="start">질의·검색</text>
+<rect x="970" y="170" width="430" height="970" rx="26" fill="#f0ecf8" stroke="#d3c6e6" stroke-width="1.6" />
+<text data-slot="zone.2" x="990" y="208" font-size="26" fill="#7550bb" font-weight="700" text-anchor="start">답변·안전성·대화</text>
+<path d="M 255,410 L 255,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="documents-&gt;clean" d="M 255,410 L 255,465" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>정제</title></path>
+<path d="M 255,645 L 255,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="clean-&gt;encoding" d="M 255,645 L 255,700" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>변환</title></path>
+<path d="M 255,880 L 255,935" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="encoding-&gt;milvus" d="M 255,880 L 255,935" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>색인</title></path>
+<path d="M 720,410 L 720,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="api-&gt;input_guard" d="M 720,410 L 720,465" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>검사</title></path>
+<path d="M 720,645 L 720,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="input_guard-&gt;hybrid" d="M 720,645 L 720,700" fill="none" stroke="#7550bb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>질의</title></path>
+<path d="M 525,790 L 517,790 L 517,1025 L 450,1025" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="hybrid-&gt;milvus" d="M 525,790 L 517,790 L 517,1025 L 450,1025" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>검색</title></path>
+<path d="M 720,880 L 720,935" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="hybrid-&gt;rerank" d="M 720,880 L 720,935" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>후보</title></path>
+<path d="M 915,1025 L 923,1025 L 923,1005 L 990,1005" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="rerank-&gt;context" d="M 915,1025 L 923,1025 L 923,1005 L 990,1005" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>정렬</title></path>
+<path d="M 990,1045 L 982,1045 L 982,320 L 990,320" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="context-&gt;answer" d="M 990,1045 L 982,1045 L 982,320 L 990,320" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>근거</title></path>
+<path d="M 1185,410 L 1185,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="answer-&gt;output_guard" d="M 1185,410 L 1185,465" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>검사</title></path>
+<path d="M 1185,645 L 1185,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="output_guard-&gt;conversation" d="M 1185,645 L 1185,700" fill="none" stroke="#7550bb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>응답</title></path>
+<g role="group" data-node="documents" aria-label="매거진 원문">
+<rect x="60" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="documents.title" x="86" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">매거진 원문</text>
+<text data-slot="documents.tech" x="86" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">문서 데이터</text>
+<text data-slot="documents.body1" x="86" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검색 대상 본문 수집</text>
+<text data-slot="documents.body2" x="86" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">매거진과 문서의 관계 유지</text>
 </g>
-<g role="group" data-node="SEARCH" aria-label="의미 · 키워드 · 검색">
-<rect x="398" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="228" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="SEARCH.role" x="422" y="240" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">검색</text>
-<text data-slot="SEARCH.line1" x="422" y="288" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">의미 · 키워드</text>
-<text data-slot="SEARCH.line2" x="422" y="328" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">검색</text>
+<g role="group" data-node="clean" aria-label="문서·청크 정제">
+<rect x="60" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="483" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="clean.title" x="86" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">문서·청크 정제</text>
+<text data-slot="clean.tech" x="86" y="544" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">텍스트 전처리</text>
+<text data-slot="clean.body1" x="86" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">짧은 청크·특수문자 잡음 제거</text>
+<text data-slot="clean.body2" x="86" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검색에 적합한 본문 구성</text>
 </g>
-<g role="group" data-node="RANK" aria-label="결과 재정렬">
-<rect x="398" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="466" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="RANK.role" x="422" y="478" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">정렬</text>
-<text data-slot="RANK.line1" x="422" y="540" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">결과 재정렬</text>
+<g role="group" data-node="encoding" aria-label="검색 표현 생성">
+<rect x="60" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="718" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="encoding.title" x="86" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">검색 표현 생성</text>
+<text data-slot="encoding.tech" x="86" y="779" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">BGE-M3 · BM25</text>
+<text data-slot="encoding.body1" x="86" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">의미 기반 Dense 표현</text>
+<text data-slot="encoding.body2" x="86" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">키워드 기반 Sparse 표현</text>
 </g>
-<g role="group" data-node="ANSWER" aria-label="추천 · 답변 · 안전성 확인">
-<rect x="50" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="466" width="4" height="104" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6"/>
-<text data-slot="ANSWER.role" x="74" y="478" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">답변·품질 확인</text>
-<text data-slot="ANSWER.line1" x="74" y="526" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">추천 · 답변</text>
-<text data-slot="ANSWER.line2" x="74" y="566" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">안전성 확인</text>
+<g role="group" data-node="milvus" aria-label="검색 색인 저장소">
+<rect x="60" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="953" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="milvus.title" x="86" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">검색 색인 저장소</text>
+<text data-slot="milvus.tech" x="86" y="1014" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">Milvus</text>
+<text data-slot="milvus.body1" x="86" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">문서 청크와 검색 표현 저장</text>
+<text data-slot="milvus.body2" x="86" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">하이브리드 검색에 사용</text>
 </g>
-<path d="M50 659 H90" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
-<text data-slot="legend.flow" x="103" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">처리 흐름</text>
+<g role="group" data-node="api" aria-label="대화 화면·API">
+<rect x="525" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="api.title" x="551" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">대화 화면·API</text>
+<text data-slot="api.tech" x="551" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">Streamlit · FastAPI</text>
+<text data-slot="api.body1" x="551" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">질문·추천 요청 수신</text>
+<text data-slot="api.body2" x="551" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">사용자와 검색 Agent 연결</text>
+</g>
+<g role="group" data-node="input_guard" aria-label="입력 안전성 검사">
+<rect x="525" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="483" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="input_guard.title" x="551" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">입력 안전성 검사</text>
+<text data-slot="input_guard.tech" x="551" y="544" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">LlamaGuard</text>
+<text data-slot="input_guard.body1" x="551" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">사용자 질문을 먼저 확인</text>
+<text data-slot="input_guard.body2" x="551" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검색·생성 단계 진입 판단</text>
+</g>
+<g role="group" data-node="hybrid" aria-label="하이브리드 검색">
+<rect x="525" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="718" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="hybrid.title" x="551" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">하이브리드 검색</text>
+<text data-slot="hybrid.tech" x="551" y="779" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">Dense + Sparse</text>
+<text data-slot="hybrid.body1" x="551" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">의미·키워드 후보 함께 검색</text>
+<text data-slot="hybrid.body2" x="551" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">질문에 맞는 문서 후보 수집</text>
+</g>
+<g role="group" data-node="rerank" aria-label="검색 결과 재정렬">
+<rect x="525" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="953" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="rerank.title" x="551" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">검색 결과 재정렬</text>
+<text data-slot="rerank.tech" x="551" y="1014" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">BGE-Reranker</text>
+<text data-slot="rerank.body1" x="551" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">질문·후보의 관련성 재평가</text>
+<text data-slot="rerank.body2" x="551" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">답변에 사용할 후보 순서 조정</text>
+</g>
+<g role="group" data-node="answer" aria-label="답변 생성 Agent">
+<rect x="990" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="248" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="answer.title" x="1016" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">답변 생성 Agent</text>
+<text data-slot="answer.tech" x="1016" y="309" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">LangGraph</text>
+<text data-slot="answer.body1" x="1016" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검색 맥락을 바탕으로 응답</text>
+<text data-slot="answer.body2" x="1016" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">질문 답변과 매거진 추천 구성</text>
+</g>
+<g role="group" data-node="output_guard" aria-label="출력 안전성 검사">
+<rect x="990" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="483" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="output_guard.title" x="1016" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">출력 안전성 검사</text>
+<text data-slot="output_guard.tech" x="1016" y="544" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">LlamaGuard</text>
+<text data-slot="output_guard.body1" x="1016" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">생성 답변의 안전성 확인</text>
+<text data-slot="output_guard.body2" x="1016" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">사용자에게 보낼 응답 검사</text>
+</g>
+<g role="group" data-node="conversation" aria-label="응답·대화 이력">
+<rect x="990" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="718" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="conversation.title" x="1016" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">응답·대화 이력</text>
+<text data-slot="conversation.tech" x="1016" y="779" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">SSE · 대화 기록 저장</text>
+<text data-slot="conversation.body1" x="1016" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">응답 스트리밍과 이력 보존</text>
+<text data-slot="conversation.body2" x="1016" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">후속 대화에 필요한 맥락 유지</text>
+</g>
+<g role="group" data-node="context" aria-label="문맥·추천 구성">
+<rect x="990" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="953" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="context.title" x="1016" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">문맥·추천 구성</text>
+<text data-slot="context.tech" x="1016" y="1014" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">인접 문맥 · Group Search</text>
+<text data-slot="context.body1" x="1016" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">주변 청크로 근거 문맥 보강</text>
+<text data-slot="context.body2" x="1016" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">매거진 단위로 결과 묶기</text>
+</g>
+<rect x="200.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.0" x="224.0" y="443.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">정제</text>
+<rect x="200.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.1" x="224.0" y="678.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">변환</text>
+<rect x="200.0" y="893.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.2" x="224.0" y="913.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">색인</text>
+<rect x="665.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.3" x="689.0" y="443.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">검사</text>
+<rect x="665.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.4" x="689.0" y="678.5" font-size="16" fill="#7550bb" font-weight="500" text-anchor="middle">질의</text>
+<rect x="459.5" y="994" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.5" x="483.5" y="1014" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">검색</text>
+<rect x="665.0" y="893.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.6" x="689.0" y="913.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">후보</text>
+<rect x="932.5" y="974" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.7" x="956.5" y="994" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">정렬</text>
+<rect x="927.0" y="487.25" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.8" x="951.0" y="507.25" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">근거</text>
+<rect x="1130.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.9" x="1154.0" y="443.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">검사</text>
+<rect x="1130.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.10" x="1154.0" y="678.5" font-size="16" fill="#7550bb" font-weight="500" text-anchor="middle">응답</text>
+<text data-slot="legend" x="60" y="1190" font-size="19" fill="#52677d" font-weight="400" text-anchor="start">화살표: 호출·데이터 전달    ·    영역: 기능별 구성</text>
+<text data-slot="note" x="60" y="1230" font-size="18" fill="#52677d" font-weight="400" text-anchor="start">의미 검색 + 키워드 검색 → 재정렬 → 문맥·매거진 단위 구성 → 입출력 안전성 검사</text>
 </svg>

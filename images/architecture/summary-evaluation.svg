@@ -1,42 +1,145 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="690" viewBox="0 0 720 690" role="img" aria-labelledby="title description">
-<title id="title">뉴스 요약 품질 자동 평가 · Plantynet · 설계 개념도</title><desc id="description">원문 · 요약 요약 품질 평가 점수 · 판단 이유 결과 저장 · 정기 보고. 기존 README의 구성 요소와 연결 방향을 유지한 기능 개념도.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1260" viewBox="0 0 1440 1260" role="img" aria-labelledby="title description">
+<title id="title">뉴스 요약 품질 자동 평가 · 컴포넌트 구성도</title><desc id="description">코드 기반 지표와 LLM 평가를 분리하고, 증분 실행·저장·보고를 연결</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#15334f" flood-opacity="0.045"/></filter></defs>
 <style>text{font-family:"Noto Sans CJK KR",Arial,sans-serif} text{font-kerning:normal}</style>
-<rect x="0" y="0" width="720" height="690" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6"/>
-<text data-slot="eyebrow" x="50" y="40" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">PROJECT ARCHITECTURE</text>
-<text data-slot="title" x="50" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">요약 품질 평가</text>
-<rect x="540" y="22" width="130" height="30" rx="15" fill="#e5edf9" stroke="none" stroke-width="1.6"/>
-<text data-slot="status" x="605" y="43" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">기능 개념도</text>
-<rect x="374" y="148" width="320" height="468" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6"/>
-<text data-slot="zone.title" x="398" y="185" font-size="23" fill="#097f78" font-weight="700" text-anchor="start">평가·기록</text>
-<path data-edge="TEXT-&gt;EVAL" data-retry="false" d="M322 280 H398" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="EVAL-&gt;RESULT" data-retry="false" d="M534 350 V448" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="RESULT-&gt;REPORT" data-retry="false" d="M398 518 H322" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<g role="group" data-node="TEXT" aria-label="원문 · 요약">
-<rect x="50" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="228" width="4" height="104" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
-<text data-slot="TEXT.role" x="74" y="240" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">입력</text>
-<text data-slot="TEXT.line1" x="74" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">원문 · 요약</text>
+<rect x="0" y="0" width="1440" height="1260" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="eyebrow" x="60" y="38" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">COMPONENT ARCHITECTURE</text>
+<text data-slot="title" x="60" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">뉴스 요약 품질 자동 평가</text>
+<text data-slot="subtitle" x="60" y="146" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">코드 기반 지표와 LLM 평가를 분리하고, 증분 실행·저장·보고를 연결</text>
+<rect x="1180" y="17" width="200" height="32" rx="16" fill="#e5edf9" stroke="none" stroke-width="1.6" />
+<text data-slot="status" x="1280" y="39" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">컴포넌트 설계</text>
+<rect x="40" y="170" width="430" height="970" rx="26" fill="#eaf1fb" stroke="#bfcee5" stroke-width="1.6" />
+<text data-slot="zone.0" x="60" y="208" font-size="26" fill="#245ec7" font-weight="700" text-anchor="start">입력·배치 제어</text>
+<rect x="505" y="170" width="430" height="970" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6" />
+<text data-slot="zone.1" x="525" y="208" font-size="26" fill="#097f78" font-weight="700" text-anchor="start">평가 실행</text>
+<rect x="970" y="170" width="430" height="970" rx="26" fill="#f0ecf8" stroke="#d3c6e6" stroke-width="1.6" />
+<text data-slot="zone.2" x="990" y="208" font-size="26" fill="#7550bb" font-weight="700" text-anchor="start">모델·기록·보고</text>
+<path d="M 450,320 L 458,320 L 458,300 L 525,300" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="schedule-&gt;worker" d="M 450,320 L 458,320 L 458,300 L 525,300" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>실행</title></path>
+<path d="M 255,645 L 255,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="input-&gt;incremental" d="M 255,645 L 255,700" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>대상</title></path>
+<path d="M 450,770 L 458,770 L 458,340 L 525,340" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="incremental-&gt;worker" d="M 450,770 L 458,770 L 458,340 L 525,340" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>전달</title></path>
+<path d="M 990,519 L 982,519 L 982,692 L 462,692 L 462,810 L 450,810" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="database-&gt;incremental" d="M 990,519 L 982,519 L 982,692 L 462,692 L 462,810 L 450,810" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>확인</title></path>
+<path d="M 720,410 L 720,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="worker-&gt;metrics" d="M 720,410 L 720,465" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>계산</title></path>
+<path d="M 915,320 L 923,320 L 923,754 L 915,754" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="worker-&gt;geval" d="M 915,320 L 923,320 L 923,754 L 915,754" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>평가</title></path>
+<path d="M 915,778 L 978,778 L 978,320 L 990,320" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="geval-&gt;llm" d="M 915,778 L 978,778 L 978,320 L 990,320" fill="none" stroke="#7550bb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>요청</title></path>
+<path d="M 720,880 L 720,935" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="geval-&gt;retry" d="M 720,880 L 720,935" fill="none" stroke="#7550bb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>제한</title></path>
+<path d="M 915,1025 L 923,1025 L 923,802 L 915,802" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="retry-&gt;geval" d="M 915,1025 L 923,1025 L 923,802 L 915,802" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>재시도</title></path>
+<path d="M 915,555 L 966,555 L 966,543 L 990,543" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="metrics-&gt;database" d="M 915,555 L 966,555 L 966,543 L 990,543" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>저장</title></path>
+<path d="M 915,826 L 966,826 L 966,567 L 990,567" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="geval-&gt;database" d="M 915,826 L 966,826 L 966,567 L 990,567" fill="none" stroke="#7550bb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>저장</title></path>
+<path d="M 990,591 L 954,591 L 954,1025 L 990,1025" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="database-&gt;report" d="M 990,591 L 954,591 L 954,1025 L 990,1025" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>집계</title></path>
+<g role="group" data-node="schedule" aria-label="배치 스케줄러">
+<rect x="60" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="schedule.title" x="86" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">배치 스케줄러</text>
+<text data-slot="schedule.tech" x="86" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">cron · flock</text>
+<text data-slot="schedule.body1" x="86" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">정기 실행과 중복 실행 방지</text>
+<text data-slot="schedule.body2" x="86" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">평가 작업 시작 시점 관리</text>
 </g>
-<g role="group" data-node="EVAL" aria-label="요약 품질 평가">
-<rect x="398" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="228" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="EVAL.role" x="422" y="240" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">평가</text>
-<text data-slot="EVAL.line1" x="422" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">요약 품질 평가</text>
+<g role="group" data-node="input" aria-label="원문·요약 입력">
+<rect x="60" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="input.title" x="86" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">원문·요약 입력</text>
+<text data-slot="input.tech" x="86" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">기사 · 요약 · 발행일</text>
+<text data-slot="input.body1" x="86" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">평가할 원문과 요약 구성</text>
+<text data-slot="input.body2" x="86" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">날짜 판단에 필요한 정보 제공</text>
 </g>
-<g role="group" data-node="RESULT" aria-label="점수 · 판단 이유">
-<rect x="398" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="466" width="4" height="104" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6"/>
-<text data-slot="RESULT.role" x="422" y="478" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">평가 결과</text>
-<text data-slot="RESULT.line1" x="422" y="540" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">점수 · 판단 이유</text>
+<g role="group" data-node="incremental" aria-label="증분 대상 선택">
+<rect x="60" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="718" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="incremental.title" x="86" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">증분 대상 선택</text>
+<text data-slot="incremental.tech" x="86" y="779" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">기처리 결과 확인</text>
+<text data-slot="incremental.body1" x="86" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">이미 저장한 평가 결과 제외</text>
+<text data-slot="incremental.body2" x="86" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">새 평가 대상만 실행기에 전달</text>
 </g>
-<g role="group" data-node="REPORT" aria-label="결과 저장 · 정기 보고">
-<rect x="50" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="466" width="4" height="104" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
-<text data-slot="REPORT.role" x="74" y="478" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">저장·보고</text>
-<text data-slot="REPORT.line1" x="74" y="526" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">결과 저장</text>
-<text data-slot="REPORT.line2" x="74" y="566" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">정기 보고</text>
+<g role="group" data-node="worker" aria-label="평가 실행기">
+<rect x="525" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="248" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="worker.title" x="551" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">평가 실행기</text>
+<text data-slot="worker.tech" x="551" y="309" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">Python</text>
+<text data-slot="worker.body1" x="551" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">대상별 평가 경로 실행</text>
+<text data-slot="worker.body2" x="551" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">지표·점수·판단 이유 수집</text>
 </g>
-<path d="M50 659 H90" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
-<text data-slot="legend.flow" x="103" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">처리 흐름</text>
+<g role="group" data-node="metrics" aria-label="코드 기반 지표">
+<rect x="525" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="483" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="metrics.title" x="551" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">코드 기반 지표</text>
+<text data-slot="metrics.tech" x="551" y="544" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">정상 응답률 · 길이 비율</text>
+<text data-slot="metrics.body1" x="551" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">응답 생성 여부 확인</text>
+<text data-slot="metrics.body2" x="551" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">원문 대비 요약 길이 계산</text>
+</g>
+<g role="group" data-node="geval" aria-label="품질 평가기">
+<rect x="525" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="718" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="geval.title" x="551" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">품질 평가기</text>
+<text data-slot="geval.tech" x="551" y="779" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">deepeval · GEval</text>
+<text data-slot="geval.body1" x="551" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">한국어 평가 기준 구성</text>
+<text data-slot="geval.body2" x="551" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">통합 평가 요청과 결과 해석</text>
+</g>
+<g role="group" data-node="retry" aria-label="호출 제한 대응">
+<rect x="525" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="953" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="retry.title" x="551" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">호출 제한 대응</text>
+<text data-slot="retry.tech" x="551" y="1014" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">Rate-limit 재시도</text>
+<text data-slot="retry.body1" x="551" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">모델 호출 제한 감지</text>
+<text data-slot="retry.body2" x="551" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">실패한 평가 요청 재시도</text>
+</g>
+<g role="group" data-node="llm" aria-label="평가 모델">
+<rect x="990" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="248" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="llm.title" x="1016" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">평가 모델</text>
+<text data-slot="llm.tech" x="1016" y="309" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">OpenAI API</text>
+<text data-slot="llm.body1" x="1016" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">요약 품질 기준에 따라 판단</text>
+<text data-slot="llm.body2" x="1016" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">점수와 판단 근거 반환</text>
+</g>
+<g role="group" data-node="database" aria-label="평가 결과 저장소">
+<rect x="990" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="database.title" x="1016" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">평가 결과 저장소</text>
+<text data-slot="database.tech" x="1016" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">PostgreSQL</text>
+<text data-slot="database.body1" x="1016" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">지표·평가 점수·근거 저장</text>
+<text data-slot="database.body2" x="1016" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">증분 처리와 보고에 재사용</text>
+</g>
+<g role="group" data-node="report" aria-label="일일 보고서 생성">
+<rect x="990" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="953" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="report.title" x="1016" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">일일 보고서 생성</text>
+<text data-slot="report.tech" x="1016" y="1014" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">openpyxl · Excel</text>
+<text data-slot="report.body1" x="1016" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">저장 결과를 일별로 집계</text>
+<text data-slot="report.body2" x="1016" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검토 가능한 평가 보고서 출력</text>
+</g>
+<rect x="467.5" y="269" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.0" x="491.5" y="289" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">실행</text>
+<rect x="200.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.1" x="224.0" y="678.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">대상</text>
+<rect x="467.5" y="309" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.2" x="491.5" y="329" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">전달</text>
+<rect x="698.0" y="661" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.3" x="722.0" y="681" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">확인</text>
+<rect x="665.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.4" x="689.0" y="443.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">계산</text>
+<rect x="868.0" y="414.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.5" x="892.0" y="434.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">평가</text>
+<rect x="922.5" y="747" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.6" x="946.5" y="767" font-size="16" fill="#7550bb" font-weight="500" text-anchor="middle">요청</text>
+<rect x="665.0" y="893.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.7" x="689.0" y="913.5" font-size="16" fill="#7550bb" font-weight="500" text-anchor="middle">제한</text>
+<rect x="852.0" y="899.5" width="64" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.8" x="884.0" y="919.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">재시도</text>
+<rect x="973.0" y="682.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.9" x="997.0" y="702.5" font-size="16" fill="#7550bb" font-weight="500" text-anchor="middle">저장</text>
+<rect x="961.0" y="794.0" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.10" x="985.0" y="814.0" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">집계</text>
+<text data-slot="legend" x="60" y="1190" font-size="19" fill="#52677d" font-weight="400" text-anchor="start">화살표: 호출·데이터 전달    ·    영역: 기능별 구성</text>
+<text data-slot="note" x="60" y="1230" font-size="18" fill="#52677d" font-weight="400" text-anchor="start">평가 기준: 내용·날짜·사실성·문체·형식 · 기처리 결과 제외와 호출 제한 재시도 적용</text>
 </svg>

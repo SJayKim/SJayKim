@@ -1,44 +1,151 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="690" viewBox="0 0 720 690" role="img" aria-labelledby="title description">
-<title id="title">스미싱 URL 탐지 · Plantynet · 설계 개념도</title><desc id="description">분석할 URL URL 모델 분류 웹페이지 · 특징 분석 분석 결과 · 성능 확인. 기존 README의 구성 요소와 연결 방향을 유지한 기능 개념도.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1260" viewBox="0 0 1440 1260" role="img" aria-labelledby="title description">
+<title id="title">URL 기반 스미싱 탐지 · 컴포넌트 구성도</title><desc id="description">URL 텍스트 모델과 웹페이지 특징 분석을 나누고, 학습·평가·보고 경로를 연결</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#15334f" flood-opacity="0.045"/></filter></defs>
 <style>text{font-family:"Noto Sans CJK KR",Arial,sans-serif} text{font-kerning:normal}</style>
-<rect x="0" y="0" width="720" height="690" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6"/>
-<text data-slot="eyebrow" x="50" y="40" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">PROJECT ARCHITECTURE</text>
-<text data-slot="title" x="50" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">URL 분류와 분석</text>
-<rect x="540" y="22" width="130" height="30" rx="15" fill="#e5edf9" stroke="none" stroke-width="1.6"/>
-<text data-slot="status" x="605" y="43" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">기능 개념도</text>
-<rect x="26" y="308" width="668" height="180" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6"/>
-<text data-slot="zone.title" x="50" y="338" font-size="23" fill="#097f78" font-weight="700" text-anchor="start">분류·분석</text>
-<path data-edge="URL-&gt;MODEL" data-retry="false" d="M360 276 V298 H186 V350" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="URL-&gt;WEB" data-retry="false" d="M360 276 V298 H534 V350" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="MODEL-&gt;RESULT" data-retry="false" d="M186 470 V496 H360 V518" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="WEB-&gt;RESULT" data-retry="false" d="M534 470 V496 H360 V518" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<g role="group" data-node="URL" aria-label="분석할 URL">
-<rect x="224" y="156" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="224" y="174" width="4" height="84" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
-<text data-slot="URL.role" x="248" y="186" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">입력</text>
-<text data-slot="URL.line1" x="248" y="239" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">분석할 URL</text>
+<rect x="0" y="0" width="1440" height="1260" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="eyebrow" x="60" y="38" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">COMPONENT ARCHITECTURE</text>
+<text data-slot="title" x="60" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">URL 기반 스미싱 탐지</text>
+<text data-slot="subtitle" x="60" y="146" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">URL 텍스트 모델과 웹페이지 특징 분석을 나누고, 학습·평가·보고 경로를 연결</text>
+<rect x="1180" y="17" width="200" height="32" rx="16" fill="#e5edf9" stroke="none" stroke-width="1.6" />
+<text data-slot="status" x="1280" y="39" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">컴포넌트 설계</text>
+<rect x="40" y="170" width="430" height="970" rx="26" fill="#eaf1fb" stroke="#bfcee5" stroke-width="1.6" />
+<text data-slot="zone.0" x="60" y="208" font-size="26" fill="#245ec7" font-weight="700" text-anchor="start">입력·모델 학습</text>
+<rect x="505" y="170" width="430" height="970" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6" />
+<text data-slot="zone.1" x="525" y="208" font-size="26" fill="#097f78" font-weight="700" text-anchor="start">텍스트 분류·웹 분석</text>
+<rect x="970" y="170" width="430" height="970" rx="26" fill="#f0ecf8" stroke="#d3c6e6" stroke-width="1.6" />
+<text data-slot="zone.2" x="990" y="208" font-size="26" fill="#7550bb" font-weight="700" text-anchor="start">분석 결과·품질 확인</text>
+<path d="M 450,300 L 525,300" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="input-&gt;classifier" d="M 450,300 L 525,300" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>분류</title></path>
+<path d="M 450,340 L 458,340 L 458,555 L 525,555" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="input-&gt;redirect" d="M 450,340 L 458,340 L 458,555 L 525,555" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>분석</title></path>
+<path d="M 255,645 L 255,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="data-&gt;training" d="M 255,645 L 255,700" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>학습</title></path>
+<path d="M 450,790 L 517,790 L 517,340 L 525,340" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="training-&gt;classifier" d="M 450,790 L 517,790 L 517,340 L 525,340" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>모델</title></path>
+<path d="M 915,320 L 923,320 L 923,300 L 990,300" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="classifier-&gt;classification" d="M 915,320 L 923,320 L 923,300 L 990,300" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>결과</title></path>
+<path d="M 720,645 L 720,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="redirect-&gt;landing" d="M 720,645 L 720,700" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>도착</title></path>
+<path d="M 720,880 L 720,935" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="landing-&gt;features" d="M 720,880 L 720,935" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>추출</title></path>
+<path d="M 915,1025 L 923,1025 L 923,555 L 990,555" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="features-&gt;feature_output" d="M 915,1025 L 923,1025 L 923,555 L 990,555" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>결과</title></path>
+<path d="M 450,555 L 458,555 L 458,652 L 982,652 L 982,770 L 990,770" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="data-&gt;evaluation" d="M 450,555 L 458,555 L 458,652 L 982,652 L 982,770 L 990,770" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>평가</title></path>
+<path d="M 990,340 L 978,340 L 978,810 L 990,810" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="classification-&gt;evaluation" d="M 990,340 L 978,340 L 978,810 L 990,810" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>대조</title></path>
+<path d="M 1185,880 L 1185,935" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="evaluation-&gt;report" d="M 1185,880 L 1185,935" fill="none" stroke="#7550bb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>보고</title></path>
+<g role="group" data-node="input" aria-label="분석 대상 URL">
+<rect x="60" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="input.title" x="86" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">분석 대상 URL</text>
+<text data-slot="input.tech" x="86" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">URL 입력</text>
+<text data-slot="input.body1" x="86" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">분류할 URL 텍스트 전달</text>
+<text data-slot="input.body2" x="86" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">웹페이지 확인 경로에도 사용</text>
 </g>
-<g role="group" data-node="MODEL" aria-label="URL 모델 분류">
-<rect x="50" y="350" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="368" width="4" height="84" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="MODEL.role" x="74" y="380" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">분류</text>
-<text data-slot="MODEL.line1" x="74" y="433" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">URL 모델 분류</text>
+<g role="group" data-node="data" aria-label="학습·평가 자료 정리">
+<rect x="60" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="data.title" x="86" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">학습·평가 자료 정리</text>
+<text data-slot="data.tech" x="86" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">ETL</text>
+<text data-slot="data.body1" x="86" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">모델 학습과 평가 자료 준비</text>
+<text data-slot="data.body2" x="86" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">반복 평가에 사용할 입력 정리</text>
 </g>
-<g role="group" data-node="WEB" aria-label="웹페이지 · 특징 분석">
-<rect x="398" y="350" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="368" width="4" height="84" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="WEB.role" x="422" y="380" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">분석</text>
-<text data-slot="WEB.line1" x="422" y="416" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">웹페이지</text>
-<text data-slot="WEB.line2" x="422" y="456" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">특징 분석</text>
+<g role="group" data-node="training" aria-label="URL 모델 추가 학습">
+<rect x="60" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="718" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="training.title" x="86" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">URL 모델 추가 학습</text>
+<text data-slot="training.tech" x="86" y="779" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">URLBert · Transformers</text>
+<text data-slot="training.body1" x="86" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">URL 분류 과제에 맞춰 학습</text>
+<text data-slot="training.body2" x="86" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">학습한 모델을 추론에 사용</text>
 </g>
-<g role="group" data-node="RESULT" aria-label="분석 결과 · 성능 확인">
-<rect x="224" y="518" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="224" y="536" width="4" height="84" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6"/>
-<text data-slot="RESULT.role" x="248" y="548" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">품질 확인</text>
-<text data-slot="RESULT.line1" x="248" y="584" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">분석 결과</text>
-<text data-slot="RESULT.line2" x="248" y="624" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">성능 확인</text>
+<g role="group" data-node="classifier" aria-label="URL 텍스트 분류기">
+<rect x="525" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="248" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="classifier.title" x="551" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">URL 텍스트 분류기</text>
+<text data-slot="classifier.tech" x="551" y="309" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">URLBert</text>
+<text data-slot="classifier.body1" x="551" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">URL 문자열을 모델에 입력</text>
+<text data-slot="classifier.body2" x="551" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">텍스트 기반 분류 결과 생성</text>
 </g>
-<path d="M50 659 H90" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
-<text data-slot="legend.flow" x="103" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">처리 흐름</text>
+<g role="group" data-node="redirect" aria-label="리다이렉트 해석">
+<rect x="525" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="483" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="redirect.title" x="551" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">리다이렉트 해석</text>
+<text data-slot="redirect.tech" x="551" y="544" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">URL 이동 경로 확인</text>
+<text data-slot="redirect.body1" x="551" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">입력 URL의 이동 경로 추적</text>
+<text data-slot="redirect.body2" x="551" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">최종 랜딩 페이지 확인</text>
+</g>
+<g role="group" data-node="landing" aria-label="랜딩 페이지 수집">
+<rect x="525" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="718" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="landing.title" x="551" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">랜딩 페이지 수집</text>
+<text data-slot="landing.tech" x="551" y="779" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">HTML 분석 입력</text>
+<text data-slot="landing.body1" x="551" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">도착 페이지의 HTML 확보</text>
+<text data-slot="landing.body2" x="551" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">특징 추출에 필요한 자료 준비</text>
+</g>
+<g role="group" data-node="features" aria-label="웹페이지 특징 추출">
+<rect x="525" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="953" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="features.title" x="551" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">웹페이지 특징 추출</text>
+<text data-slot="features.tech" x="551" y="1014" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">HTML 특징 분석</text>
+<text data-slot="features.body1" x="551" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">페이지 구성·특징을 분석</text>
+<text data-slot="features.body2" x="551" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">URL 텍스트와 별도 분석 수행</text>
+</g>
+<g role="group" data-node="classification" aria-label="텍스트 분류 결과">
+<rect x="990" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="classification.title" x="1016" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">텍스트 분류 결과</text>
+<text data-slot="classification.tech" x="1016" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">모델 추론 결과</text>
+<text data-slot="classification.body1" x="1016" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">URL 기반 분류 결과 반환</text>
+<text data-slot="classification.body2" x="1016" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">평가 데이터와 결과 대조</text>
+</g>
+<g role="group" data-node="feature_output" aria-label="페이지 분석 결과">
+<rect x="990" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="feature_output.title" x="1016" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">페이지 분석 결과</text>
+<text data-slot="feature_output.tech" x="1016" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">HTML 특징</text>
+<text data-slot="feature_output.body1" x="1016" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">추출한 웹페이지 특징 정리</text>
+<text data-slot="feature_output.body2" x="1016" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">별도 분석 결과로 활용</text>
+</g>
+<g role="group" data-node="evaluation" aria-label="모델 품질 평가">
+<rect x="990" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="718" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="evaluation.title" x="1016" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">모델 품질 평가</text>
+<text data-slot="evaluation.tech" x="1016" y="779" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">평가 파이프라인</text>
+<text data-slot="evaluation.body1" x="1016" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">학습·추론 결과의 품질 확인</text>
+<text data-slot="evaluation.body2" x="1016" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">반복 평가 결과 비교</text>
+</g>
+<g role="group" data-node="report" aria-label="보고·추세 확인">
+<rect x="990" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="953" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="report.title" x="1016" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">보고·추세 확인</text>
+<text data-slot="report.tech" x="1016" y="1014" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">평가 리포트 · 모니터링</text>
+<text data-slot="report.body1" x="1016" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">평가 결과를 보고서로 정리</text>
+<text data-slot="report.body2" x="1016" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">성능 변화 추세 확인</text>
+</g>
+<rect x="463.5" y="269" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.0" x="487.5" y="289" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">분류</text>
+<rect x="467.5" y="524" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.1" x="491.5" y="544" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">분석</text>
+<rect x="200.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.2" x="224.0" y="678.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">학습</text>
+<rect x="459.5" y="759" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.3" x="483.5" y="779" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">모델</text>
+<rect x="932.5" y="269" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.4" x="956.5" y="289" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">결과</text>
+<rect x="665.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.5" x="689.0" y="678.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">도착</text>
+<rect x="665.0" y="893.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.6" x="689.0" y="913.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">추출</text>
+<rect x="932.5" y="524" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.7" x="956.5" y="544" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">결과</text>
+<rect x="927.0" y="667.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.8" x="951.0" y="687.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">평가</text>
+<rect x="923.0" y="443.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.9" x="947.0" y="463.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">대조</text>
+<rect x="1130.0" y="893.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.10" x="1154.0" y="913.5" font-size="16" fill="#7550bb" font-weight="500" text-anchor="middle">보고</text>
+<text data-slot="legend" x="60" y="1190" font-size="19" fill="#52677d" font-weight="400" text-anchor="start">화살표: 호출·데이터 전달    ·    영역: 기능별 구성</text>
+<text data-slot="note" x="60" y="1230" font-size="18" fill="#52677d" font-weight="400" text-anchor="start">URL 문자열 분류 / 리다이렉트·HTML 특징 분석 / 학습 자료 준비·반복 평가·추세 보고</text>
 </svg>

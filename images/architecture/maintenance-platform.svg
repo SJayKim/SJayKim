@@ -1,42 +1,163 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="690" viewBox="0 0 720 690" role="img" aria-labelledby="title description">
-<title id="title">AI 소프트웨어 유지보수 플랫폼 · 위시켓 · 설계 개념도</title><desc id="description">수정 요청 코드 · 문서 코드 수정 · 검증 변경안 검토. 기존 README의 구성 요소와 연결 방향을 유지한 기능 개념도.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1260" viewBox="0 0 1440 1260" role="img" aria-labelledby="title description">
+<title id="title">AI 소프트웨어 유지보수 플랫폼 · 컴포넌트 구성도</title><desc id="description">인수 자료와 실행 근거를 연결하고, 코드 수정·검증·검토를 관리하는 구성</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#15334f" flood-opacity="0.045"/></filter></defs>
 <style>text{font-family:"Noto Sans CJK KR",Arial,sans-serif} text{font-kerning:normal}</style>
-<rect x="0" y="0" width="720" height="690" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6"/>
-<text data-slot="eyebrow" x="50" y="40" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">PROJECT ARCHITECTURE</text>
-<text data-slot="title" x="50" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">코드 수정과 검토</text>
-<rect x="540" y="22" width="130" height="30" rx="15" fill="#e5edf9" stroke="none" stroke-width="1.6"/>
-<text data-slot="status" x="605" y="43" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">기능 개념도</text>
-<rect x="200" y="316" width="320" height="330" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6"/>
-<text data-slot="zone.title" x="224" y="349" font-size="23" fill="#097f78" font-weight="700" text-anchor="start">수정·검토</text>
-<path data-edge="REQUEST-&gt;WORK" data-retry="false" d="M186 276 V296 H360 V366" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="DOCS-&gt;WORK" data-retry="false" d="M534 276 V296 H360 V366" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="WORK-&gt;REVIEW" data-retry="false" d="M360 486 V518" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<g role="group" data-node="REQUEST" aria-label="수정 요청">
-<rect x="50" y="156" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="174" width="4" height="84" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
-<text data-slot="REQUEST.role" x="74" y="186" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">입력</text>
-<text data-slot="REQUEST.line1" x="74" y="239" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">수정 요청</text>
+<rect x="0" y="0" width="1440" height="1260" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="eyebrow" x="60" y="38" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">COMPONENT ARCHITECTURE</text>
+<text data-slot="title" x="60" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">AI 소프트웨어 유지보수 플랫폼</text>
+<text data-slot="subtitle" x="60" y="146" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">인수 자료와 실행 근거를 연결하고, 코드 수정·검증·검토를 관리하는 구성</text>
+<rect x="1180" y="17" width="200" height="32" rx="16" fill="#e5edf9" stroke="none" stroke-width="1.6" />
+<text data-slot="status" x="1280" y="39" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">컴포넌트 설계</text>
+<rect x="40" y="170" width="430" height="970" rx="26" fill="#eaf1fb" stroke="#bfcee5" stroke-width="1.6" />
+<text data-slot="zone.0" x="60" y="208" font-size="26" fill="#245ec7" font-weight="700" text-anchor="start">인수·맥락·근거</text>
+<rect x="505" y="170" width="430" height="970" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6" />
+<text data-slot="zone.1" x="525" y="208" font-size="26" fill="#097f78" font-weight="700" text-anchor="start">요청·실행 제어</text>
+<rect x="970" y="170" width="430" height="970" rx="26" fill="#f0ecf8" stroke="#d3c6e6" stroke-width="1.6" />
+<text data-slot="zone.2" x="990" y="208" font-size="26" fill="#7550bb" font-weight="700" text-anchor="start">모델·저장·운영</text>
+<path d="M 255,410 L 255,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="handover-&gt;search" d="M 255,410 L 255,465" fill="none" stroke="#8a97a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="8 7"><title>자료</title></path>
+<path d="M 450,790 L 458,790 L 458,519 L 450,519" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="data_context-&gt;search" d="M 450,790 L 458,790 L 458,519 L 450,519" fill="none" stroke="#8a97a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="8 7"><title>맥락</title></path>
+<path d="M 450,543 L 517,543 L 517,555 L 525,555" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="search-&gt;controller" d="M 450,543 L 517,543 L 517,555 L 525,555" fill="none" stroke="#8a97a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="8 7"><title>근거</title></path>
+<path d="M 450,567 L 462,567 L 462,1025 L 450,1025" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="search-&gt;evidence" d="M 450,567 L 462,567 L 462,1025 L 450,1025" fill="none" stroke="#8a97a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="8 7"><title>조회</title></path>
+<path d="M 720,410 L 720,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="portal-&gt;controller" d="M 720,410 L 720,465" fill="none" stroke="#8a97a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="8 7"><title>요청</title></path>
+<path d="M 720,645 L 720,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="controller-&gt;runner" d="M 720,645 L 720,700" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>실행</title></path>
+<path d="M 720,880 L 720,935" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="runner-&gt;verification" d="M 720,880 L 720,935" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>검증</title></path>
+<path d="M 915,525 L 923,525 L 923,535 L 990,535" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="controller-&gt;queue" d="M 915,525 L 923,525 L 923,535 L 990,535" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>등록</title></path>
+<path d="M 915,555 L 982,555 L 982,320 L 990,320" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="controller-&gt;model" d="M 915,555 L 982,555 L 982,320 L 990,320" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>호출</title></path>
+<path d="M 915,585 L 923,585 L 923,790 L 990,790" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="controller-&gt;publisher" d="M 915,585 L 923,585 L 923,790 L 990,790" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>게시</title></path>
+<path d="M 990,575 L 982,575 L 982,1025 L 990,1025" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="queue-&gt;dashboard" d="M 990,575 L 982,575 L 982,1025 L 990,1025" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>조회</title></path>
+<path d="M 525,1025 L 517,1025 L 517,591 L 450,591" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="verification-&gt;search" d="M 525,1025 L 517,1025 L 517,591 L 450,591" fill="none" stroke="#8a97a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="8 7"><title>결과</title></path>
+<g role="group" data-node="handover" aria-label="인수 자료 검증">
+<rect x="60" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="handover.title" x="86" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">인수 자료 검증</text>
+<text data-slot="handover.tech" x="86" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">구조화 계약 · 입력 검사</text>
+<text data-slot="handover.body1" x="86" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">기능·기대 동작·시험 연결</text>
+<text data-slot="handover.body2" x="86" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">코드와 환경의 근거 정리</text>
 </g>
-<g role="group" data-node="DOCS" aria-label="코드 · 문서">
-<rect x="398" y="156" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="174" width="4" height="84" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
-<text data-slot="DOCS.role" x="422" y="186" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">참조 자료</text>
-<text data-slot="DOCS.line1" x="422" y="239" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">코드 · 문서</text>
+<g role="group" data-node="search" aria-label="코드·문서 검색">
+<rect x="60" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="search.title" x="86" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">코드·문서 검색</text>
+<text data-slot="search.tech" x="86" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">Python · SQLite · MCP</text>
+<text data-slot="search.body1" x="86" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">출처·버전·권한을 보존</text>
+<text data-slot="search.body2" x="86" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검색 후보와 최신성 확인</text>
 </g>
-<g role="group" data-node="WORK" aria-label="코드 수정 · 검증">
-<rect x="224" y="366" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="224" y="384" width="4" height="84" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="WORK.role" x="248" y="396" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">처리·검증</text>
-<text data-slot="WORK.line1" x="248" y="432" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">코드 수정</text>
-<text data-slot="WORK.line2" x="248" y="472" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">검증</text>
+<g role="group" data-node="data_context" aria-label="DB 분석·업무 모델">
+<rect x="60" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="718" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="data_context.title" x="86" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">DB 분석·업무 모델</text>
+<text data-slot="data_context.tech" x="86" y="779" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">SQL 카탈로그 · YAML</text>
+<text data-slot="data_context.body1" x="86" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">키·관계 후보와 사전 정리</text>
+<text data-slot="data_context.body2" x="86" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">업무 개념·판단 규칙 연결</text>
 </g>
-<g role="group" data-node="REVIEW" aria-label="변경안 검토">
-<rect x="224" y="518" width="272" height="120" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="224" y="536" width="4" height="84" rx="2" fill="#9b6410" stroke="none" stroke-width="1.6"/>
-<text data-slot="REVIEW.role" x="248" y="548" font-size="18" fill="#9b6410" font-weight="600" text-anchor="start">검토</text>
-<text data-slot="REVIEW.line1" x="248" y="601" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">변경안 검토</text>
+<g role="group" data-node="evidence" aria-label="근거 검토 화면">
+<rect x="60" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="953" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="evidence.title" x="86" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">근거 검토 화면</text>
+<text data-slot="evidence.tech" x="86" y="1014" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">FastAPI · React · PostgreSQL</text>
+<text data-slot="evidence.body1" x="86" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">원문 검색·질문·피드백</text>
+<text data-slot="evidence.body2" x="86" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">충돌 근거와 정정 이력 확인</text>
 </g>
-<path d="M50 659 H90" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
-<text data-slot="legend.flow" x="103" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">처리 흐름</text>
+<g role="group" data-node="portal" aria-label="고객 접점">
+<rect x="525" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="248" width="4" height="144" rx="2" fill="#9b6410" stroke="none" stroke-width="1.6" />
+<text data-slot="portal.title" x="551" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">고객 접점</text>
+<text data-slot="portal.tech" x="551" y="309" font-size="18" fill="#9b6410" font-weight="600" text-anchor="start">포털 · 게이트웨이</text>
+<text data-slot="portal.body1" x="551" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">로그인 기반·조회 화면 구현</text>
+<text data-slot="portal.body2" x="551" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">요청·승인 기능은 설계 단계</text>
+</g>
+<g role="group" data-node="controller" aria-label="실행 제어기">
+<rect x="525" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="483" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="controller.title" x="551" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">실행 제어기</text>
+<text data-slot="controller.tech" x="551" y="544" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">Rust · 상태 머신 · 정책</text>
+<text data-slot="controller.body1" x="551" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">계획·근거 고정과 승인 관리</text>
+<text data-slot="controller.body2" x="551" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">권한·실행 예산·상태 판단</text>
+</g>
+<g role="group" data-node="runner" aria-label="코드 실행기">
+<rect x="525" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="718" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="runner.title" x="551" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">코드 실행기</text>
+<text data-slot="runner.tech" x="551" y="779" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">Docker · AI 코딩 CLI</text>
+<text data-slot="runner.body1" x="551" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">고정된 코드 판에서 실행</text>
+<text data-slot="runner.body2" x="551" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">격리 작업 공간에서 코드 수정</text>
+</g>
+<g role="group" data-node="verification" aria-label="검증·증거 수집">
+<rect x="525" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="953" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="verification.title" x="551" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">검증·증거 수집</text>
+<text data-slot="verification.tech" x="551" y="1014" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">시험 · 미리보기 · 수용 검사</text>
+<text data-slot="verification.body1" x="551" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">변경 결과와 시험 근거 수집</text>
+<text data-slot="verification.body2" x="551" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">민감 정보 제거·계약 확인</text>
+</g>
+<g role="group" data-node="model" aria-label="모델 호출 관리">
+<rect x="990" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="248" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="model.title" x="1016" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">모델 호출 관리</text>
+<text data-slot="model.tech" x="1016" y="309" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">모델 게이트웨이</text>
+<text data-slot="model.body1" x="1016" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">호출 정책과 사용량 집계</text>
+<text data-slot="model.body2" x="1016" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">작업별 예산·비용 기록</text>
+</g>
+<g role="group" data-node="queue" aria-label="작업 큐·지속 상태">
+<rect x="990" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="queue.title" x="1016" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">작업 큐·지속 상태</text>
+<text data-slot="queue.tech" x="1016" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">PostgreSQL · SQLx</text>
+<text data-slot="queue.body1" x="1016" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">작업 소비와 실행 상태 저장</text>
+<text data-slot="queue.body2" x="1016" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">재개에 필요한 기록 관리</text>
+</g>
+<g role="group" data-node="publisher" aria-label="변경 게시·감사">
+<rect x="990" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="718" width="4" height="144" rx="2" fill="#9b6410" stroke="none" stroke-width="1.6" />
+<text data-slot="publisher.title" x="1016" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">변경 게시·감사</text>
+<text data-slot="publisher.tech" x="1016" y="779" font-size="18" fill="#9b6410" font-weight="600" text-anchor="start">GitLab · Draft MR</text>
+<text data-slot="publisher.body1" x="1016" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검토할 변경과 증거 게시</text>
+<text data-slot="publisher.body2" x="1016" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">승인·외부 변경 이력 추적</text>
+</g>
+<g role="group" data-node="dashboard" aria-label="운영 조회 화면">
+<rect x="990" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="953" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="dashboard.title" x="1016" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">운영 조회 화면</text>
+<text data-slot="dashboard.tech" x="1016" y="1014" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">읽기 API · 대시보드</text>
+<text data-slot="dashboard.body1" x="1016" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">상태·다음 행동·경고 확인</text>
+<text data-slot="dashboard.body2" x="1016" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">사용량·비용 표시와 합성 검증</text>
+</g>
+<rect x="200.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.0" x="224.0" y="443.5" font-size="16" fill="#8a97a8" font-weight="500" text-anchor="middle">자료</text>
+<rect x="465.0" y="572.75" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.1" x="489.0" y="592.75" font-size="16" fill="#8a97a8" font-weight="500" text-anchor="middle">맥락</text>
+<rect x="459.5" y="512" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.2" x="483.5" y="532" font-size="16" fill="#8a97a8" font-weight="500" text-anchor="middle">근거</text>
+<rect x="407.0" y="667.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.3" x="431.0" y="687.5" font-size="16" fill="#8a97a8" font-weight="500" text-anchor="middle">조회</text>
+<rect x="665.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.4" x="689.0" y="443.5" font-size="16" fill="#8a97a8" font-weight="500" text-anchor="middle">요청</text>
+<rect x="665.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.5" x="689.0" y="678.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">실행</text>
+<rect x="665.0" y="893.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.6" x="689.0" y="913.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">검증</text>
+<rect x="932.5" y="504" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.7" x="956.5" y="524" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">등록</text>
+<rect x="924.5" y="560" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.8" x="948.5" y="580" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">호출</text>
+<rect x="932.5" y="759" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.9" x="956.5" y="779" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">게시</text>
+<rect x="927.0" y="673.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.10" x="951.0" y="693.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">조회</text>
+<rect x="462.0" y="685.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.11" x="486.0" y="705.5" font-size="16" fill="#8a97a8" font-weight="500" text-anchor="middle">결과</text>
+<text data-slot="legend" x="60" y="1190" font-size="19" fill="#52677d" font-weight="400" text-anchor="start">화살표: 호출·데이터 전달    ·    영역: 기능별 구성</text>
+<text data-slot="note" x="60" y="1230" font-size="18" fill="#52677d" font-weight="400" text-anchor="start">개발 중 · 실선: 모듈 구현 관계 · 점선: 연동 설계 · 전체 운영 통합은 진행 중</text>
 </svg>

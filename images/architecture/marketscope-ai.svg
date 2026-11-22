@@ -1,42 +1,169 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="690" viewBox="0 0 720 690" role="img" aria-labelledby="title description">
-<title id="title">MarketScope AI · 지도 기반 상권 분석 · 개인 프로젝트 · 설계 개념도</title><desc id="description">지도 · 대화 입력 AI 도구 선택 상권 조회 · 비교 수치 검증 · 응답 전달. 기존 README의 구성 요소와 연결 방향을 유지한 기능 개념도.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1260" viewBox="0 0 1440 1260" role="img" aria-labelledby="title description">
+<title id="title">MarketScope AI · 컴포넌트 구성도</title><desc id="description">지도와 대화를 연결하고, 도구 실행·데이터 조회·수치 근거 검증을 역할별로 분리</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#15334f" flood-opacity="0.045"/></filter></defs>
 <style>text{font-family:"Noto Sans CJK KR",Arial,sans-serif} text{font-kerning:normal}</style>
-<rect x="0" y="0" width="720" height="690" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6"/>
-<text data-slot="eyebrow" x="50" y="40" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">PROJECT ARCHITECTURE</text>
-<text data-slot="title" x="50" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">지도 기반 상권 분석</text>
-<rect x="540" y="22" width="130" height="30" rx="15" fill="#e5edf9" stroke="none" stroke-width="1.6"/>
-<text data-slot="status" x="605" y="43" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">기능 개념도</text>
-<rect x="374" y="148" width="320" height="468" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6"/>
-<text data-slot="zone.title" x="398" y="185" font-size="23" fill="#097f78" font-weight="700" text-anchor="start">도구 선택·실행</text>
-<path data-edge="UI-&gt;AGENT" data-retry="false" d="M322 280 H398" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="AGENT-&gt;TOOLS" data-retry="false" d="M534 350 V448" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path data-edge="TOOLS-&gt;ANSWER" data-retry="false" d="M398 518 H322" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<g role="group" data-node="UI" aria-label="지도 · 대화 입력">
-<rect x="50" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="228" width="4" height="104" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
-<text data-slot="UI.role" x="74" y="240" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">입력</text>
-<text data-slot="UI.line1" x="74" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">지도 · 대화 입력</text>
+<rect x="0" y="0" width="1440" height="1260" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="eyebrow" x="60" y="38" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">COMPONENT ARCHITECTURE</text>
+<text data-slot="title" x="60" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">MarketScope AI</text>
+<text data-slot="subtitle" x="60" y="146" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">지도와 대화를 연결하고, 도구 실행·데이터 조회·수치 근거 검증을 역할별로 분리</text>
+<rect x="1180" y="17" width="200" height="32" rx="16" fill="#e5edf9" stroke="none" stroke-width="1.6" />
+<text data-slot="status" x="1280" y="39" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">컴포넌트 설계</text>
+<rect x="40" y="170" width="430" height="970" rx="26" fill="#eaf1fb" stroke="#bfcee5" stroke-width="1.6" />
+<text data-slot="zone.0" x="60" y="208" font-size="26" fill="#245ec7" font-weight="700" text-anchor="start">지도·대화·API</text>
+<rect x="505" y="170" width="430" height="970" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6" />
+<text data-slot="zone.1" x="525" y="208" font-size="26" fill="#097f78" font-weight="700" text-anchor="start">Agent·모델·검증</text>
+<rect x="970" y="170" width="430" height="970" rx="26" fill="#f0ecf8" stroke="#d3c6e6" stroke-width="1.6" />
+<text data-slot="zone.2" x="990" y="208" font-size="26" fill="#7550bb" font-weight="700" text-anchor="start">공공 데이터·조회 계층</text>
+<path d="M 450,300 L 458,300 L 458,790 L 450,790" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="map-&gt;state" d="M 450,300 L 458,300 L 458,790 L 450,790" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>선택</title></path>
+<path d="M 255,645 L 255,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="chat-&gt;state" d="M 255,645 L 255,700" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>동기화</title></path>
+<path d="M 450,340 L 462,340 L 462,989 L 450,989" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="map-&gt;api" d="M 450,340 L 462,340 L 462,989 L 450,989" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>조회</title></path>
+<path d="M 450,555 L 474,555 L 474,1013 L 450,1013" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="chat-&gt;api" d="M 450,555 L 474,555 L 474,1013 L 450,1013" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>대화</title></path>
+<path d="M 450,1037 L 517,1037 L 517,320 L 525,320" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="api-&gt;loop" d="M 450,1037 L 517,1037 L 517,320 L 525,320" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>실행</title></path>
+<path d="M 915,300 L 923,300 L 923,1025 L 915,1025" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="loop-&gt;llm" d="M 915,300 L 923,300 L 923,1025 L 915,1025" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>호출</title></path>
+<path d="M 720,410 L 720,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="loop-&gt;tools" d="M 720,410 L 720,465" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>도구</title></path>
+<path d="M 915,340 L 930,340 L 930,790 L 915,790" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="loop-&gt;trust" d="M 915,340 L 930,340 L 930,790 L 915,790" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>초안</title></path>
+<path d="M 720,645 L 720,700" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="tools-&gt;trust" d="M 720,645 L 720,700" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>근거</title></path>
+<path d="M 915,555 L 982,555 L 982,770 L 990,770" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="tools-&gt;repository" d="M 915,555 L 982,555 L 982,770 L 990,770" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>조회</title></path>
+<path d="M 990,810 L 978,810 L 978,552 L 982,552 L 982,555 L 990,555" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="repository-&gt;database" d="M 990,810 L 978,810 L 978,552 L 982,552 L 982,555 L 990,555" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>조회</title></path>
+<path d="M 1185,880 L 1185,935" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="repository-&gt;cache" d="M 1185,880 L 1185,935" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>캐시</title></path>
+<path d="M 1185,410 L 1185,465" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="etl-&gt;database" d="M 1185,410 L 1185,465" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>적재</title></path>
+<path d="M 525,790 L 486,790 L 486,1061 L 450,1061" fill="none" stroke="#f4f7fb" stroke-width="7" stroke-linejoin="round"/>
+<path data-edge="trust-&gt;api" d="M 525,790 L 486,790 L 486,1061 L 450,1061" fill="none" stroke="#7550bb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><title>검증</title></path>
+<g role="group" data-node="map" aria-label="상권 지도 화면">
+<rect x="60" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="map.title" x="86" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">상권 지도 화면</text>
+<text data-slot="map.tech" x="86" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">Next.js · Kakao Map · deck.gl</text>
+<text data-slot="map.body1" x="86" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">상권 선택·지도 지표 표시</text>
+<text data-slot="map.body2" x="86" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">대화 결과의 지도 명령 반영</text>
 </g>
-<g role="group" data-node="AGENT" aria-label="AI 도구 선택">
-<rect x="398" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="228" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="AGENT.role" x="422" y="240" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">도구 선택</text>
-<text data-slot="AGENT.line1" x="422" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">AI 도구 선택</text>
+<g role="group" data-node="chat" aria-label="대화·분석 카드">
+<rect x="60" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="chat.title" x="86" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">대화·분석 카드</text>
+<text data-slot="chat.tech" x="86" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">React · SSE</text>
+<text data-slot="chat.body1" x="86" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">요청·진행 상황·분석 결과 표시</text>
+<text data-slot="chat.body2" x="86" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">지도와 연결되는 결과 카드</text>
 </g>
-<g role="group" data-node="TOOLS" aria-label="상권 조회 · 비교">
-<rect x="398" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="398" y="466" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
-<text data-slot="TOOLS.role" x="422" y="478" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">실행</text>
-<text data-slot="TOOLS.line1" x="422" y="540" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">상권 조회 · 비교</text>
+<g role="group" data-node="state" aria-label="지도·대화 상태">
+<rect x="60" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="718" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="state.title" x="86" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">지도·대화 상태</text>
+<text data-slot="state.tech" x="86" y="779" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">Zustand · useMapSync</text>
+<text data-slot="state.body1" x="86" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">선택 상권과 대화 상태 공유</text>
+<text data-slot="state.body2" x="86" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">지도와 카드 동작 동기화</text>
 </g>
-<g role="group" data-node="ANSWER" aria-label="수치 검증 · 응답 전달">
-<rect x="50" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
-<rect x="50" y="466" width="4" height="104" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6"/>
-<text data-slot="ANSWER.role" x="74" y="478" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">검증·응답</text>
-<text data-slot="ANSWER.line1" x="74" y="526" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">수치 검증</text>
-<text data-slot="ANSWER.line2" x="74" y="566" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">응답 전달</text>
+<g role="group" data-node="api" aria-label="백엔드 API">
+<rect x="60" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="60" y="953" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="api.title" x="86" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">백엔드 API</text>
+<text data-slot="api.tech" x="86" y="1014" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">FastAPI · REST · SSE</text>
+<text data-slot="api.body1" x="86" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">대화·상권·지도 요청 처리</text>
+<text data-slot="api.body2" x="86" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">Agent 이벤트와 지도 명령 전달</text>
 </g>
-<path d="M50 659 H90" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
-<text data-slot="legend.flow" x="103" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">처리 흐름</text>
+<g role="group" data-node="loop" aria-label="v2 Agentic Loop">
+<rect x="525" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="248" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="loop.title" x="551" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">v2 Agentic Loop</text>
+<text data-slot="loop.tech" x="551" y="309" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">모델 주도 Function Calling</text>
+<text data-slot="loop.body1" x="551" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">도구 선택·실행·응답 반복</text>
+<text data-slot="loop.body2" x="551" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">요청별 실행 횟수·시간 제어</text>
+</g>
+<g role="group" data-node="tools" aria-label="도구 등록·실행">
+<rect x="525" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="483" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="tools.title" x="551" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">도구 등록·실행</text>
+<text data-slot="tools.tech" x="551" y="544" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">분석 도구 · 계산 · 상권 해석</text>
+<text data-slot="tools.body1" x="551" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">도메인 데이터 조회와 계산</text>
+<text data-slot="tools.body2" x="551" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">검증에 쓸 원본 근거 축적</text>
+</g>
+<g role="group" data-node="trust" aria-label="Trust Kernel">
+<rect x="525" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="718" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="trust.title" x="551" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">Trust Kernel</text>
+<text data-slot="trust.tech" x="551" y="779" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">수치 바인딩 · 단위 검사</text>
+<text data-slot="trust.body1" x="551" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">답변 수치를 도구 근거와 대조</text>
+<text data-slot="trust.body2" x="551" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">교정·미확인 표시·대체 응답</text>
+</g>
+<g role="group" data-node="llm" aria-label="모델 어댑터">
+<rect x="525" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="525" y="953" width="4" height="144" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6" />
+<text data-slot="llm.title" x="551" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">모델 어댑터</text>
+<text data-slot="llm.tech" x="551" y="1014" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">Anthropic · OpenAI · Gemini</text>
+<text data-slot="llm.body1" x="551" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">도구 호출과 응답 생성 요청</text>
+<text data-slot="llm.body2" x="551" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">호출 실패 시 대체 모델 경로</text>
+</g>
+<g role="group" data-node="etl" aria-label="공공 데이터 적재">
+<rect x="990" y="230" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="248" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="etl.title" x="1016" y="274" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">공공 데이터 적재</text>
+<text data-slot="etl.tech" x="1016" y="309" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">Open API · SHP · GeoPandas</text>
+<text data-slot="etl.body1" x="1016" y="346" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">통계와 상권 경계 데이터 준비</text>
+<text data-slot="etl.body2" x="1016" y="378" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">조회 가능한 데이터베이스로 적재</text>
+</g>
+<g role="group" data-node="database" aria-label="상권·공간 데이터">
+<rect x="990" y="465" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="483" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="database.title" x="1016" y="509" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">상권·공간 데이터</text>
+<text data-slot="database.tech" x="1016" y="544" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">PostgreSQL · PostGIS</text>
+<text data-slot="database.body1" x="1016" y="581" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">상권 통계와 경계 정보 저장</text>
+<text data-slot="database.body2" x="1016" y="613" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">지역·업종·공간 조건 조회</text>
+</g>
+<g role="group" data-node="repository" aria-label="데이터 접근 계층">
+<rect x="990" y="700" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="718" width="4" height="144" rx="2" fill="#097f78" stroke="none" stroke-width="1.6" />
+<text data-slot="repository.title" x="1016" y="744" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">데이터 접근 계층</text>
+<text data-slot="repository.tech" x="1016" y="779" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">SQLAlchemy Async</text>
+<text data-slot="repository.body1" x="1016" y="816" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">분석 도구의 조회 요청 처리</text>
+<text data-slot="repository.body2" x="1016" y="848" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">데이터베이스 접근 로직 공통화</text>
+</g>
+<g role="group" data-node="cache" aria-label="조회 캐시">
+<rect x="990" y="935" width="390" height="180" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="990" y="953" width="4" height="144" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6" />
+<text data-slot="cache.title" x="1016" y="979" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">조회 캐시</text>
+<text data-slot="cache.tech" x="1016" y="1014" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">Redis</text>
+<text data-slot="cache.body1" x="1016" y="1051" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">반복 데이터 조회 결과 재사용</text>
+<text data-slot="cache.body2" x="1016" y="1083" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">만료 정책에 따라 캐시 관리</text>
+</g>
+<rect x="403.0" y="653.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.0" x="427.0" y="673.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">선택</text>
+<rect x="184.0" y="658.5" width="64" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.1" x="216.0" y="678.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">동기화</text>
+<rect x="469.0" y="488.25" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.2" x="493.0" y="508.25" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">조회</text>
+<rect x="419.0" y="884.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.3" x="443.0" y="904.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">대화</text>
+<rect x="459.5" y="1006" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.4" x="483.5" y="1026" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">실행</text>
+<rect x="868.0" y="648.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.5" x="892.0" y="668.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">호출</text>
+<rect x="665.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.6" x="689.0" y="443.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">도구</text>
+<rect x="937.0" y="438.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.7" x="961.0" y="458.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">초안</text>
+<rect x="665.0" y="658.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.8" x="689.0" y="678.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">근거</text>
+<rect x="924.5" y="524" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.9" x="948.5" y="544" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">조회</text>
+<rect x="923.0" y="602.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.10" x="947.0" y="622.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">조회</text>
+<rect x="1130.0" y="893.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.11" x="1154.0" y="913.5" font-size="16" fill="#097f78" font-weight="500" text-anchor="middle">캐시</text>
+<rect x="1130.0" y="423.5" width="48" height="28" rx="6" fill="#f4f7fb" stroke="none" stroke-width="1.6" />
+<text data-slot="edge.12" x="1154.0" y="443.5" font-size="16" fill="#245ec7" font-weight="500" text-anchor="middle">적재</text>
+<text data-slot="legend" x="60" y="1190" font-size="19" fill="#52677d" font-weight="400" text-anchor="start">화살표: 호출·데이터 전달    ·    영역: 기능별 구성</text>
+<text data-slot="note" x="60" y="1230" font-size="18" fill="#52677d" font-weight="400" text-anchor="start">기본 경로: v2 Agentic Loop · 레거시 PAE는 Mock·롤백 경로 · 최종 응답은 수치 근거 검사 후 전송</text>
 </svg>

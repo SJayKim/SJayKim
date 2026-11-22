@@ -31,7 +31,7 @@
 
 구현: 자료 검색·데이터 관계 분석, 코드 수정·검증과 작업 상태 확인 기능을 개발 중임. 구성요소별 검증을 진행하고 있으며 전체 운영 연동 검증은 남아 있음.
 
-<img src="images/architecture/maintenance-platform.png" alt="AI 소프트웨어 유지보수 플랫폼 · 위시켓 설계 개념도" width="720">
+<img src="images/architecture/maintenance-platform.png" alt="AI 소프트웨어 유지보수 플랫폼 · 위시켓 컴포넌트 구성도" width="1000">
 
 Rust · Python · TypeScript · PostgreSQL · Docker
 
@@ -46,7 +46,7 @@ Rust · Python · TypeScript · PostgreSQL · Docker
 
 구현: 업무 도구와 근거 검색을 연결해 명세 초안·업무 요약·변경 이력 기능을 구현함. 실패 원인 기록, 재시도와 반복 실패 시 중단 처리도 개발함.
 
-<img src="images/architecture/project-task-agent.png" alt="프로젝트 업무 처리 AI 에이전트 · Plantynet 설계 개념도" width="720">
+<img src="images/architecture/project-task-agent.png" alt="프로젝트 업무 처리 AI 에이전트 · Plantynet 컴포넌트 구성도" width="1000">
 
 Python · LangGraph · FastAPI · LightRAG · Docker Compose
 
@@ -61,7 +61,7 @@ Python · LangGraph · FastAPI · LightRAG · Docker Compose
 
 구현: 원문과 요약을 비교해 품질 점수와 판단 이유를 남기고 보고서로 정리함. 이미 처리한 결과 제외, 실패 작업 재시도와 중복 실행 방지도 구현함.
 
-<img src="images/architecture/summary-evaluation.png" alt="뉴스 요약 품질 자동 평가 · Plantynet 설계 개념도" width="720">
+<img src="images/architecture/summary-evaluation.png" alt="뉴스 요약 품질 자동 평가 · Plantynet 컴포넌트 구성도" width="1000">
 
 Python · deepeval/GEval · PostgreSQL · openpyxl
 
@@ -76,7 +76,7 @@ Python · deepeval/GEval · PostgreSQL · openpyxl
 
 구현: 의미·키워드 검색과 결과 재정렬, 문맥 보강을 챗봇에 연결함. 검색에 부적합한 데이터를 정리하고 입력·답변의 안전성 검사도 구현함.
 
-<img src="images/architecture/magazine-search.png" alt="매거진 검색·추천 AI 챗봇 · Plantynet 설계 개념도" width="720">
+<img src="images/architecture/magazine-search.png" alt="매거진 검색·추천 AI 챗봇 · Plantynet 컴포넌트 구성도" width="1000">
 
 Python · Milvus · BGE-M3 · BM25 · BGE-Reranker · LlamaGuard
 
@@ -91,7 +91,7 @@ Python · Milvus · BGE-M3 · BM25 · BGE-Reranker · LlamaGuard
 
 구현: 자체 모델 서빙에 요약 길이 조정, 긴 문서 축약과 실패 시 재시도를 연결함. 요약·분류·태그 추출 API와 검토 화면을 구현하고 API를 배포함.
 
-<img src="images/architecture/news-processing-api.png" alt="뉴스 요약·분류·태깅 API · Plantynet 설계 개념도" width="720">
+<img src="images/architecture/news-processing-api.png" alt="뉴스 요약·분류·태깅 API · Plantynet 컴포넌트 구성도" width="1000">
 
 Python · FastAPI · vLLM · LangGraph · Gradio · Docker
 
@@ -106,7 +106,7 @@ Python · FastAPI · vLLM · LangGraph · Gradio · Docker
 
 구현: URLBert를 추가 학습하고 URL 텍스트 분류와 웹페이지 특징 분석을 각각 구현함. 평가·보고 기능을 연결해 모델 성능의 추이를 확인하도록 구성함.
 
-<img src="images/architecture/smishing-detection.png" alt="스미싱 URL 탐지 · Plantynet 설계 개념도" width="720">
+<img src="images/architecture/smishing-detection.png" alt="스미싱 URL 탐지 · Plantynet 컴포넌트 구성도" width="1000">
 
 Python · URLBert · Hugging Face Transformers · HTML 분석
 
@@ -121,7 +121,7 @@ Python · URLBert · Hugging Face Transformers · HTML 분석
 
 구현: 관광지 설명·리뷰에서 후보를 찾고 조건과 의미에 따라 추천 순위를 정함. 추천 결과를 일정으로 연결하고 API와 검색용 데이터 저장소를 배포함.
 
-<img src="images/architecture/travel-recommendation.png" alt="여행 추천·일정 생성 챗봇 · AIO2O 설계 개념도" width="720">
+<img src="images/architecture/travel-recommendation.png" alt="여행 추천·일정 생성 챗봇 · AIO2O 컴포넌트 구성도" width="1000">
 
 Python · Embedding Models · Vector DB · Docker Compose
 
@@ -136,7 +136,7 @@ Python · Embedding Models · Vector DB · Docker Compose
 
 구현: 선호 조건으로 후보를 좁힌 뒤 영화 설명의 의미 유사도로 추천 순위를 정함. 조건 필터와 의미 검색을 결합한 기능을 API로 개발함.
 
-<img src="images/architecture/movie-recommendation.png" alt="영화 추천 API · AIO2O 설계 개념도" width="720">
+<img src="images/architecture/movie-recommendation.png" alt="영화 추천 API · AIO2O 컴포넌트 구성도" width="1000">
 
 Python · PostgreSQL · pgvector · Embedding Models · Docker
 
@@ -151,7 +151,7 @@ Python · PostgreSQL · pgvector · Embedding Models · Docker
 
 구현: 서울시 1,650개 상권 데이터를 조회·비교하는 도구를 지도·대화에 연결함. AI 답변에 포함된 수치를 도구 조회 결과와 대조하는 검증 기능을 구현함.
 
-<img src="images/architecture/marketscope-ai.png" alt="MarketScope AI · 지도 기반 상권 분석 · 개인 프로젝트 설계 개념도" width="720">
+<img src="images/architecture/marketscope-ai.png" alt="MarketScope AI · 지도 기반 상권 분석 · 개인 프로젝트 컴포넌트 구성도" width="1000">
 
 Python · FastAPI · TypeScript · React · PostgreSQL/PostGIS
 
