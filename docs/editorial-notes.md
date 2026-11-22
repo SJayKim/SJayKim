@@ -20,7 +20,7 @@ uv run docs/render_korean.py
 
 The script pins its Python dependencies, including RenderCV 2.8. Install the Noto Sans CJK KR regular and bold fonts before rendering. Career PDF generation uses Google Chrome on macOS, or an installed Playwright Chromium browser on other systems. Inspect the generated PDFs after edits. The script checks page counts, key text extraction, and career-page overflow.
 
-PDF links point to `main` by default. For a published branch preview, add `--link-ref <branch>`; this revision uses `--link-ref docs/career-resume-20261122`. Regenerate with the default after merging to keep links independent of the preview branch.
+The committed PDFs link to documents on `main` and are published directly on `main`. The command above generates these links without an additional option.
 
 ## 기존 정리 기준 (2026-11-21)
 
