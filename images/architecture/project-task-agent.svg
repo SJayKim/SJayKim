@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="690" viewBox="0 0 720 690" role="img" aria-labelledby="title description">
+<title id="title">프로젝트 업무 처리 AI 에이전트 · Plantynet · 설계 개념도</title><desc id="description">업무 요청 요청 해석 · 근거 검색 업무 도구 실행 결과 확인. 기존 README의 구성 요소와 연결 방향을 유지한 기능 개념도.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#15334f" flood-opacity="0.045"/></filter></defs>
+<style>text{font-family:"Noto Sans CJK KR",Arial,sans-serif} text{font-kerning:normal}</style>
+<rect x="0" y="0" width="720" height="690" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6"/>
+<text data-slot="eyebrow" x="50" y="40" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">PROJECT ARCHITECTURE</text>
+<text data-slot="title" x="50" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">업무 도구 실행</text>
+<rect x="540" y="22" width="130" height="30" rx="15" fill="#e5edf9" stroke="none" stroke-width="1.6"/>
+<text data-slot="status" x="605" y="43" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">기능 개념도</text>
+<rect x="374" y="148" width="320" height="468" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6"/>
+<text data-slot="zone.title" x="398" y="185" font-size="23" fill="#097f78" font-weight="700" text-anchor="start">해석·실행</text>
+<path data-edge="REQUEST-&gt;CONTEXT" data-retry="false" d="M322 280 H398" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-edge="CONTEXT-&gt;TOOLS" data-retry="false" d="M578 350 V448" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-edge="TOOLS-&gt;CHECK" data-retry="false" d="M398 518 H322" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-edge="CHECK-&gt;CONTEXT" data-retry="true" d="M186 448 V399 H490 V350" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="7 7"/>
+<text data-slot="edge.retry" x="302" y="388" font-size="17" fill="#097f78" font-weight="600" text-anchor="start">재시도</text>
+<g role="group" data-node="REQUEST" aria-label="업무 요청">
+<rect x="50" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="50" y="228" width="4" height="104" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
+<text data-slot="REQUEST.role" x="74" y="240" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">입력</text>
+<text data-slot="REQUEST.line1" x="74" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">업무 요청</text>
+</g>
+<g role="group" data-node="CONTEXT" aria-label="요청 해석 · 근거 검색">
+<rect x="398" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="398" y="228" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
+<text data-slot="CONTEXT.role" x="422" y="240" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">처리</text>
+<text data-slot="CONTEXT.line1" x="422" y="288" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">요청 해석</text>
+<text data-slot="CONTEXT.line2" x="422" y="328" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">근거 검색</text>
+</g>
+<g role="group" data-node="TOOLS" aria-label="업무 도구 실행">
+<rect x="398" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="398" y="466" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
+<text data-slot="TOOLS.role" x="422" y="478" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">실행</text>
+<text data-slot="TOOLS.line1" x="422" y="540" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">업무 도구 실행</text>
+</g>
+<g role="group" data-node="CHECK" aria-label="결과 확인">
+<rect x="50" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="50" y="466" width="4" height="104" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6"/>
+<text data-slot="CHECK.role" x="74" y="478" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">결과 확인</text>
+<text data-slot="CHECK.line1" x="74" y="540" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">결과 확인</text>
+</g>
+<path d="M50 659 H90" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text data-slot="legend.flow" x="103" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">처리 흐름</text>
+<path d="M280 659 H320" fill="none" stroke="#097f78" stroke-width="2.5" stroke-dasharray="7 7" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text data-slot="legend.retry" x="333" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">재시도</text>
+</svg>
