@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="690" viewBox="0 0 720 690" role="img" aria-labelledby="title description">
+<title id="title">MarketScope AI · 지도 기반 상권 분석 · 개인 프로젝트 · 설계 개념도</title><desc id="description">지도 · 대화 입력 AI 도구 선택 상권 조회 · 비교 수치 검증 · 응답 전달. 기존 README의 구성 요소와 연결 방향을 유지한 기능 개념도.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="context-stroke" stroke-width="1.5"/></marker><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#15334f" flood-opacity="0.045"/></filter></defs>
+<style>text{font-family:"Noto Sans CJK KR",Arial,sans-serif} text{font-kerning:normal}</style>
+<rect x="0" y="0" width="720" height="690" rx="0" fill="#f4f7fb" stroke="none" stroke-width="1.6"/>
+<text data-slot="eyebrow" x="50" y="40" font-size="17" fill="#245ec7" font-weight="700" text-anchor="start">PROJECT ARCHITECTURE</text>
+<text data-slot="title" x="50" y="100" font-size="43" fill="#142b43" font-weight="700" text-anchor="start">지도 기반 상권 분석</text>
+<rect x="540" y="22" width="130" height="30" rx="15" fill="#e5edf9" stroke="none" stroke-width="1.6"/>
+<text data-slot="status" x="605" y="43" font-size="17" fill="#245ec7" font-weight="600" text-anchor="middle">기능 개념도</text>
+<rect x="374" y="148" width="320" height="468" rx="26" fill="#eaf6f3" stroke="#b8d9d1" stroke-width="1.6"/>
+<text data-slot="zone.title" x="398" y="185" font-size="23" fill="#097f78" font-weight="700" text-anchor="start">도구 선택·실행</text>
+<path data-edge="UI-&gt;AGENT" data-retry="false" d="M322 280 H398" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-edge="AGENT-&gt;TOOLS" data-retry="false" d="M534 350 V448" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-edge="TOOLS-&gt;ANSWER" data-retry="false" d="M398 518 H322" fill="none" stroke="#097f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g role="group" data-node="UI" aria-label="지도 · 대화 입력">
+<rect x="50" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="50" y="228" width="4" height="104" rx="2" fill="#245ec7" stroke="none" stroke-width="1.6"/>
+<text data-slot="UI.role" x="74" y="240" font-size="18" fill="#245ec7" font-weight="600" text-anchor="start">입력</text>
+<text data-slot="UI.line1" x="74" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">지도 · 대화 입력</text>
+</g>
+<g role="group" data-node="AGENT" aria-label="AI 도구 선택">
+<rect x="398" y="210" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="398" y="228" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
+<text data-slot="AGENT.role" x="422" y="240" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">도구 선택</text>
+<text data-slot="AGENT.line1" x="422" y="302" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">AI 도구 선택</text>
+</g>
+<g role="group" data-node="TOOLS" aria-label="상권 조회 · 비교">
+<rect x="398" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="398" y="466" width="4" height="104" rx="2" fill="#097f78" stroke="none" stroke-width="1.6"/>
+<text data-slot="TOOLS.role" x="422" y="478" font-size="18" fill="#097f78" font-weight="600" text-anchor="start">실행</text>
+<text data-slot="TOOLS.line1" x="422" y="540" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">상권 조회 · 비교</text>
+</g>
+<g role="group" data-node="ANSWER" aria-label="수치 검증 · 응답 전달">
+<rect x="50" y="448" width="272" height="140" rx="18" fill="white" stroke="#d5dfe9" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="50" y="466" width="4" height="104" rx="2" fill="#7550bb" stroke="none" stroke-width="1.6"/>
+<text data-slot="ANSWER.role" x="74" y="478" font-size="18" fill="#7550bb" font-weight="600" text-anchor="start">검증·응답</text>
+<text data-slot="ANSWER.line1" x="74" y="526" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">수치 검증</text>
+<text data-slot="ANSWER.line2" x="74" y="566" font-size="27" fill="#142b43" font-weight="700" text-anchor="start">응답 전달</text>
+</g>
+<path d="M50 659 H90" fill="none" stroke="#245ec7" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text data-slot="legend.flow" x="103" y="665" font-size="17" fill="#52677d" font-weight="400" text-anchor="start">처리 흐름</text>
+</svg>
