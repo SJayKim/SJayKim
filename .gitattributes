@@ -1,1 +1,3 @@
 *.pdf binary
+docs/diagrams/*.html linguist-generated=true -whitespace
+images/architecture/*.svg linguist-generated=true -whitespace

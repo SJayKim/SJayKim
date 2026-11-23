@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "뉴스 요약 품질 자동 평가",
+    "locale": "ko",
+    "output": "docs/diagrams/summary-evaluation.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/SJayKim.git",
+      "revision": "88c3cdcf2645a979b199462b1654a8dedefe170c"
+    }
+  },
+  "components": [
+    {
+      "id": "schedule",
+      "type": "backend",
+      "label": "배치 스케줄러",
+      "sublabel": "cron · flock",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "input",
+      "type": "external",
+      "label": "원문·요약 입력",
+      "sublabel": "기사 · 요약 · 발행일",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "incremental",
+      "type": "backend",
+      "label": "증분 대상 선택",
+      "sublabel": "기처리 결과 확인",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "worker",
+      "type": "backend",
+      "label": "평가 실행기",
+      "sublabel": "Python",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "metrics",
+      "type": "backend",
+      "label": "코드 기반 지표",
+      "sublabel": "정상 응답률 · 길이 비율",
+      "pos": [
+        760,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "geval",
+      "type": "backend",
+      "label": "품질 평가기",
+      "sublabel": "deepeval · GEval",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "retry",
+      "type": "backend",
+      "label": "호출 제한 대응",
+      "sublabel": "Rate-limit 재시도",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "llm",
+      "type": "external",
+      "label": "평가 모델",
+      "sublabel": "OpenAI API",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "database",
+      "type": "database",
+      "label": "평가 결과 저장소",
+      "sublabel": "PostgreSQL",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "report",
+      "type": "backend",
+      "label": "일일 보고서 생성",
+      "sublabel": "openpyxl · Excel",
+      "pos": [
+        760,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 5,
+          "end_line": 15
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "schedule-to-worker",
+      "from": "schedule",
+      "to": "worker",
+      "label": "실행"
+    },
+    {
+      "id": "input-to-incremental",
+      "from": "input",
+      "to": "incremental",
+      "label": "대상"
+    },
+    {
+      "id": "incremental-to-worker",
+      "from": "incremental",
+      "to": "worker",
+      "label": "전달"
+    },
+    {
+      "id": "database-to-incremental",
+      "from": "database",
+      "to": "incremental",
+      "label": "확인"
+    },
+    {
+      "id": "worker-to-metrics",
+      "from": "worker",
+      "to": "metrics",
+      "label": "계산"
+    },
+    {
+      "id": "worker-to-geval",
+      "from": "worker",
+      "to": "geval",
+      "label": "평가"
+    },
+    {
+      "id": "geval-to-llm",
+      "from": "geval",
+      "to": "llm",
+      "label": "요청"
+    },
+    {
+      "id": "geval-to-retry",
+      "from": "geval",
+      "to": "retry",
+      "label": "제한"
+    },
+    {
+      "id": "retry-to-geval",
+      "from": "retry",
+      "to": "geval",
+      "label": "재시도"
+    },
+    {
+      "id": "metrics-to-database",
+      "from": "metrics",
+      "to": "database",
+      "label": "저장"
+    },
+    {
+      "id": "geval-to-database",
+      "from": "geval",
+      "to": "database",
+      "label": "저장"
+    },
+    {
+      "id": "database-to-report",
+      "from": "database",
+      "to": "report",
+      "label": "집계"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "읽는 기준",
+      "items": [
+        "기능별 구성도이며 독립 배포 단위를 뜻하지 않음.",
+        "평가 기준: 내용·날짜·사실성·문체·형식 · 기처리 결과 제외와 호출 제한 재시도 적용",
+        "공개 경력 문서에 근거한 개념도. 회사 원본 코드·운영 상태를 재검증한 결과가 아님.",
+        "5개 기준의 평가 요청을 1회로 통합. 토큰 비용 1/5 또는 품질 동등성은 실측하지 않음."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "입력·배치 제어",
+      "items": [
+        "배치 스케줄러: 정기 실행과 중복 실행 방지 · 평가 작업 시작 시점 관리",
+        "원문·요약 입력: 평가할 원문과 요약 구성 · 날짜 판단에 필요한 정보 제공",
+        "증분 대상 선택: 이미 저장한 평가 결과 제외 · 새 평가 대상만 실행기에 전달"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "평가 실행",
+      "items": [
+        "평가 실행기: 대상별 평가 경로 실행 · 지표·점수·판단 이유 수집",
+        "코드 기반 지표: 응답 생성 여부 확인 · 원문 대비 요약 길이 계산",
+        "품질 평가기: 한국어 평가 기준 구성 · 통합 평가 요청과 결과 해석",
+        "호출 제한 대응: 모델 호출 제한 감지 · 실패한 평가 요청 재시도"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "모델·기록·보고",
+      "items": [
+        "평가 모델: 요약 품질 기준에 따라 판단 · 점수와 판단 근거 반환",
+        "평가 결과 저장소: 지표·평가 점수·근거 저장 · 증분 처리와 보고에 재사용",
+        "일일 보고서 생성: 저장 결과를 일별로 집계 · 검토 가능한 평가 보고서 출력"
+      ]
+    }
+  ]
+}
