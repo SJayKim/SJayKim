@@ -100,11 +100,13 @@ AIO2O · Skylife · 2023.06~2023.12 · 4명 팀에서 벡터 DB 설계·추천 �
 
 문제: 상권 통계가 여러 자료에 흩어져 있고 사용자가 지도와 수치, 분석 결과를 따로 해석해야 했다.
 
-실행: 서울시 1,650개 상권 자료를 적재하고 지도와 챗봇을 연결했다. LangGraph의 Planner·Actor·Evaluator가 11종 도구를 선택·조합하며 의존 관계가 없는 실행을 병렬 처리한다. 지도 선택과 응답을 동기화하고 SSE 이벤트와 리포트 카드로 결과를 표시했다. 실데이터 ETL, 실패·빈 결과 시 추측 방지, 대화 맥락을 반영한 질의 재작성, Langfuse 피드백 연결을 구현했다.
+당시 구현 기록: 서울시 1,650개 상권 자료를 적재하고 지도와 챗봇을 연결했다. LangGraph의 Planner·Actor·Evaluator가 11종 도구를 선택·조합하며 의존 관계가 없는 실행을 병렬 처리한다. 지도 선택과 응답을 동기화하고 SSE 이벤트와 리포트 카드로 결과를 표시했다. 실데이터 ETL, 실패·빈 결과 시 추측 방지, 대화 맥락을 반영한 질의 재작성, Langfuse 피드백 연결을 구현했다.
 
 결과: 지도 기반 상권 분석 서비스 v0.4.0 공개 이력이 있다. 당시 Playwright Chromium 66/66 및 production smoke 28/28 통과 기록을 보유한다. 이는 과거 기록이며 현재 재실행 결과가 아니다. OAuth2·결제·Tier 게이팅은 당시 후속 계획으로, 유료 고객이나 매출 실적으로 표현하지 않는다.
 
 기술: Python, FastAPI, LangGraph, PostgreSQL/PostGIS, SQLAlchemy, React, TypeScript, Zustand, SSE, Playwright, Langfuse.
+
+현재 공개 코드와의 구분: 2026-11-23 확인한 [`78aeb1b`](https://github.com/SJayKim/Catchment-Area-Analysis/tree/78aeb1b759e599ce6cc70f9b6697bb1cb1b9939c)에서는 v2 설정과 실제 모델 사용 시 자체 Agentic Loop를 실행하며, Mock 또는 PAE 설정에서는 레거시 LangGraph 경로를 사용한다. v2는 도구 반환값·계산값을 근거로 최종 답변 본문의 수치를 검증한다. 진행 이벤트와 결과 카드는 본문 검증 전에 전송될 수 있다. [현재 구성도](https://sjaykim.github.io/SJayKim/docs/diagrams/marketscope-ai.html)는 이 코드 판을 기준으로 하며, 위의 과거 시험 결과를 현재 재실행 결과로 해석하지 않는다.
 
 ![MarketScope AI 랜딩 페이지](../../images/marketscope_landingpage.png)
 

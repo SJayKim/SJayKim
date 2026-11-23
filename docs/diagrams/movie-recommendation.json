@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "영화 추천 API",
+    "locale": "ko",
+    "output": "docs/diagrams/movie-recommendation.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/SJayKim.git",
+      "revision": "88c3cdcf2645a979b199462b1654a8dedefe170c"
+    }
+  },
+  "components": [
+    {
+      "id": "data",
+      "type": "external",
+      "label": "영화 원천 정보",
+      "sublabel": "설명 · 감독 · 배우 · 장르",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "prepare",
+      "type": "backend",
+      "label": "영화 콘텐츠 구성",
+      "sublabel": "메타데이터 · 설명 텍스트",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "embedding",
+      "type": "backend",
+      "label": "영화 의미 임베딩",
+      "sublabel": "Embedding Models",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "database",
+      "type": "database",
+      "label": "영화·벡터 저장소",
+      "sublabel": "PostgreSQL · pgvector",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "conditions",
+      "type": "backend",
+      "label": "선호 조건 처리",
+      "sublabel": "추천 입력 조건",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "filter",
+      "type": "backend",
+      "label": "후보 영화 선택",
+      "sublabel": "메타데이터 필터",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "similarity",
+      "type": "backend",
+      "label": "의미 유사도 검색",
+      "sublabel": "벡터 비교",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "ranking",
+      "type": "backend",
+      "label": "추천 순위 구성",
+      "sublabel": "조건 + 의미 기반 정렬",
+      "pos": [
+        760,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "추천 API",
+      "sublabel": "Python · Docker",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "response",
+      "type": "frontend",
+      "label": "영화 추천 응답",
+      "sublabel": "추천 목록",
+      "pos": [
+        760,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 85,
+          "end_line": 95
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "data-to-prepare",
+      "from": "data",
+      "to": "prepare",
+      "label": "정리"
+    },
+    {
+      "id": "prepare-to-embedding",
+      "from": "prepare",
+      "to": "embedding",
+      "label": "변환"
+    },
+    {
+      "id": "embedding-to-database",
+      "from": "embedding",
+      "to": "database",
+      "label": "저장"
+    },
+    {
+      "id": "api-to-conditions",
+      "from": "api",
+      "to": "conditions",
+      "label": "조건"
+    },
+    {
+      "id": "conditions-to-filter",
+      "from": "conditions",
+      "to": "filter",
+      "label": "선택"
+    },
+    {
+      "id": "filter-to-database",
+      "from": "filter",
+      "to": "database",
+      "label": "조회"
+    },
+    {
+      "id": "filter-to-similarity",
+      "from": "filter",
+      "to": "similarity",
+      "label": "후보"
+    },
+    {
+      "id": "similarity-to-database",
+      "from": "similarity",
+      "to": "database",
+      "label": "벡터"
+    },
+    {
+      "id": "similarity-to-ranking",
+      "from": "similarity",
+      "to": "ranking",
+      "label": "점수"
+    },
+    {
+      "id": "ranking-to-response",
+      "from": "ranking",
+      "to": "response",
+      "label": "추천"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "읽는 기준",
+      "items": [
+        "기능별 구성도이며 독립 배포 단위를 뜻하지 않음.",
+        "PostgreSQL 안에서 메타데이터와 pgvector 임베딩을 함께 조회 · 조건 필터와 의미 기반 순위를 결합",
+        "공개 경력 문서에 근거한 개념도. 회사 원본 코드·운영 상태를 재검증한 결과가 아님."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "영화 데이터 준비",
+      "items": [
+        "영화 원천 정보: 영화 내용과 메타데이터 준비 · 조건 검색·의미 비교에 활용",
+        "영화 콘텐츠 구성: 필터에 쓸 속성 정보 정리 · 임베딩 입력 텍스트 구성",
+        "영화 의미 임베딩: 영화 설명·특징을 벡터화 · 영화 간 의미 비교 기반 생성"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "조건·벡터 조회",
+      "items": [
+        "영화·벡터 저장소: 메타데이터와 임베딩 저장 · 조건 조회와 벡터 검색 지원",
+        "선호 조건 처리: 사용자가 지정한 선호 해석 · 후보를 고를 조건 구성",
+        "후보 영화 선택: 조건에 맞는 영화 후보 조회 · 추천 비교 대상의 범위 결정",
+        "의미 유사도 검색: 영화 의미 표현을 비교 · 선택한 후보의 관련성 계산"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "API·순위·응답",
+      "items": [
+        "추천 순위 구성: 의미 유사도에 따라 순위화 · 추천할 영화 목록 구성",
+        "추천 API: 추천 요청을 받아 조건 전달 · 영화 추천 결과 제공",
+        "영화 추천 응답: 조건을 만족하는 영화 반환 · 의미 기반 순서로 결과 제공"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "여행 추천·일정 생성 챗봇",
+    "locale": "ko",
+    "output": "docs/diagrams/travel-recommendation.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/SJayKim.git",
+      "revision": "88c3cdcf2645a979b199462b1654a8dedefe170c"
+    }
+  },
+  "components": [
+    {
+      "id": "data",
+      "type": "external",
+      "label": "관광 콘텐츠",
+      "sublabel": "설명 · 리뷰",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "prepare",
+      "type": "backend",
+      "label": "콘텐츠 정리",
+      "sublabel": "키워드 · 해시태그",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "embedding",
+      "type": "backend",
+      "label": "콘텐츠 임베딩",
+      "sublabel": "Embedding Models",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "vector_db",
+      "type": "database",
+      "label": "관광 벡터 저장소",
+      "sublabel": "VectorDB",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "추천 요청 API",
+      "sublabel": "Python · API",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "constraints",
+      "type": "backend",
+      "label": "요청 조건 해석",
+      "sublabel": "지역 · 일수 · 카테고리",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "query",
+      "type": "backend",
+      "label": "질의 의미 표현",
+      "sublabel": "Embedding Models",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "filter",
+      "type": "backend",
+      "label": "후보 조건 필터",
+      "sublabel": "조건 기반 후보 선택",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "chat",
+      "type": "frontend",
+      "label": "여행 대화 접점",
+      "sublabel": "챗봇 인터페이스",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "type": "backend",
+      "label": "여행 일정 구성",
+      "sublabel": "추천 결과 · 일정 조건",
+      "pos": [
+        760,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "ranking",
+      "type": "backend",
+      "label": "의미 기반 순위",
+      "sublabel": "벡터 유사도",
+      "pos": [
+        760,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 71,
+          "end_line": 81
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "data-to-prepare",
+      "from": "data",
+      "to": "prepare",
+      "label": "정리"
+    },
+    {
+      "id": "prepare-to-embedding",
+      "from": "prepare",
+      "to": "embedding",
+      "label": "변환"
+    },
+    {
+      "id": "embedding-to-vector_db",
+      "from": "embedding",
+      "to": "vector_db",
+      "label": "저장"
+    },
+    {
+      "id": "chat-to-api",
+      "from": "chat",
+      "to": "api",
+      "label": "요청"
+    },
+    {
+      "id": "api-to-constraints",
+      "from": "api",
+      "to": "constraints",
+      "label": "해석"
+    },
+    {
+      "id": "constraints-to-query",
+      "from": "constraints",
+      "to": "query",
+      "label": "의미"
+    },
+    {
+      "id": "constraints-to-filter",
+      "from": "constraints",
+      "to": "filter",
+      "label": "조건"
+    },
+    {
+      "id": "filter-to-vector_db",
+      "from": "filter",
+      "to": "vector_db",
+      "label": "조회"
+    },
+    {
+      "id": "filter-to-ranking",
+      "from": "filter",
+      "to": "ranking",
+      "label": "후보"
+    },
+    {
+      "id": "query-to-ranking",
+      "from": "query",
+      "to": "ranking",
+      "label": "비교"
+    },
+    {
+      "id": "ranking-to-plan",
+      "from": "ranking",
+      "to": "plan",
+      "label": "추천"
+    },
+    {
+      "id": "constraints-to-plan",
+      "from": "constraints",
+      "to": "plan",
+      "label": "일수"
+    },
+    {
+      "id": "plan-to-chat",
+      "from": "plan",
+      "to": "chat",
+      "label": "일정"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "읽는 기준",
+      "items": [
+        "기능별 구성도이며 독립 배포 단위를 뜻하지 않음.",
+        "지역·일수·카테고리 조건 반영 → 후보 필터 → 의미 유사도 순위 → 여행 일정 구성",
+        "공개 경력 문서에 근거한 개념도. 회사 원본 코드·운영 상태를 재검증한 결과가 아님."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "관광 데이터·색인",
+      "items": [
+        "관광 콘텐츠: 관광지 설명과 리뷰 준비 · 추천 근거로 쓸 텍스트 수집",
+        "콘텐츠 정리: 관광 콘텐츠의 주요 특징 정리 · 검색에 사용할 텍스트 구성",
+        "콘텐츠 임베딩: 관광 텍스트를 벡터로 변환 · 의미를 비교할 표현 생성",
+        "관광 벡터 저장소: 콘텐츠 벡터와 조건 정보 저장 · 후보 검색과 유사도 조회 지원"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "요청·조건 해석",
+      "items": [
+        "추천 요청 API: 여행 요청을 처리 경로로 연결 · 추천과 일정 결과 반환",
+        "요청 조건 해석: 여행 선호와 제약 조건 구분 · 후보 검색과 일정 구성에 전달",
+        "질의 의미 표현: 여행 선호를 의미 표현으로 · 관광 콘텐츠와 비교할 기준 구성",
+        "후보 조건 필터: 요청 조건에 맞는 관광지 선택 · 의미 순위화 전에 범위 축소"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "추천·일정·대화",
+      "items": [
+        "여행 대화 접점: 여행 요청과 선호 전달 · 추천 장소와 일정 확인",
+        "여행 일정 구성: 추천 관광지를 일정으로 구성 · 여행 일수와 요청 조건 반영",
+        "의미 기반 순위: 선택된 후보와 선호 의미 비교 · 관련성에 따라 관광지 정렬"
+      ]
+    }
+  ]
+}

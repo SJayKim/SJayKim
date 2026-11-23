@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "프로젝트 업무 지원 AI Agent",
+    "locale": "ko",
+    "output": "docs/diagrams/project-task-agent.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/SJayKim.git",
+      "revision": "88c3cdcf2645a979b199462b1654a8dedefe170c"
+    }
+  },
+  "components": [
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "대화 API",
+      "sublabel": "FastAPI · SSE",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "documents",
+      "type": "external",
+      "label": "업무 문서·첨부",
+      "sublabel": "프로젝트 자료",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "ingest",
+      "type": "backend",
+      "label": "문서 전처리",
+      "sublabel": "텍스트 정규화 · 구조화 요약",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "index",
+      "type": "database",
+      "label": "문서 지식 색인",
+      "sublabel": "LightRAG",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "actor",
+      "type": "backend",
+      "label": "Actor",
+      "sublabel": "LangGraph",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "executor",
+      "type": "backend",
+      "label": "Tool Executor",
+      "sublabel": "업무·검색 도구 실행",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "evaluator",
+      "type": "backend",
+      "label": "Evaluator",
+      "sublabel": "결과 평가 · 종료 판단",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ],
+      "tag": "반복 실패 시 중단"
+    },
+    {
+      "id": "reflection",
+      "type": "backend",
+      "label": "Reflection",
+      "sublabel": "실패 원인 분석",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "llm",
+      "type": "external",
+      "label": "언어 모델",
+      "sublabel": "Gemini API",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "business_tools",
+      "type": "backend",
+      "label": "프로젝트 업무 도구",
+      "sublabel": "프로젝트 · 작업 · 활동",
+      "pos": [
+        760,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "retrieval",
+      "type": "backend",
+      "label": "문서 검색 도구",
+      "sublabel": "LightRAG 검색",
+      "pos": [
+        760,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "lessons",
+      "type": "database",
+      "label": "실패 교훈 저장소",
+      "sublabel": "LessonsStore",
+      "pos": [
+        760,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 35,
+          "end_line": 45
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "api-to-actor",
+      "from": "api",
+      "to": "actor",
+      "label": "요청"
+    },
+    {
+      "id": "documents-to-ingest",
+      "from": "documents",
+      "to": "ingest",
+      "label": "정리"
+    },
+    {
+      "id": "ingest-to-index",
+      "from": "ingest",
+      "to": "index",
+      "label": "색인"
+    },
+    {
+      "id": "actor-to-llm",
+      "from": "actor",
+      "to": "llm",
+      "label": "호출"
+    },
+    {
+      "id": "actor-to-executor",
+      "from": "actor",
+      "to": "executor",
+      "label": "실행"
+    },
+    {
+      "id": "executor-to-business_tools",
+      "from": "executor",
+      "to": "business_tools",
+      "label": "호출"
+    },
+    {
+      "id": "executor-to-retrieval",
+      "from": "executor",
+      "to": "retrieval",
+      "label": "검색"
+    },
+    {
+      "id": "retrieval-to-index",
+      "from": "retrieval",
+      "to": "index",
+      "label": "조회"
+    },
+    {
+      "id": "executor-to-evaluator",
+      "from": "executor",
+      "to": "evaluator",
+      "label": "평가"
+    },
+    {
+      "id": "evaluator-to-reflection",
+      "from": "evaluator",
+      "to": "reflection",
+      "label": "실패"
+    },
+    {
+      "id": "reflection-to-actor",
+      "from": "reflection",
+      "to": "actor",
+      "label": "재시도 가능 시"
+    },
+    {
+      "id": "reflection-to-lessons",
+      "from": "reflection",
+      "to": "lessons",
+      "label": "기록"
+    },
+    {
+      "id": "lessons-to-reflection",
+      "from": "lessons",
+      "to": "reflection",
+      "label": "재사용"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "읽는 기준",
+      "items": [
+        "기능별 구성도이며 독립 배포 단위를 뜻하지 않음.",
+        "Actor → Tool Executor → Evaluator → Reflection · 반복 실패 시 중단하고 교훈을 재사용",
+        "공개 경력 문서에 근거한 개념도. 회사 원본 코드·운영 상태를 재검증한 결과가 아님."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "서비스·문서 지식",
+      "items": [
+        "대화 API: 사용자 업무 요청 수신 · 진행 상황과 결과 스트리밍",
+        "업무 문서·첨부: 기획·명세·변경 자료 입력 · 검색할 문서 원문 준비",
+        "문서 전처리: 첨부 내용을 읽기 좋은 형태로 · 문서 의미와 핵심 항목 정리",
+        "문서 지식 색인: 문서 지식과 관계 색인 · 검색 도구가 참조할 맥락 저장"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Agent 실행 루프",
+      "items": [
+        "Actor: 요청을 해석하고 행동 결정 · 필요한 도구와 입력 구성",
+        "Tool Executor: 선택한 도구를 호출 · 실행 결과를 다음 단계로 전달",
+        "Evaluator: 요청 충족 여부 확인 · 성공·재시도·중단 판단",
+        "Reflection: 실패한 행동의 원인 정리 · 수정 방향을 다음 행동에 반영"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "모델·도구·실패 교훈",
+      "items": [
+        "언어 모델: 업무 의도·문서 내용 해석 · 도구 선택과 응답 생성 지원",
+        "프로젝트 업무 도구: 업무 데이터 조회·변경 · 명세 초안·요약·이력 처리",
+        "문서 검색 도구: Local · Global · Hybrid · 업무에 필요한 근거 반환",
+        "실패 교훈 저장소: 실패 원인·해결 방법 기록 · 후속 실행에서 교훈 재사용"
+      ]
+    }
+  ]
+}

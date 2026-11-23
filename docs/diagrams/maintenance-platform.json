@@ -1,0 +1,391 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI 소프트웨어 유지보수 플랫폼",
+    "locale": "ko",
+    "output": "docs/diagrams/maintenance-platform.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/SJayKim.git",
+      "revision": "88c3cdcf2645a979b199462b1654a8dedefe170c"
+    }
+  },
+  "components": [
+    {
+      "id": "handover",
+      "type": "backend",
+      "label": "인수 자료 검증",
+      "sublabel": "구조화 계약 · 입력 검사",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 47,
+          "end_line": 48
+        }
+      ]
+    },
+    {
+      "id": "search",
+      "type": "backend",
+      "label": "코드·문서 검색",
+      "sublabel": "Python · SQLite · MCP",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 69,
+          "end_line": 77
+        }
+      ]
+    },
+    {
+      "id": "data_context",
+      "type": "backend",
+      "label": "DB 분석·업무 모델",
+      "sublabel": "SQL 카탈로그 · YAML",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 73,
+          "end_line": 83
+        }
+      ]
+    },
+    {
+      "id": "evidence",
+      "type": "frontend",
+      "label": "근거 검토 화면",
+      "sublabel": "FastAPI · React · PostgreSQL",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 85,
+          "end_line": 91
+        }
+      ]
+    },
+    {
+      "id": "portal",
+      "type": "frontend",
+      "label": "고객 접점",
+      "sublabel": "P2 로컬 · P3 검증 전",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 95,
+          "end_line": 97
+        }
+      ],
+      "tag": "요청·승인 미구현"
+    },
+    {
+      "id": "controller",
+      "type": "backend",
+      "label": "실행 제어기",
+      "sublabel": "Rust · 상태 머신 · 정책",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 37,
+          "end_line": 44
+        }
+      ]
+    },
+    {
+      "id": "runner",
+      "type": "backend",
+      "label": "코드 실행기",
+      "sublabel": "Docker · AI 코딩 CLI",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 55,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "type": "security",
+      "label": "검증·증거 수집",
+      "sublabel": "시험 · 미리보기 · 수용 검사",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 39,
+          "end_line": 43
+        }
+      ]
+    },
+    {
+      "id": "model",
+      "type": "backend",
+      "label": "모델 호출 관리",
+      "sublabel": "모델 게이트웨이",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 40,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "queue",
+      "type": "database",
+      "label": "작업 큐·지속 상태",
+      "sublabel": "PostgreSQL · SQLx",
+      "pos": [
+        760,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 41,
+          "end_line": 41
+        }
+      ]
+    },
+    {
+      "id": "publisher",
+      "type": "backend",
+      "label": "변경 게시·감사",
+      "sublabel": "GitLab · Draft MR",
+      "pos": [
+        760,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 42,
+          "end_line": 42
+        }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "type": "frontend",
+      "label": "운영 조회 화면",
+      "sublabel": "읽기 API · 대시보드",
+      "pos": [
+        760,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 95,
+          "end_line": 97
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "handover-to-search",
+      "from": "handover",
+      "to": "search",
+      "label": "연동 예정 · 자료",
+      "variant": "dashed"
+    },
+    {
+      "id": "data_context-to-search",
+      "from": "data_context",
+      "to": "search",
+      "label": "연동 예정 · 맥락",
+      "variant": "dashed"
+    },
+    {
+      "id": "search-to-controller",
+      "from": "search",
+      "to": "controller",
+      "label": "연동 예정 · 근거",
+      "variant": "dashed"
+    },
+    {
+      "id": "search-to-evidence",
+      "from": "search",
+      "to": "evidence",
+      "label": "연동 예정 · 조회",
+      "variant": "dashed"
+    },
+    {
+      "id": "portal-to-controller",
+      "from": "portal",
+      "to": "controller",
+      "label": "연동 예정 · 요청",
+      "variant": "dashed"
+    },
+    {
+      "id": "controller-to-runner",
+      "from": "controller",
+      "to": "runner",
+      "label": "실행"
+    },
+    {
+      "id": "runner-to-verification",
+      "from": "runner",
+      "to": "verification",
+      "label": "검증"
+    },
+    {
+      "id": "controller-to-queue",
+      "from": "controller",
+      "to": "queue",
+      "label": "등록"
+    },
+    {
+      "id": "controller-to-model",
+      "from": "controller",
+      "to": "model",
+      "label": "호출"
+    },
+    {
+      "id": "controller-to-publisher",
+      "from": "controller",
+      "to": "publisher",
+      "label": "게시 조건 확인"
+    },
+    {
+      "id": "dashboard-to-queue",
+      "from": "dashboard",
+      "to": "queue",
+      "label": "읽기 조회"
+    },
+    {
+      "id": "verification-to-search",
+      "from": "verification",
+      "to": "search",
+      "label": "연동 예정 · 결과",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "읽는 기준",
+      "items": [
+        "기능별 구성도이며 독립 배포 단위를 뜻하지 않음.",
+        "개발 중 · 실선: 모듈 구현 관계 · 점선: 연동 설계 · 전체 운영 통합은 진행 중",
+        "공개 경력 문서에 근거한 개념도. 회사 원본 코드·운영 상태를 재검증한 결과가 아님.",
+        "P3 조회는 소스 작성·실행 검증 유예. P4~P7 요청·응답·승인·배포 기록은 미구현. Draft MR 게시와 자동 병합·배포는 구분."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "인수·맥락·근거",
+      "items": [
+        "인수 자료 검증: 기능·기대 동작·시험 연결 · 코드와 환경의 근거 정리",
+        "코드·문서 검색: 출처·버전·권한을 보존 · 검색 후보와 최신성 확인",
+        "DB 분석·업무 모델: 키·관계 후보와 사전 정리 · 업무 개념·판단 규칙 연결",
+        "근거 검토 화면: 원문 검색·질문·피드백 · 충돌 근거와 정정 이력 확인"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "요청·실행 제어",
+      "items": [
+        "고객 접점: 로그인 기반·조회 화면 구현 · 요청·승인 기능은 설계 단계",
+        "실행 제어기: 계획·근거 고정과 승인 관리 · 권한·실행 예산·상태 판단",
+        "코드 실행기: 고정된 코드 판에서 실행 · 격리 작업 공간에서 코드 수정",
+        "검증·증거 수집: 변경 결과와 시험 근거 수집 · 민감 정보 제거·계약 확인"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "모델·저장·운영",
+      "items": [
+        "모델 호출 관리: 호출 정책과 사용량 집계 · 작업별 예산·비용 기록",
+        "작업 큐·지속 상태: 작업 소비와 실행 상태 저장 · 재개에 필요한 기록 관리",
+        "변경 게시·감사: 검토할 변경과 증거 게시 · 승인·외부 변경 이력 추적",
+        "운영 조회 화면: 상태·다음 행동·경고 확인 · 사용량·비용 표시와 합성 검증"
+      ]
+    }
+  ]
+}

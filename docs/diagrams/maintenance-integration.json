@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "유지보수 플랫폼 · 전체 연결 목표",
+    "locale": "ko",
+    "output": "docs/diagrams/maintenance-integration.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/SJayKim.git",
+      "revision": "88c3cdcf2645a979b199462b1654a8dedefe170c"
+    }
+  },
+  "components": [
+    {
+      "id": "input",
+      "type": "external",
+      "label": "프로젝트 인수 자료",
+      "sublabel": "코드 · 문서 · 환경",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 18,
+          "end_line": 19
+        }
+      ]
+    },
+    {
+      "id": "relay",
+      "type": "backend",
+      "label": "인수인계 검증",
+      "sublabel": "기능 점검 · 인계 패키지",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 69,
+          "end_line": 69
+        }
+      ]
+    },
+    {
+      "id": "ontology",
+      "type": "backend",
+      "label": "업무·데이터 관계 모델",
+      "sublabel": "객체 · 관계 · 결정 규칙",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 73,
+          "end_line": 73
+        }
+      ]
+    },
+    {
+      "id": "dca",
+      "type": "backend",
+      "label": "DB·SQL 관계 분석",
+      "sublabel": "데이터 사전 · 관계 후보",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 81,
+          "end_line": 83
+        }
+      ]
+    },
+    {
+      "id": "context",
+      "type": "backend",
+      "label": "코드·문서 검색",
+      "sublabel": "근거 조회 · 판·권한 재확인",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 71,
+          "end_line": 77
+        }
+      ]
+    },
+    {
+      "id": "brain",
+      "type": "frontend",
+      "label": "업무 근거 검토",
+      "sublabel": "원문 · 상충 기록 · 확인 질문",
+      "pos": [
+        760,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 85,
+          "end_line": 91
+        }
+      ]
+    },
+    {
+      "id": "request",
+      "type": "external",
+      "label": "유지보수 요청",
+      "sublabel": "작업 범위와 목표",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 22,
+          "end_line": 23
+        }
+      ]
+    },
+    {
+      "id": "control",
+      "type": "backend",
+      "label": "유지보수 실행 제어",
+      "sublabel": "상태 · 계획 · 승인 · 예산",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 37,
+          "end_line": 44
+        }
+      ]
+    },
+    {
+      "id": "panel",
+      "type": "frontend",
+      "label": "고객 포털",
+      "sublabel": "P2 로컬 · P3 검증 전",
+      "pos": [
+        760,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 95,
+          "end_line": 97
+        }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "type": "frontend",
+      "label": "작업·비용 모니터링",
+      "sublabel": "읽기 전용 · 단계 A 합성 검증",
+      "pos": [
+        760,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 95,
+          "end_line": 97
+        }
+      ]
+    },
+    {
+      "id": "runner",
+      "type": "backend",
+      "label": "코드 수정·검증 실행기",
+      "sublabel": "격리 환경 · 시험 · 증거",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 55,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "publisher",
+      "type": "backend",
+      "label": "변경 게시·감사",
+      "sublabel": "Draft MR · 변경 기록",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/project-reliability.md",
+          "line": 42,
+          "end_line": 42
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "input-to-relay",
+      "from": "input",
+      "to": "relay",
+      "label": "자료"
+    },
+    {
+      "id": "relay-to-context",
+      "from": "relay",
+      "to": "context",
+      "label": "인계 예정",
+      "variant": "dashed"
+    },
+    {
+      "id": "ontology-to-context",
+      "from": "ontology",
+      "to": "context",
+      "label": "의미 연결 예정",
+      "variant": "dashed"
+    },
+    {
+      "id": "dca-to-context",
+      "from": "dca",
+      "to": "context",
+      "label": "맥락 연결 예정",
+      "variant": "dashed"
+    },
+    {
+      "id": "request-to-control",
+      "from": "request",
+      "to": "control",
+      "label": "요청"
+    },
+    {
+      "id": "context-to-control",
+      "from": "context",
+      "to": "control",
+      "label": "후보·재확인 예정",
+      "variant": "dashed"
+    },
+    {
+      "id": "control-to-runner",
+      "from": "control",
+      "to": "runner",
+      "label": "정책·권한 확인"
+    },
+    {
+      "id": "runner-to-control",
+      "from": "runner",
+      "to": "control",
+      "label": "결과·검증 근거"
+    },
+    {
+      "id": "control-to-publisher",
+      "from": "control",
+      "to": "publisher",
+      "label": "게시 조건 확인"
+    },
+    {
+      "id": "control-to-dashboard",
+      "from": "control",
+      "to": "dashboard",
+      "label": "상태·비용"
+    },
+    {
+      "id": "panel-to-control",
+      "from": "panel",
+      "to": "control",
+      "label": "요청·검토 예정",
+      "variant": "dashed"
+    },
+    {
+      "id": "publisher-to-context",
+      "from": "publisher",
+      "to": "context",
+      "label": "결과 환류 예정",
+      "variant": "dashed"
+    },
+    {
+      "id": "context-to-brain",
+      "from": "context",
+      "to": "brain",
+      "label": "원천 연결 예정",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "구현과 연결 목표",
+      "items": [
+        "2026-11-21 공개 문서 기준. 전체 운영 연동은 미완료.",
+        "실선은 문서에 기록한 모듈 관계, 점선과 예정 표시는 연결 설계. 실제 운영·배포 완료를 의미하지 않음.",
+        "기존 전체 구성도의 12개 역할과 13개 연결 방향을 보존함."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "인수·업무 근거",
+      "items": [
+        "인수 자료와 데이터 관계 후보를 근거 검색에 연결하는 설계.",
+        "근거 후보를 전달하기 전에 판·권한을 재확인하는 연결 계약.",
+        "업무 근거 검토는 PostgreSQL·Ollama 합성 검증 단계이며 회사 원천 연결은 후속 범위."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "실행·검토 경계",
+      "items": [
+        "제어부는 실행 정책과 승인을 관리하고, Runner는 격리 환경에서 수정·시험함.",
+        "Draft MR 게시와 자동 병합·배포는 별개이며 전체 자동 반영은 미완료.",
+        "고객 포털 P3는 소스 작성·실행 검증 유예, P4~P7 요청·응답·승인·배포 기록은 미구현.",
+        "대시보드 단계 A 합성 검증, B/C 검증·통합 전."
+      ]
+    }
+  ]
+}

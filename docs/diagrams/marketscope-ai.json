@@ -1,0 +1,429 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MarketScope AI",
+    "locale": "ko",
+    "output": "docs/diagrams/marketscope-ai.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/Catchment-Area-Analysis.git",
+      "revision": "78aeb1b759e599ce6cc70f9b6697bb1cb1b9939c"
+    }
+  },
+  "components": [
+    {
+      "id": "map",
+      "type": "frontend",
+      "label": "상권 지도 화면",
+      "sublabel": "Next.js · Kakao Map · deck.gl",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/architecture/overview.md",
+          "line": 14,
+          "end_line": 26
+        }
+      ]
+    },
+    {
+      "id": "chat",
+      "type": "frontend",
+      "label": "대화·분석 카드",
+      "sublabel": "React · SSE",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/architecture/overview.md",
+          "line": 14,
+          "end_line": 26
+        }
+      ]
+    },
+    {
+      "id": "state",
+      "type": "backend",
+      "label": "지도·대화 상태",
+      "sublabel": "Zustand · useMapSync",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/architecture/overview.md",
+          "line": 68,
+          "end_line": 68
+        },
+        {
+          "path": "frontend/src/hooks/useMapSync.ts",
+          "line": 1,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "백엔드 API",
+      "sublabel": "FastAPI · REST · SSE",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/agent/runtime.py",
+          "line": 16,
+          "end_line": 36
+        },
+        {
+          "path": "server/server/api/routes/chat.py",
+          "line": 350,
+          "end_line": 365
+        },
+        {
+          "path": "server/server/api/routes/map_data.py",
+          "line": 55,
+          "end_line": 74
+        }
+      ],
+      "tag": "v2 설정 + 실제 모델"
+    },
+    {
+      "id": "loop",
+      "type": "backend",
+      "label": "v2 Agentic Loop",
+      "sublabel": "모델 주도 Function Calling",
+      "pos": [
+        760,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/agent/runtime.py",
+          "line": 16,
+          "end_line": 36
+        },
+        {
+          "path": "server/server/agent/loop/engine.py",
+          "line": 245,
+          "end_line": 310
+        }
+      ]
+    },
+    {
+      "id": "tools",
+      "type": "backend",
+      "label": "도구 등록·실행",
+      "sublabel": "분석 도구 · 계산 · 상권 해석",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/agent/tools/estimated_sales.py",
+          "line": 58,
+          "end_line": 77
+        },
+        {
+          "path": "server/server/agent/loop/engine.py",
+          "line": 260,
+          "end_line": 292
+        }
+      ]
+    },
+    {
+      "id": "trust",
+      "type": "security",
+      "label": "Trust Kernel",
+      "sublabel": "수치 바인딩 · 단위 검사",
+      "pos": [
+        760,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/agent/loop/engine.py",
+          "line": 350,
+          "end_line": 380
+        }
+      ],
+      "tag": "최종 본문 검증"
+    },
+    {
+      "id": "llm",
+      "type": "external",
+      "label": "모델 어댑터",
+      "sublabel": "Anthropic · OpenAI · Gemini",
+      "pos": [
+        760,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/agent/loop/models.py",
+          "line": 48,
+          "end_line": 69
+        }
+      ]
+    },
+    {
+      "id": "etl",
+      "type": "backend",
+      "label": "공공 데이터 적재",
+      "sublabel": "Open API · SHP · GeoPandas",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/data/etl/loader.py",
+          "line": 27,
+          "end_line": 64
+        }
+      ]
+    },
+    {
+      "id": "database",
+      "type": "database",
+      "label": "상권·공간 데이터",
+      "sublabel": "PostgreSQL · PostGIS",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/repositories/real/estimated_sales.py",
+          "line": 18,
+          "end_line": 48
+        }
+      ]
+    },
+    {
+      "id": "repository",
+      "type": "backend",
+      "label": "데이터 접근 계층",
+      "sublabel": "SQLAlchemy Async",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "server/server/repositories/real/estimated_sales.py",
+          "line": 11,
+          "end_line": 51
+        }
+      ]
+    },
+    {
+      "id": "cache",
+      "type": "database",
+      "label": "조회 캐시",
+      "sublabel": "Redis",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/architecture/data.md",
+          "line": 218,
+          "end_line": 237
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "map-to-state",
+      "from": "map",
+      "to": "state",
+      "label": "선택"
+    },
+    {
+      "id": "chat-to-state",
+      "from": "chat",
+      "to": "state",
+      "label": "동기화"
+    },
+    {
+      "id": "map-to-api",
+      "from": "map",
+      "to": "api",
+      "label": "조회"
+    },
+    {
+      "id": "chat-to-api",
+      "from": "chat",
+      "to": "api",
+      "label": "대화"
+    },
+    {
+      "id": "api-to-loop",
+      "from": "api",
+      "to": "loop",
+      "label": "실행"
+    },
+    {
+      "id": "loop-to-llm",
+      "from": "loop",
+      "to": "llm",
+      "label": "호출"
+    },
+    {
+      "id": "loop-to-tools",
+      "from": "loop",
+      "to": "tools",
+      "label": "도구"
+    },
+    {
+      "id": "loop-to-trust",
+      "from": "loop",
+      "to": "trust",
+      "label": "초안"
+    },
+    {
+      "id": "tools-to-trust",
+      "from": "tools",
+      "to": "trust",
+      "label": "근거"
+    },
+    {
+      "id": "tools-to-repository",
+      "from": "tools",
+      "to": "repository",
+      "label": "조회"
+    },
+    {
+      "id": "repository-to-database",
+      "from": "repository",
+      "to": "database",
+      "label": "조회"
+    },
+    {
+      "id": "etl-to-database",
+      "from": "etl",
+      "to": "database",
+      "label": "적재"
+    },
+    {
+      "id": "trust-to-api",
+      "from": "trust",
+      "to": "api",
+      "label": "검증"
+    },
+    {
+      "id": "tools-to-cache",
+      "from": "tools",
+      "to": "cache",
+      "label": "캐시 조회·저장"
+    },
+    {
+      "id": "api-to-cache",
+      "from": "api",
+      "to": "cache",
+      "label": "지도 캐시"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "읽는 기준",
+      "items": [
+        "기능별 구성도이며 독립 배포 단위를 뜻하지 않음.",
+        "v2 설정 + 실제 모델: Agentic Loop · Mock·PAE 설정: 레거시 경로 · 최종 답변 본문은 수치 근거 검사 후 전송",
+        "공개 코드 78aeb1b 기준. 실제 운영 환경과 서비스 가동 여부는 검증하지 않음.",
+        "Mock 또는 PAE 설정은 레거시 경로. 도구 원본 결과와 계산값을 근거로 최종 본문을 검증하며, 진행 이벤트·카드는 먼저 전송될 수 있음."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "지도·대화·API",
+      "items": [
+        "상권 지도 화면: 상권 선택·지도 지표 표시 · 대화 결과의 지도 명령 반영",
+        "대화·분석 카드: 요청·진행 상황·분석 결과 표시 · 지도와 연결되는 결과 카드",
+        "지도·대화 상태: 선택 상권과 대화 상태 공유 · 지도와 카드 동작 동기화",
+        "백엔드 API: 대화·상권·지도 요청 처리 · Agent 이벤트와 지도 명령 전달"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Agent·모델·검증",
+      "items": [
+        "v2 Agentic Loop: 도구 선택·실행·응답 반복 · 요청별 실행 횟수·시간 제어",
+        "도구 등록·실행: 도메인 데이터 조회와 계산 · 검증에 쓸 원본 근거 축적",
+        "Trust Kernel: 답변 수치를 도구 근거와 대조 · 교정·미확인 표시·대체 응답",
+        "모델 어댑터: 도구 호출과 응답 생성 요청 · 호출 실패 시 대체 모델 경로"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "공공 데이터·조회 계층",
+      "items": [
+        "공공 데이터 적재: 통계와 상권 경계 데이터 준비 · 조회 가능한 데이터베이스로 적재",
+        "상권·공간 데이터: 상권 통계와 경계 정보 저장 · 지역·업종·공간 조건 조회",
+        "데이터 접근 계층: 분석 도구의 조회 요청 처리 · 데이터베이스 접근 로직 공통화",
+        "조회 캐시: 도구·API의 조회 결과 재사용 · 벤치마크 저장소의 캐시 접근도 존재"
+      ]
+    }
+  ]
+}

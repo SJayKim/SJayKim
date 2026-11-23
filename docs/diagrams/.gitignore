@@ -1,0 +1,2 @@
+# Archify receipts contain machine-specific paths; keep them local.
+*.delivery.json

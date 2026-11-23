@@ -14,22 +14,9 @@
 
 아래 그림은 시스템의 역할과 연결 목표다. 점선은 구현·계약 채택·통합 검증이 남은 연결을 나타낸다. 개별 구성요소의 구현 상태는 다음 표에 적었다.
 
-```mermaid
-flowchart TB
-    Input["프로젝트 인수 자료"] --> Relay["소프트웨어 인수인계 검증\n기능 점검 · 인계 패키지"]
-    Relay -. "인계 근거 전달" .-> Context["코드·문서 검색\n근거 조회 · 판과 권한 재확인"]
-    Ontology["프로젝트 업무·데이터 관계 모델\n객체 · 관계 · 결정 규칙"] -. "공통 의미와 식별" .-> Context
-    DCA["DB 구조·SQL 관계 분석\n데이터 사전 · 관계 후보"] -. "데이터 맥락" .-> Context
-    Request["유지보수 요청"] --> Control["AI 유지보수 실행 제어\n상태 · 계획 · 승인 · 예산"]
-    Context -. "후보 제공 · 실행 전 재확인" .-> Control
-    Control --> Runner["AI 코드 수정·검증 실행기\n격리 환경 · 시험 · 증거"]
-    Runner --> Control
-    Control --> Publisher["게시 · 감사\nDraft MR · 변경 기록"]
-    Control --> Dashboard["AI 작업·비용 모니터링 대시보드"]
-    Panel["고객용 유지보수 포털"] -. "요청 · 질문 · 검토" .-> Control
-    Publisher -. "처리 결과 환류" .-> Context
-    Context -. "공유 원천 연결 예정" .-> Brain["업무 근거 검색·의사결정 지원\n브리핑 · 검토 질문 · 원문 대조"]
-```
+[![유지보수 플랫폼의 전체 연결 목표](../../images/architecture/maintenance-integration.png)](https://sjaykim.github.io/SJayKim/docs/diagrams/maintenance-integration.html)
+
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/maintenance-integration.html) · [SVG 원본](../../images/architecture/maintenance-integration.svg)
 
 ## 구성요소별 기여와 상태
 

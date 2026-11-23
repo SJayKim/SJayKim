@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "매거진 검색·추천 AI 챗봇",
+    "locale": "ko",
+    "output": "docs/diagrams/magazine-search.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/SJayKim/SJayKim.git",
+      "revision": "88c3cdcf2645a979b199462b1654a8dedefe170c"
+    }
+  },
+  "components": [
+    {
+      "id": "documents",
+      "type": "external",
+      "label": "매거진 원문",
+      "sublabel": "문서 데이터",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "clean",
+      "type": "backend",
+      "label": "문서·청크 정제",
+      "sublabel": "텍스트 전처리",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "encoding",
+      "type": "backend",
+      "label": "검색 표현 생성",
+      "sublabel": "BGE-M3 · BM25",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "milvus",
+      "type": "database",
+      "label": "검색 색인 저장소",
+      "sublabel": "Milvus",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "대화 화면·API",
+      "sublabel": "Streamlit · FastAPI",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "input_guard",
+      "type": "security",
+      "label": "입력 안전성 검사",
+      "sublabel": "LlamaGuard",
+      "pos": [
+        400,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "hybrid",
+      "type": "backend",
+      "label": "하이브리드 검색",
+      "sublabel": "Dense + Sparse",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "rerank",
+      "type": "backend",
+      "label": "검색 결과 재정렬",
+      "sublabel": "BGE-Reranker",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "type": "backend",
+      "label": "답변 생성 Agent",
+      "sublabel": "LangGraph",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "output_guard",
+      "type": "security",
+      "label": "출력 안전성 검사",
+      "sublabel": "LlamaGuard",
+      "pos": [
+        760,
+        200
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "conversation",
+      "type": "frontend",
+      "label": "응답·대화 이력",
+      "sublabel": "SSE · 대화 기록 저장",
+      "pos": [
+        760,
+        360
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "context",
+      "type": "backend",
+      "label": "문맥·추천 구성",
+      "sublabel": "인접 문맥 · Group Search",
+      "pos": [
+        760,
+        520
+      ],
+      "size": [
+        260,
+        82
+      ],
+      "sources": [
+        {
+          "path": "docs/projects/prior-projects.md",
+          "line": 47,
+          "end_line": 57
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "documents-to-clean",
+      "from": "documents",
+      "to": "clean",
+      "label": "정제"
+    },
+    {
+      "id": "clean-to-encoding",
+      "from": "clean",
+      "to": "encoding",
+      "label": "변환"
+    },
+    {
+      "id": "encoding-to-milvus",
+      "from": "encoding",
+      "to": "milvus",
+      "label": "색인"
+    },
+    {
+      "id": "api-to-input_guard",
+      "from": "api",
+      "to": "input_guard",
+      "label": "검사"
+    },
+    {
+      "id": "input_guard-to-hybrid",
+      "from": "input_guard",
+      "to": "hybrid",
+      "label": "검사 통과 시"
+    },
+    {
+      "id": "hybrid-to-milvus",
+      "from": "hybrid",
+      "to": "milvus",
+      "label": "검색"
+    },
+    {
+      "id": "hybrid-to-rerank",
+      "from": "hybrid",
+      "to": "rerank",
+      "label": "후보"
+    },
+    {
+      "id": "rerank-to-context",
+      "from": "rerank",
+      "to": "context",
+      "label": "정렬"
+    },
+    {
+      "id": "context-to-answer",
+      "from": "context",
+      "to": "answer",
+      "label": "근거"
+    },
+    {
+      "id": "answer-to-output_guard",
+      "from": "answer",
+      "to": "output_guard",
+      "label": "검사"
+    },
+    {
+      "id": "output_guard-to-conversation",
+      "from": "output_guard",
+      "to": "conversation",
+      "label": "검사 통과 시"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "읽는 기준",
+      "items": [
+        "기능별 구성도이며 독립 배포 단위를 뜻하지 않음.",
+        "의미 검색 + 키워드 검색 → 재정렬 → 문맥·매거진 단위 구성 → 입출력 안전성 검사",
+        "공개 경력 문서에 근거한 개념도. 회사 원본 코드·운영 상태를 재검증한 결과가 아님."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "문서 준비·색인",
+      "items": [
+        "매거진 원문: 검색 대상 본문 수집 · 매거진과 문서의 관계 유지",
+        "문서·청크 정제: 짧은 청크·특수문자 잡음 제거 · 검색에 적합한 본문 구성",
+        "검색 표현 생성: 의미 기반 Dense 표현 · 키워드 기반 Sparse 표현",
+        "검색 색인 저장소: 문서 청크와 검색 표현 저장 · 하이브리드 검색에 사용"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "질의·검색",
+      "items": [
+        "대화 화면·API: 질문·추천 요청 수신 · 사용자와 검색 Agent 연결",
+        "입력 안전성 검사: 사용자 질문을 먼저 확인 · 검색·생성 단계 진입 판단",
+        "하이브리드 검색: 의미·키워드 후보 함께 검색 · 질문에 맞는 문서 후보 수집",
+        "검색 결과 재정렬: 질문·후보의 관련성 재평가 · 답변에 사용할 후보 순서 조정"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "답변·안전성·대화",
+      "items": [
+        "답변 생성 Agent: 검색 맥락을 바탕으로 응답 · 질문 답변과 매거진 추천 구성",
+        "출력 안전성 검사: 생성 답변의 안전성 확인 · 사용자에게 보낼 응답 검사",
+        "응답·대화 이력: 응답 스트리밍과 이력 보존 · 후속 대화에 필요한 맥락 유지",
+        "문맥·추천 구성: 주변 청크로 근거 문맥 보강 · 매거진 단위로 결과 묶기"
+      ]
+    }
+  ]
+}

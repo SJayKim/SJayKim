@@ -22,7 +22,7 @@
 | **[영화 추천 API](#movie-recommendation)**<br/>AIO2O | 추천 로직·데이터 저장소 설계, 조건·의미 기반 추천 API 개발. |
 | **[MarketScope AI · 상권 분석](#marketscope-ai)**<br/>개인 프로젝트 | 기획·데이터 처리·서버·화면·AI 기능 1인 개발. |
 
-각 프로젝트의 문제·담당·구현 내용과 설계 선택을 정리함. 도식은 기능별 컴포넌트와 연결 관계를 설명하기 위한 개념도임.
+각 프로젝트의 문제·담당·구현 내용과 설계 선택을 정리함. 도식은 기능별 컴포넌트와 연결 관계를 설명하기 위한 개념도임. [Archify 도식 모음](https://sjaykim.github.io/SJayKim/docs/diagrams/)에서 구성요소·연결·출처를 탐색할 수 있음. 회사 프로젝트는 공개 경력 문서, MarketScope는 공개 코드의 고정된 판을 근거로 작성함.
 
 <a id="maintenance-platform"></a>
 
@@ -37,9 +37,9 @@
 
 **설계 선택:** 실행 제어와 코드 수정·검증을 나누고, 변경 결과에 근거를 붙여 검토할 수 있도록 설계함.
 
-<img src="images/architecture/maintenance-platform.png" alt="AI 소프트웨어 유지보수 플랫폼 · 위시켓 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/maintenance-platform.html"><img src="images/architecture/maintenance-platform.png" alt="AI 소프트웨어 유지보수 플랫폼 · 위시켓 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/maintenance-platform.png?raw=true) · [SVG 원본](images/architecture/maintenance-platform.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/maintenance-platform.html) · [PNG 원본](images/architecture/maintenance-platform.png?raw=true) · [SVG 원본](images/architecture/maintenance-platform.svg) · [프로젝트 목록](#프로젝트)
 
 Rust · Python · TypeScript · PostgreSQL · Docker
 
@@ -58,9 +58,9 @@ Rust · Python · TypeScript · PostgreSQL · Docker
 
 **설계 선택:** 도구 실행·결과 평가·실패 회고를 나눠 실패 원인에 따라 다음 행동을 바꾸도록 구성함.
 
-<img src="images/architecture/project-task-agent.png" alt="프로젝트 업무 처리 AI 에이전트 · Plantynet 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/project-task-agent.html"><img src="images/architecture/project-task-agent.png" alt="프로젝트 업무 처리 AI 에이전트 · Plantynet 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/project-task-agent.png?raw=true) · [SVG 원본](images/architecture/project-task-agent.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/project-task-agent.html) · [PNG 원본](images/architecture/project-task-agent.png?raw=true) · [SVG 원본](images/architecture/project-task-agent.svg) · [프로젝트 목록](#프로젝트)
 
 Python · LangGraph · FastAPI · LightRAG · Docker Compose
 
@@ -79,9 +79,9 @@ Python · LangGraph · FastAPI · LightRAG · Docker Compose
 
 **설계 선택:** 응답 여부·길이처럼 코드로 계산하는 지표와 내용·사실성 등을 판단하는 LLM 평가를 구분함.
 
-<img src="images/architecture/summary-evaluation.png" alt="뉴스 요약 품질 자동 평가 · Plantynet 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/summary-evaluation.html"><img src="images/architecture/summary-evaluation.png" alt="뉴스 요약 품질 자동 평가 · Plantynet 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/summary-evaluation.png?raw=true) · [SVG 원본](images/architecture/summary-evaluation.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/summary-evaluation.html) · [PNG 원본](images/architecture/summary-evaluation.png?raw=true) · [SVG 원본](images/architecture/summary-evaluation.svg) · [프로젝트 목록](#프로젝트)
 
 Python · deepeval/GEval · PostgreSQL · openpyxl
 
@@ -100,9 +100,9 @@ Python · deepeval/GEval · PostgreSQL · openpyxl
 
 **설계 선택:** 의미 검색과 키워드 검색을 함께 사용하고, 재정렬과 주변 문맥 보강으로 답변 근거를 구성함.
 
-<img src="images/architecture/magazine-search.png" alt="매거진 검색·추천 AI 챗봇 · Plantynet 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/magazine-search.html"><img src="images/architecture/magazine-search.png" alt="매거진 검색·추천 AI 챗봇 · Plantynet 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/magazine-search.png?raw=true) · [SVG 원본](images/architecture/magazine-search.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/magazine-search.html) · [PNG 원본](images/architecture/magazine-search.png?raw=true) · [SVG 원본](images/architecture/magazine-search.svg) · [프로젝트 목록](#프로젝트)
 
 Python · Milvus · BGE-M3 · BM25 · BGE-Reranker · LlamaGuard
 
@@ -121,9 +121,9 @@ Python · Milvus · BGE-M3 · BM25 · BGE-Reranker · LlamaGuard
 
 **설계 선택:** FastAPI 프로세스에 vLLM 엔진을 내장하고, 동시 요청 제한과 Continuous Batching으로 추론 요청을 처리함.
 
-<img src="images/architecture/news-processing-api.png" alt="뉴스 요약·분류·태깅 API · Plantynet 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/news-processing-api.html"><img src="images/architecture/news-processing-api.png" alt="뉴스 요약·분류·태깅 API · Plantynet 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/news-processing-api.png?raw=true) · [SVG 원본](images/architecture/news-processing-api.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/news-processing-api.html) · [PNG 원본](images/architecture/news-processing-api.png?raw=true) · [SVG 원본](images/architecture/news-processing-api.svg) · [프로젝트 목록](#프로젝트)
 
 Python · FastAPI · vLLM · LangGraph · Gradio · Docker
 
@@ -142,9 +142,9 @@ Python · FastAPI · vLLM · LangGraph · Gradio · Docker
 
 **설계 선택:** URL 문자열 분류와 리다이렉트 뒤 페이지 분석을 구분해 URL 자체와 웹페이지 특징을 각각 확인하도록 구성함.
 
-<img src="images/architecture/smishing-detection.png" alt="스미싱 URL 탐지 · Plantynet 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/smishing-detection.html"><img src="images/architecture/smishing-detection.png" alt="스미싱 URL 탐지 · Plantynet 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/smishing-detection.png?raw=true) · [SVG 원본](images/architecture/smishing-detection.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/smishing-detection.html) · [PNG 원본](images/architecture/smishing-detection.png?raw=true) · [SVG 원본](images/architecture/smishing-detection.svg) · [프로젝트 목록](#프로젝트)
 
 Python · URLBert · Hugging Face Transformers · HTML 분석
 
@@ -163,9 +163,9 @@ Python · URLBert · Hugging Face Transformers · HTML 분석
 
 **설계 선택:** 지역·일수·카테고리 조건과 자연어 선호를 구분하고, 조건으로 후보를 좁힌 뒤 의미 유사도로 추천 순위를 정함.
 
-<img src="images/architecture/travel-recommendation.png" alt="여행 추천·일정 생성 챗봇 · AIO2O 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/travel-recommendation.html"><img src="images/architecture/travel-recommendation.png" alt="여행 추천·일정 생성 챗봇 · AIO2O 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/travel-recommendation.png?raw=true) · [SVG 원본](images/architecture/travel-recommendation.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/travel-recommendation.html) · [PNG 원본](images/architecture/travel-recommendation.png?raw=true) · [SVG 원본](images/architecture/travel-recommendation.svg) · [프로젝트 목록](#프로젝트)
 
 Python · Embedding Models · Vector DB · Docker Compose
 
@@ -184,9 +184,9 @@ Python · Embedding Models · Vector DB · Docker Compose
 
 **설계 선택:** 장르·배우 등 명시한 조건은 메타데이터로 확인하고, 영화 설명의 의미는 벡터 유사도로 비교함.
 
-<img src="images/architecture/movie-recommendation.png" alt="영화 추천 API · AIO2O 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/movie-recommendation.html"><img src="images/architecture/movie-recommendation.png" alt="영화 추천 API · AIO2O 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/movie-recommendation.png?raw=true) · [SVG 원본](images/architecture/movie-recommendation.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/movie-recommendation.html) · [PNG 원본](images/architecture/movie-recommendation.png?raw=true) · [SVG 원본](images/architecture/movie-recommendation.svg) · [프로젝트 목록](#프로젝트)
 
 Python · PostgreSQL · pgvector · Embedding Models · Docker
 
@@ -205,9 +205,9 @@ Python · PostgreSQL · pgvector · Embedding Models · Docker
 
 **설계 선택:** 도구에서 얻은 원본 값을 답변 수치와 대조하고, 근거가 없는 수치는 교정하거나 미확인으로 표시함.
 
-<img src="images/architecture/marketscope-ai.png" alt="MarketScope AI · 지도 기반 상권 분석 · 개인 프로젝트 컴포넌트 구성도" width="1000">
+<a href="https://sjaykim.github.io/SJayKim/docs/diagrams/marketscope-ai.html"><img src="images/architecture/marketscope-ai.png" alt="MarketScope AI · 지도 기반 상권 분석 · 개인 프로젝트 컴포넌트 구성도" width="1000"></a>
 
-[PNG 원본](images/architecture/marketscope-ai.png?raw=true) · [SVG 원본](images/architecture/marketscope-ai.svg) · [프로젝트 목록](#프로젝트)
+[탐색형 도식](https://sjaykim.github.io/SJayKim/docs/diagrams/marketscope-ai.html) · [PNG 원본](images/architecture/marketscope-ai.png?raw=true) · [SVG 원본](images/architecture/marketscope-ai.svg) · [프로젝트 목록](#프로젝트)
 
 Python · FastAPI · TypeScript · React · PostgreSQL/PostGIS
 
